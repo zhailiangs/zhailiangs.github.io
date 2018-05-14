@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[hexo文章属性冒号后面要加空格]]></title>
+    <url>%2F2018%2F05%2F12%2Farticle-title%2F</url>
+    <content type="text"><![CDATA[问题刚开始使用hexo，生成静态文件老是报错，错误提示如下：1can not read a block mapping entry; a multiline key may implicit key at line 解决办法冒号后面加空格 错误写法：12tags:[hexo入门]categories:hexo 正确写法:12tags: [hexo入门]categories: hexo]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>hexo入门</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Hello World]]></title>
+    <url>%2F2018%2F05%2F12%2Fhello-world%2F</url>
+    <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
+  </entry>
+</search>
