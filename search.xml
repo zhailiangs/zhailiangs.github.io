@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Centos显示tcp，udp的端口和进程等相关情况]]></title>
+    <url>%2F2018%2F05%2F18%2FCentos%E6%98%BE%E7%A4%BAtcp%EF%BC%8Cudp%E7%9A%84%E7%AB%AF%E5%8F%A3%E5%92%8C%E8%BF%9B%E7%A8%8B%E7%AD%89%E7%9B%B8%E5%85%B3%E6%83%85%E5%86%B5%2F</url>
+    <content type="text"><![CDATA[netstat命令netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际的网络连接以及每一个网络接口设备的netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。该命令的一般格式为： 12345678910netstat [选项] 命令中各选项的含义如下： -a 显示所有socket，包括正在监听的。 -c 每隔1秒就重新显示一遍，直到用户中断它。 -i 显示所有网络接口的信息，格式同“ifconfig -e”。 -n 以网络IP地址代替名称，显示出网络连接情形。 -r 显示核心路由表，格式同“route -e”。 -t 显示TCP协议的连接情况。 -u 显示UDP协议的连接情况。 -v 显示正在进行的工作。 netstat -tunlp用于显示tcp，udp的端口和进程等相关情况1netstat -tunlp]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>CentOS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[hexo文章属性冒号后面要加空格]]></title>
     <url>%2F2018%2F05%2F12%2Farticle-title%2F</url>
     <content type="text"><![CDATA[问题刚开始使用hexo，生成静态文件老是报错，错误提示如下：1can not read a block mapping entry; a multiline key may implicit key at line 解决办法冒号后面加空格 错误写法：12tags:[hexo入门]categories:hexo 正确写法:12tags: [hexo入门]categories: hexo]]></content>

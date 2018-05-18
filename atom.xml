@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-05-14T06:35:00.224Z</updated>
+  <updated>2018-05-18T02:42:47.881Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Centos显示tcp，udp的端口和进程等相关情况</title>
+    <link href="http://yoursite.com/2018/05/18/Centos%E6%98%BE%E7%A4%BAtcp%EF%BC%8Cudp%E7%9A%84%E7%AB%AF%E5%8F%A3%E5%92%8C%E8%BF%9B%E7%A8%8B%E7%AD%89%E7%9B%B8%E5%85%B3%E6%83%85%E5%86%B5/"/>
+    <id>http://yoursite.com/2018/05/18/Centos显示tcp，udp的端口和进程等相关情况/</id>
+    <published>2018-05-18T02:37:57.000Z</published>
+    <updated>2018-05-18T02:42:47.881Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="netstat命令"><a href="#netstat命令" class="headerlink" title="netstat命令"></a>netstat命令</h1><p>netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际的网络连接以及每一个网络接口设备的<br>netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。<br>该命令的一般格式为：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">netstat [选项]</span><br><span class="line">    命令中各选项的含义如下：</span><br><span class="line">    -a 显示所有socket，包括正在监听的。</span><br><span class="line">    -c 每隔1秒就重新显示一遍，直到用户中断它。</span><br><span class="line">    -i 显示所有网络接口的信息，格式同“ifconfig -e”。</span><br><span class="line">    -n 以网络IP地址代替名称，显示出网络连接情形。</span><br><span class="line">    -r 显示核心路由表，格式同“route -e”。</span><br><span class="line">    -t 显示TCP协议的连接情况。</span><br><span class="line">    -u 显示UDP协议的连接情况。</span><br><span class="line">    -v 显示正在进行的工作。</span><br></pre></td></tr></table></figure><h1 id="netstat-tunlp"><a href="#netstat-tunlp" class="headerlink" title="netstat -tunlp"></a>netstat -tunlp</h1><p>用于显示tcp，udp的端口和进程等相关情况<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -tunlp</span><br></pre></td></tr></table></figure></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;netstat命令&quot;&gt;&lt;a href=&quot;#netstat命令&quot; class=&quot;headerlink&quot; title=&quot;netstat命令&quot;&gt;&lt;/a&gt;netstat命令&lt;/h1&gt;&lt;p&gt;netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际
+      
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://yoursite.com/categories/Linux/"/>
+    
+    
+      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+      <category term="CentOS" scheme="http://yoursite.com/tags/CentOS/"/>
+    
+  </entry>
   
   <entry>
     <title>hexo文章属性冒号后面要加空格</title>
