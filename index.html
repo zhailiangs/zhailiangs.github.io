@@ -292,6 +292,168 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/18/Python定时器框架APScheduler中BlockingScheduler和BackgroundScheduler的区别/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zhailiangs">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhailiangs'blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/18/Python定时器框架APScheduler中BlockingScheduler和BackgroundScheduler的区别/" itemprop="url">Python定时任务框架APScheduler中BlockingScheduler和BackgroundScheduler的区别</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-18T18:07:53+08:00">
+                2018-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/18/Python定时器框架APScheduler中BlockingScheduler和BackgroundScheduler的区别/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/05/18/Python定时器框架APScheduler中BlockingScheduler和BackgroundScheduler的区别/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>APScheduler是基于Quartz的一个Python定时任务框架，提供了基于日期、固定时间间隔以及crontab类型的任务，并且可以持久化任务。</p>
+<p>这里简单列一下常用的若干调度器：</p>
+<p>BlockingScheduler：仅可用在当前你的进程之内，与当前的进行共享计算资源<br>BackgroundScheduler:　在后台运行调度，不影响当前的系统计算运行<br>AsyncIOScheduler:　如果当前系统中使用了async module，则需要使用异步的调度器<br>GeventScheduler:　如果使用了gevent，则需要使用该调度<br>TornadoScheduler:　如果使用了Tornado, 则使用当前的调度器<br>TwistedScheduler:Twister应用的调度器<br>QtScheduler:　Qt的调度器</p>
+<h1 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h1><p>我在使用APScheduler过程中想使用BackgroundScheduler调度器，结果任务一直无法执行，后来换用BlockingScheduler，结果可以正常执行。</p>
+<p>BackgroundScheduler调度器代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">from datetime import datetime</span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line">scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">scheduler.start()</span><br><span class="line">scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 16:56:01&apos;,args=[&apos;my_test3&apos;],id=&apos;my_test4&apos;)</span><br></pre></td></tr></table></figure>
+<p>BlockingScheduler调度器代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">import datetime</span><br><span class="line">from apscheduler.schedulers.blocking import BlockingScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line"># 使用sqlite存储作业</span><br><span class="line">sqlitedb = r&quot;sqlitedb.db&quot;</span><br><span class="line">url = r&apos;sqlite:///%s&apos; %sqlitedb</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    print(datetime.datetime.now())</span><br><span class="line">    print(&apos;-&apos; * 10 + text + &apos;-&apos; * 10)</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=url)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sched = BlockingScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults)</span><br><span class="line">sched.add_job(test,next_run_time= args=[&apos;my_test&apos;],id=&apos;my_test&apos;)</span><br><span class="line">sched.start()</span><br></pre></td></tr></table></figure>
+<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p>BackgroundScheduler调度器依赖于python脚本的主进程，如果主进程不存在定时任务也就不存在，我的代码里面没有可以维持脚本于行的主进程所以也就没办法执行定时任务</p>
+<h1 id="正确示例代码"><a href="#正确示例代码" class="headerlink" title="正确示例代码"></a>正确示例代码</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">from datetime import datetime</span><br><span class="line">import time</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">    &#125;</span><br><span class="line">    executors = &#123;</span><br><span class="line">        &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">        &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">    &#125;</span><br><span class="line">    job_defaults = &#123;</span><br><span class="line">        &apos;coalesce&apos;: False,</span><br><span class="line">        &apos;max_instances&apos;: 3</span><br><span class="line">    &#125;</span><br><span class="line">    scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">    #scheduler.add_job(tick, &apos;interval&apos;, seconds=3)</span><br><span class="line">    scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 17:12:01&apos;, args=[&apos;my_test5&apos;],id=&apos;my_test5&apos;)</span><br><span class="line">    scheduler.start()  #这里的调度任务是独立的一个线程</span><br><span class="line">    print(&apos;Press Ctrl+&#123;0&#125; to exit&apos;.format(&apos;Break&apos; if os.name == &apos;nt&apos; else &apos;C&apos;))</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        # This is here to simulate application activity (which keeps the main thread alive).</span><br><span class="line">        while True:</span><br><span class="line">            time.sleep(2)    #其他任务是独立的线程执行</span><br><span class="line">            print(&apos;sleep!&apos;)</span><br><span class="line">    except (KeyboardInterrupt, SystemExit):</span><br><span class="line">        # Not strictly necessary if daemonic mode is enabled but should be done if possible</span><br><span class="line">        scheduler.shutdown()</span><br><span class="line">        print(&apos;Exit The Job!&apos;)</span><br></pre></td></tr></table></figure>
+<p>参考链接：<br>    1.<a href="https://www.cnblogs.com/hushaojun/p/5189109.html" target="_blank" rel="noopener">https://www.cnblogs.com/hushaojun/p/5189109.html</a><br>    2.<a href="https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1" target="_blank" rel="noopener">https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/18/Centos显示tcp，udp的端口和进程等相关情况/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -395,7 +557,7 @@
       
         
           
-            <h1 id="netstat命令"><a href="#netstat命令" class="headerlink" title="netstat命令"></a>netstat命令</h1><p>netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际的网络连接以及每一个网络接口设备的<br>netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。<br>该命令的一般格式为：</p>
+            <h1 id="netstat命令"><a href="#netstat命令" class="headerlink" title="netstat命令"></a>netstat命令</h1><p>netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际的网络连接以及每一个网络接口设备<br>netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。<br>该命令的一般格式为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">netstat [选项]</span><br><span class="line">    命令中各选项的含义如下：</span><br><span class="line">    -a 显示所有socket，包括正在监听的。</span><br><span class="line">    -c 每隔1秒就重新显示一遍，直到用户中断它。</span><br><span class="line">    -i 显示所有网络接口的信息，格式同“ifconfig -e”。</span><br><span class="line">    -n 以网络IP地址代替名称，显示出网络连接情形。</span><br><span class="line">    -r 显示核心路由表，格式同“route -e”。</span><br><span class="line">    -t 显示TCP协议的连接情况。</span><br><span class="line">    -u 显示UDP协议的连接情况。</span><br><span class="line">    -v 显示正在进行的工作。</span><br></pre></td></tr></table></figure>
 <h1 id="netstat-tunlp"><a href="#netstat-tunlp" class="headerlink" title="netstat -tunlp"></a>netstat -tunlp</h1><p>用于显示tcp，udp的端口和进程等相关情况<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -tunlp</span><br></pre></td></tr></table></figure></p>
 
@@ -776,7 +938,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -787,7 +949,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -798,7 +960,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
