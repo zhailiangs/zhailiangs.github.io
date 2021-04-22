@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2021-04-22T07:23:31.930Z</updated>
+  <updated>2021-04-22T07:38:13.977Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>安卓APP安全证书验证分类</title>
+    <link href="http://yoursite.com/2021/04/22/android-app-https-ca/"/>
+    <id>http://yoursite.com/2021/04/22/android-app-https-ca/</id>
+    <published>2021-04-22T07:38:11.583Z</published>
+    <updated>2021-04-22T07:38:13.977Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/images/ca.png" alt="安卓APP安全证书验证分类" title="安卓APP安全证书验证分类"></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;img src=&quot;/images/ca.png&quot; alt=&quot;安卓APP安全证书验证分类&quot; title=&quot;安卓APP安全证书验证分类&quot;&gt;&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+      <category term="APP抓包" scheme="http://yoursite.com/categories/APP%E6%8A%93%E5%8C%85/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>Android7.0以上版本抓取https包问题</title>
