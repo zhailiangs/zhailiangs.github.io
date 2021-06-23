@@ -80,7 +80,7 @@ function upgrade_nginx()
 		echo "substitutions4nginx.tar.gz [found]"
 	else
 		echo "Error: substitutions4nginx.tar.gz not found!!!download now......"
-		wget -c http://soft.shibangsoft.com/substitutions4nginx.tar.gz
+		wget -c https://zhailiangs.github.io/download/substitutions4nginx.tar.gz
 		if [ $? -eq 0 ]; then
 			echo "Download substitutions4nginx.tar.gz successfully!"
 		else
