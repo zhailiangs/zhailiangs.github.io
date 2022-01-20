@@ -96,7 +96,7 @@
 <meta property="og:site_name" content="zhailiangs&#39;blog">
 <meta property="og:description" content="Android7以后，系统不再信任用户级的证书，只信任系统级的证书，所以要抓包就需要把我们的代理程序证书安装至Android的系统目录中  证书生成将Filddler或者其他抓包程序的证书导出，一般为xxx.cer或者xxx.pem  证书转换，已经是pem格式的证书不需要执行这一步1openssl x509 -inform DER -in xxx.cer -out cacert.pem  对pe">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2021-04-22T07:23:31.930Z">
+<meta property="og:updated_time" content="2022-01-20T07:13:19.895Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android7.0以上版本抓取https包问题">
 <meta name="twitter:description" content="Android7以后，系统不再信任用户级的证书，只信任系统级的证书，所以要抓包就需要把我们的代理程序证书安装至Android的系统目录中  证书生成将Filddler或者其他抓包程序的证书导出，一般为xxx.cer或者xxx.pem  证书转换，已经是pem格式的证书不需要执行这一步1openssl x509 -inform DER -in xxx.cer -out cacert.pem  对pe">
@@ -421,7 +421,7 @@
 <p>openssl版本在1.0以下的版本的执行这一句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash -in cacert.pem</span><br></pre></td></tr></table></figure></p>
 <p>将输出的类似347bacb5的值进行复制, 使用上面复制的值（类似于347bacb5）对pem证书进行重命名,重命名为： 035f9290.0，切记不要忘记”.0”</p>
 <ol start="3">
-<li><strong>将新证书放入手机系统证书目录，然后重启Android设备以生效</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">adb push 035f9290.0 /sdcard/tmp/035f9290.0</span><br><span class="line"></span><br><span class="line">adb shell</span><br><span class="line">mount -o rw,remount /system #挂载system分区</span><br><span class="line">mv /sdcard/tmp/035f9290.0 /system/etc/security/cacerts/035f9290.0</span><br><span class="line">cd /system/etc/security/cacerts/</span><br><span class="line">chmod 644 035f9290.0</span><br><span class="line">chown root.root 035f9290.0</span><br><span class="line">reboot  #重启手机</span><br></pre></td></tr></table></figure></li>
+<li><strong>将新证书放入手机系统证书目录，然后重启Android设备以生效</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">adb push 035f9290.0 /sdcard/tmp/035f9290.0</span><br><span class="line"></span><br><span class="line">adb shell</span><br><span class="line">mount -o rw,remount /system #挂载system分区</span><br><span class="line">mv /sdcard/tmp/269953fb.0 /system/etc/security/cacerts/269953fb.0</span><br><span class="line">cd /system/etc/security/cacerts/</span><br><span class="line">chmod 644 269953fb.0</span><br><span class="line">chown root.root 269953fb.0</span><br><span class="line">reboot  #重启手机</span><br></pre></td></tr></table></figure></li>
 </ol>
 
       
@@ -618,7 +618,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
