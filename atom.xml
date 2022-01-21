@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2021-04-22T07:38:13.977Z</updated>
+  <updated>2022-01-21T04:55:15.409Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Fiddler证书清除并重新配置</title>
+    <link href="http://yoursite.com/2022/01/21/fiddler-certificates-clean/"/>
+    <id>http://yoursite.com/2022/01/21/fiddler-certificates-clean/</id>
+    <published>2022-01-21T04:55:15.350Z</published>
+    <updated>2022-01-21T04:55:15.409Z</updated>
+    
+    <content type="html"><![CDATA[<p>很多使用fiddler抓包，对于http来说不需太多纠结，随便设置下就能用，但是抓取https就死活抓不了，出现诸如以下问题：</p><p>creation of the root certificate was not successful;</p><p>Failed to find the root certificate in User Root List;</p><p>The Root certificate could not be found;</p><p>The root certificate could not be located;</p><p>Fiddler 抓取https 显示 Tunnel to … 443;</p><p>等等…</p><p>1.(最关键).清除C:\Users\用户\AppData\Roaming\Microsoft\Crypto\RSA 目录下所有文件（首次安装fiddler请忽略）</p><p>2.清除电脑上的根证书，WIN+R快捷键，输入：certmgr.msc， 然后回车，查找所有fiddler证书（菜单栏–操作–查找证书），然后删除。（首次安装fiddler请忽略）</p><p>3.清除浏览器上的证书文件 ,此处需要仔细查找带有FiddlerRoot的字样，并删除，以谷歌浏览器为例说明，在浏览器上输入: chrome://settings/，（首次安装fiddler请忽略）</p><p>4.打开fiddler，点击工具栏中的Tools—&gt;Options，点击Actions,选择最后一项，Reset All certificates,然后关闭</p><p>原文链接：<a href="https://blog.csdn.net/w6082819920919/article/details/112174650" target="_blank" rel="noopener">https://blog.csdn.net/w6082819920919/article/details/112174650</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;很多使用fiddler抓包，对于http来说不需太多纠结，随便设置下就能用，但是抓取https就死活抓不了，出现诸如以下问题：&lt;/p&gt;
+&lt;p&gt;creation of the root certificate was not successful;&lt;/p&gt;
+&lt;p&gt;Failed
+      
+    
+    </summary>
+    
+      <category term="APP抓包" scheme="http://yoursite.com/categories/APP%E6%8A%93%E5%8C%85/"/>
+    
+    
+      <category term="fiddler" scheme="http://yoursite.com/tags/fiddler/"/>
+    
+      <category term="https" scheme="http://yoursite.com/tags/https/"/>
+    
+  </entry>
   
   <entry>
     <title>安卓APP安全证书验证分类</title>
@@ -45,7 +74,7 @@
     <link href="http://yoursite.com/2021/04/22/android-app-https/"/>
     <id>http://yoursite.com/2021/04/22/android-app-https/</id>
     <published>2021-04-22T07:14:54.253Z</published>
-    <updated>2022-01-20T07:16:12.294Z</updated>
+    <updated>2022-01-21T04:54:14.810Z</updated>
     
     <content type="html"><![CDATA[<p>Android7以后，系统不再信任用户级的证书，只信任系统级的证书，所以要抓包就需要把我们的代理程序证书安装至Android的系统目录中</p><ol><li><strong>证书生成</strong><br>将Filddler或者其他抓包程序的证书导出，一般为xxx.cer或者xxx.pem</li></ol><p>证书转换，已经是pem格式的证书不需要执行这一步<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -inform DER -in xxx.cer -out cacert.pem</span><br></pre></td></tr></table></figure></p><ol start="2"><li><strong>对pem证书进行重命名</strong></li></ol><p>openssl版本在1.0以上的版本的执行这一句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash_old -in cacert.pem</span><br></pre></td></tr></table></figure></p><p>openssl版本在1.0以下的版本的执行这一句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash -in cacert.pem</span><br></pre></td></tr></table></figure></p><p>将输出的类似269953fb的值进行复制, 使用上面复制的值（类似于269953fb）对pem证书进行重命名,重命名为： 269953fb.0，切记不要忘记”.0”</p><ol start="3"><li><strong>将新证书放入手机系统证书目录，然后重启Android设备以生效</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">adb push 269953fb.0 /sdcard/tmp/269953fb.0</span><br><span class="line"></span><br><span class="line">adb shell</span><br><span class="line">mount -o rw,remount /system #挂载system分区</span><br><span class="line">mv /sdcard/tmp/269953fb.0 /system/etc/security/cacerts/269953fb.0</span><br><span class="line">cd /system/etc/security/cacerts/</span><br><span class="line">chmod 644 269953fb.0</span><br><span class="line">chown root.root 269953fb.0</span><br><span class="line">reboot  #重启手机</span><br></pre></td></tr></table></figure></li></ol>]]></content>
     
@@ -63,7 +92,7 @@
       <category term="APP抓包" scheme="http://yoursite.com/categories/APP%E6%8A%93%E5%8C%85/"/>
     
     
-      <category term="filddler" scheme="http://yoursite.com/tags/filddler/"/>
+      <category term="fiddler" scheme="http://yoursite.com/tags/fiddler/"/>
     
       <category term="https" scheme="http://yoursite.com/tags/https/"/>
     
