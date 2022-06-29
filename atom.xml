@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-01-21T04:55:15.409Z</updated>
+  <updated>2022-06-29T06:13:55.735Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,87 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>组合索引</title>
+    <link href="http://yoursite.com/2022/06/29/db-index/"/>
+    <id>http://yoursite.com/2022/06/29/db-index/</id>
+    <published>2022-06-29T06:10:23.404Z</published>
+    <updated>2022-06-29T06:13:55.735Z</updated>
+    
+    <content type="html"><![CDATA[<p>首先我们看看组合索引的与单列索引的区别：</p><h2 id="一-为什么要使用联合索引"><a href="#一-为什么要使用联合索引" class="headerlink" title="一.为什么要使用联合索引"></a>一.为什么要使用联合索引</h2><ol><li><p>减少开销<br>建一个联合索引(col1,col2,col3)，实际相当于建了(col1),(col1,col2),(col1,col2,col3)三个索引。每多一个索引，都会增加写操作的开销和磁盘空间的开销。对于大量数据的表，使用联合索引会大大的减少开销！</p></li><li><p>覆盖索引<br>对联合索引(col1,col2,col3)，如果有如下的sql: select col1,col2,col3 from test where col1=1 and col2=2。那么MySQL可以直接通过遍历索引取得数据，而无需回表，这减少了很多的随机io操作。减少io操作，特别的随机io其实是dba主要的优化策略。所以，在真正的实际应用中，覆盖索引是主要的提升性能的优化手段之一。</p></li><li><p>效率高<br>索引列越多，通过索引筛选出的数据越少。有1000W条数据的表，有如下sql:select from table where col1=1 and col2=2 and col3=3,假设假设每个条件可以筛选出10%的数据，如果只有单值索引，那么通过该索引能筛选出1000W10%=100w条数据，然后再回表从100w条数据中找到符合col2=2 and col3= 3的数据，然后再排序，再分页；如果是联合索引，通过索引筛选出1000w10% 10% *10%=1w，效率提升可想而知!</p></li></ol><h2 id="二-组合索引如何使用"><a href="#二-组合索引如何使用" class="headerlink" title="二.组合索引如何使用"></a>二.组合索引如何使用</h2><p>最左原则</p><p>例如组合索引（a,b,c），组合索引的生效原则是</p><p>从前往后依次使用生效，如果中间某个索引没有使用，那么断点前面的索引部分起作用，断点后面的索引没有起作用；</p><p>对于组合索引:Mysql从左到右的使用索引中的字段，一个查询可以只使用索引中的一部份，但只能是最左侧部分。例如索引是key index (a,b,c). 可以支持a | a,b| a,b,c 3种组合进行查找，但不支持 b,c进行查找 .当最左侧字段是常量引用时，索引就十分有效。</p><p>两个或更多个列上的索引被称作复合索引。<br>利用索引中的附加列，您可以缩小搜索的范围，但使用一个具有两列的索引 不同于使用两个单独的索引。复合索引的结构与电话簿类似，人名由姓和名构成，电话簿首先按姓氏对进行排序，然后按名字对有相同姓氏的人进行排序。如果您知 道姓，电话簿将非常有用；如果您知道姓和名，电话簿则更为有用，但如果您只知道名不姓，电话簿将没有用处。<br>所以说创建复合索引时，应该仔细考虑列的顺序。对索引中的所有列执行搜索或仅对前几列执行搜索时，复合索引非常有用；仅对后面的任意列执行搜索时，复合索引则没有用处。</p><p>原文链接：<a href="https://blog.csdn.net/qq_46661297/article/details/106226732" target="_blank" rel="noopener">https://blog.csdn.net/qq_46661297/article/details/106226732</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;首先我们看看组合索引的与单列索引的区别：&lt;/p&gt;
+&lt;h2 id=&quot;一-为什么要使用联合索引&quot;&gt;&lt;a href=&quot;#一-为什么要使用联合索引&quot; class=&quot;headerlink&quot; title=&quot;一.为什么要使用联合索引&quot;&gt;&lt;/a&gt;一.为什么要使用联合索引&lt;/h2&gt;&lt;ol&gt;
+
+      
+    
+    </summary>
+    
+      <category term="数据库" scheme="http://yoursite.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="索引" scheme="http://yoursite.com/tags/%E7%B4%A2%E5%BC%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>WordPress 创建自定义 URL 页面模板</title>
+    <link href="http://yoursite.com/2022/06/29/wordpress-loadcustom-template/"/>
+    <id>http://yoursite.com/2022/06/29/wordpress-loadcustom-template/</id>
+    <published>2022-06-29T06:06:06.968Z</published>
+    <updated>2022-06-29T06:07:54.202Z</updated>
+    
+    <content type="html"><![CDATA[<p>WordPress 创建模板的其实都非常的简单，而 WordPress 添加自定义页面一般有两种方法，一种是使用自定义模板，另外一种是使用 template_redirect 动作钩子来实现自定义页面。这也是子凡最近在开发博客导航中屡试不爽的一个功能，其中主要就是为了完成博客导航中 URL 的一个统一及规范，所以这就成了最好的一个方法了。</p><p>WordPress 自定义创建页面模板其实非常的简单，但是也比较的有局限性，因为 WordPress 在 page 页面类型中的 url 是不支持同名存在的，所以一旦与分类目录活着标签别名相同后，自定义固定链接使用文章名的链接就会出现错误，这也使得不能规范博客导航中的 URL 链接，所以这就成了子凡在开发博客导航中一直纠结的一个梗，所以最后不得不弃用 WordPress 自定义模板的这个功能。</p><p>template_redirect 动作钩子很有用，因为它是 WordPress 知道用户正在浏览的页面的关键。它在特定的页面选择 theme template 之前执行。在只在网站的前端触发，并不在管理员页面触发。直接调用 WordPress 的 API. 来解决这个问题。</p><p>老规矩，在当前主题 functions.php 中添加一下代码：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">//自定义页面模板</span><br><span class="line">function loadCustomTemplate($template) &#123;</span><br><span class="line">    global $wp_query;</span><br><span class="line">    if(!file_exists($template))return;</span><br><span class="line">    $wp_query-&gt;is_page = true;</span><br><span class="line">    $wp_query-&gt;is_single = false;</span><br><span class="line">    $wp_query-&gt;is_home = false;</span><br><span class="line">    $wp_query-&gt;comments = false;</span><br><span class="line">    // if we have a 404 status</span><br><span class="line">    if ($wp_query-&gt;is_404) &#123;</span><br><span class="line">        // set status of 404 to false</span><br><span class="line">        unset($wp_query-&gt;query[&quot;error&quot;]);</span><br><span class="line">        $wp_query-&gt;query_vars[&quot;error&quot;]=&quot;&quot;;</span><br><span class="line">        $wp_query-&gt;is_404=false;</span><br><span class="line">    &#125;</span><br><span class="line">    // change the header to 200 OK</span><br><span class="line">    header(&quot;HTTP/1.1 200 OK&quot;);</span><br><span class="line">    //load our template</span><br><span class="line">    include($template);</span><br><span class="line">    exit;</span><br><span class="line">&#125;</span><br><span class="line">function templateRedirect() &#123;</span><br><span class="line">    $basename = basename($_SERVER[&apos;REQUEST_URI&apos;], &apos;?&apos; . $_SERVER[&apos;QUERY_STRING&apos;]);</span><br><span class="line">    loadCustomTemplate(TEMPLATEPATH.&apos;/blogs/&apos;.&quot;/$basename.php&quot;);</span><br><span class="line">&#125;</span><br><span class="line">add_action(&apos;template_redirect&apos;, &apos;templateRedirect&apos;);</span><br></pre></td></tr></table></figure><p>这样就实现了 WordPress 查找主题文件夹下/blogs 文件夹下的 php 文件，并且将相匹配的 URL 请求转交给对应的 php 文件来处理的效果，与此同时，这个 php 文件还保持了对 WordPress API 的调用，因此留给我们的空间非常大。</p><p>如果我们需要自定义某个页面链接的模板，就需要在主题文件夹下的/blogs 目录创建一个 xxx.php 的 php 文件。这里页面的内容子凡就不提供代码示例了。</p><p>那么最后我们就只需要输入 domain.com/xxx 就能显示这个 xxx.php 的文件内容了，并且 xxx.php 这个文件是支持所有 WordPress 函数的，具有主题的框架和 CSS 样式，非常方便好用。</p><p>原文链接：<a href="https://zhangzifan.com/wordpress-template-redirect.html" target="_blank" rel="noopener">https://zhangzifan.com/wordpress-template-redirect.html</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;WordPress 创建模板的其实都非常的简单，而 WordPress 添加自定义页面一般有两种方法，一种是使用自定义模板，另外一种是使用 template_redirect 动作钩子来实现自定义页面。这也是子凡最近在开发博客导航中屡试不爽的一个功能，其中主要就是为了完成博
+      
+    
+    </summary>
+    
+      <category term="WordPress" scheme="http://yoursite.com/categories/WordPress/"/>
+    
+    
+      <category term="Template" scheme="http://yoursite.com/tags/Template/"/>
+    
+      <category term="WordPress" scheme="http://yoursite.com/tags/WordPress/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>WordPress 过滤钩子（Filter）基础详解</title>
+    <link href="http://yoursite.com/2022/06/29/wordpress-filter/"/>
+    <id>http://yoursite.com/2022/06/29/wordpress-filter/</id>
+    <published>2022-06-29T06:03:52.030Z</published>
+    <updated>2022-06-29T06:05:13.060Z</updated>
+    
+    <content type="html"><![CDATA[<p>WordPress 过滤钩子（filters）——我们可以扩展 WordPress 的最好方法之一。这个特性的基础就是钩子（hooks）—— WordPress的过滤（filters）和动作（actions）钩子。没有它们，我们就无法利用 WordPress 的可扩展性的优势。</p><h2 id="什么是-WordPress-过滤钩子（Filter）"><a href="#什么是-WordPress-过滤钩子（Filter）" class="headerlink" title="什么是 WordPress 过滤钩子（Filter）"></a>什么是 WordPress 过滤钩子（Filter）</h2><p>在 WordPress 官方开发文档里面，过滤钩子（filter）是这样定义的：</p><p>过滤钩子是一类函数，WordPress 执行传递和处理数据的过程中，在针对这些数据做出某些动作之前的特定点运行(例如将数据写入数据库或将其传递到浏览器页面)。WordPress 默认已经做了一些过滤钩子，你的插件可以添加它自己的过滤钩子。</p><p>本质上，过滤器就是在 WordPress 输出之前将你的浏览数据做出反应。过滤钩子是 WordPress 的两种钩子之一，另外一个我们叫做动作钩子（actions）。当然这不是我们这篇文章讨论的。</p><h2 id="在-WordPress-中使用过滤钩子"><a href="#在-WordPress-中使用过滤钩子" class="headerlink" title="在 WordPress 中使用过滤钩子"></a>在 WordPress 中使用过滤钩子</h2><p>正如我说的那样，使用 WordPress 过滤钩子是非常容易的，我们只需要了解一些过滤钩子的最基本的功能。（说实在点，最困难的部分其实是学习所有的过滤钩子，但是正如你想的那样，你一次性不可能学习每一个过滤钩子——当你需要哪个过滤钩子的时候，再学习它。）</p><p>在这部分，我们要做如下四件事：</p><ul><li>创建一个过滤函数</li><li>挂载到一个过滤钩子</li><li>从过滤钩子上移除一个函数</li><li>创建自己的过滤钩子</li></ul><p>创建一个过滤函数，并且钩到过滤钩子<br>为了在过滤器之间传输数据，你需要创建一个函数，用来定义如何传递这个数据以及用过滤钩子将其连接起来。</p><p>我们来看看，我们创建一个插件用来移除文章标题的元音（vowels），你不能说“从我的文章标题里面移除元音”你应当说“挂载这个函数（用来移除元音的）到我文章标题的过滤钩子”</p><p>这就完了？当然没有，看下面这个例子，我们将撰写函数代码来从任何东西上面移除元音<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    function remove_the_vowels($title ) &#123;</span><br><span class="line">        $title = preg_replace(&apos;/[aeiou]/i&apos;,&apos;&apos;, $title);</span><br><span class="line">        return $title;</span><br><span class="line">    &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p><p>这个函数获取 $title 字符串，移除元音后返回它。 够简单吧？现在我们继续深入这个例子，我们将其用钩子连接到过滤器：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    function remove_the_vowels( $title ) &#123;</span><br><span class="line">        $title = preg_replace( &apos;/[aeiou]/i&apos;, &apos;&apos;, $title );</span><br><span class="line">        return $title;</span><br><span class="line">    &#125;</span><br><span class="line">    add_filter( &apos;the_title&apos;, &apos;remove_the_vowels&apos; );</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p><p>注意到新的函数没有？我们快速的看看这个 add_filter()：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    add_filter( $tag, $function_to_add, $priority, $accepted_args );</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p><ul><li>$tag (required) - 过滤钩子的名称</li><li>$function_to_add (必须) - 要挂载到过滤钩子的函数名称</li><li>$priority (可选) -一个整数用来判断我们的函数什么时候执行，默认数值是10：这个数值你可以设置较高，也可以设置较低。数值的高低决定函数运行的优先级，数值越低优先级越高</li><li>$accepted_args (可选) – 一个整数用来设定过滤钩子接受的参数的个数，默认值是1</li></ul><h2 id="移除一个过滤钩子"><a href="#移除一个过滤钩子" class="headerlink" title="移除一个过滤钩子"></a>移除一个过滤钩子</h2><p>我们也可以从过滤钩子上面移除附加的函数，为了演示这个，我们用一个很简单的函数， remove_filter(). 我们来看看他是如何工作的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php remove_filter( $tag, $function_to_remove, $priority ); ?&gt;</span><br></pre></td></tr></table></figure></p><p>和 add_filter() 的参数几乎是相同的：</p><ul><li>$tag (必须) – 过滤钩子的名称</li><li>$function_to_remove (必须) – 要移除的函数的名称</li><li>$priority (可选) – 函数的优先级（根据定义函数的顺序）</li></ul><p>另外还有一个叫 remove_all_filters() 的函数，他有两个参数，分别是 $tag 和 $priority 用来设定过滤钩子的名称以及过滤钩子的优先级。remove_all_filters() 函数就像他的名字那样，它可以移除所有过滤钩子上面的函数。</p><h2 id="创建你自己的过滤钩子"><a href="#创建你自己的过滤钩子" class="headerlink" title="创建你自己的过滤钩子"></a>创建你自己的过滤钩子</h2><p>你还在疑虑这些过滤钩子是如何创建的？这里有一个特别的函数叫 apply_filters()，它在核心代码中被用来创建了几百个过滤钩子了。当然，它也可以用在核心代码之外，这就意味着我们可以在插件和主题里面也能创建过滤钩子。</p><p>来看看它是如何工作的:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php apply_filters( $tag, $value, $var1, $var2 /* ...and so on */ ); ?&gt;</span><br></pre></td></tr></table></figure></p><ul><li>$tag (必须) – 过滤钩子的名称</li><li>$value (必须) – 通过add_filter()挂载的过滤函数所要修改的值。</li><li>$var1, $var2 and so on (任意) – 你的过滤钩子的参数（你喜欢设多少就多少），过滤函数可以使用这些参数，但是它们不能被函数返回。</li></ul><p>我们考虑一下这样一个例子：想象一下你写了一个函数，这个函数只返回一句皮特格里芬的名言：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php function peter_griffin_quote() &#123;    $quote = &quot;The bird is the word.&quot;;    return $quote;&#125; ?&gt;</span><br></pre></td></tr></table></figure></p><p>如果你想让人们过滤这句话（将你的插件代码放在一边），你需要向下面那样使用<br>apply_filters() 这个函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    function peter_griffin_quote() &#123;</span><br><span class="line">        $quote = &quot;The bird is the word.&quot;; </span><br><span class="line">        return apply_filters( &apos;peter_griffin_quote&apos;, $quote );</span><br><span class="line">    &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p><p>那样，其他开发者使用你的插件可以这样修改你的函数数据：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    function change_the_quote( $quote ) &#123;</span><br><span class="line">        $quote = str_replace( &apos;bird&apos;, &apos;nerd&apos;, $quote );</span><br><span class="line">        return $quote;</span><br><span class="line">    &#125;</span><br><span class="line">    add_filter( &apos;peter_griffin_quote&apos;, &apos;change_the_quote&apos; );</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p><p>现在，每当这个 peter_griffin_quote() 函数运行的时候，开发者不需要编辑你的插件文件，皮特的名言也会有很小的改变。</p><p>如果你需要额外的关于 WordPress 过滤钩子的信息，你可以参考 Pippin Williamson 的这个教程: Writing Extensible Plugins With Actions and Filters。在这个教程里面，你可以学到如何在你的插件或者主题中创建过滤钩子和动作钩子。</p><h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>你用过滤钩子用的越多，你就会感觉到越有趣。WordPress 有几百个过滤钩子，学习这些过滤钩子，你将会成为 WordPress方面的专家，在下一部分，我们将要学习下面这十个 WordPress 过滤钩子：</p><ul><li>login_errors</li><li>comment_post_redirect</li><li>allowed_redirect_hosts</li><li>body_class</li><li>locale</li><li>sanitize_user</li><li>the_content</li><li>the_password_form</li><li>the_terms</li><li>wp_mail_from</li></ul><p>原文链接：<a href="https://cloud.tencent.com/developer/article/1962605" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1962605</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;WordPress 过滤钩子（filters）——我们可以扩展 WordPress 的最好方法之一。这个特性的基础就是钩子（hooks）—— WordPress的过滤（filters）和动作（actions）钩子。没有它们，我们就无法利用 WordPress 的可扩展性的优
+      
+    
+    </summary>
+    
+      <category term="WordPress" scheme="http://yoursite.com/categories/WordPress/"/>
+    
+    
+      <category term="WordPress" scheme="http://yoursite.com/tags/WordPress/"/>
+    
+      <category term="Filter" scheme="http://yoursite.com/tags/Filter/"/>
+    
+  </entry>
   
   <entry>
     <title>Fiddler证书清除并重新配置</title>
