@@ -96,7 +96,7 @@
 <meta property="og:site_name" content="zhailiangs&#39;blog">
 <meta property="og:description" content="首先我们看看组合索引的与单列索引的区别： 一.为什么要使用联合索引 减少开销建一个联合索引(col1,col2,col3)，实际相当于建了(col1),(col1,col2),(col1,col2,col3)三个索引。每多一个索引，都会增加写操作的开销和磁盘空间的开销。对于大量数据的表，使用联合索引会大大的减少开销！  覆盖索引对联合索引(col1,col2,col3)，如果有如下的sql: se">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2022-06-29T06:13:55.735Z">
+<meta property="og:updated_time" content="2022-06-29T06:33:51.184Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="组合索引">
 <meta name="twitter:description" content="首先我们看看组合索引的与单列索引的区别： 一.为什么要使用联合索引 减少开销建一个联合索引(col1,col2,col3)，实际相当于建了(col1),(col1,col2),(col1,col2,col3)三个索引。每多一个索引，都会增加写操作的开销和磁盘空间的开销。对于大量数据的表，使用联合索引会大大的减少开销！  覆盖索引对联合索引(col1,col2,col3)，如果有如下的sql: se">
@@ -415,7 +415,7 @@
 </li>
 <li><p>覆盖索引<br>对联合索引(col1,col2,col3)，如果有如下的sql: select col1,col2,col3 from test where col1=1 and col2=2。那么MySQL可以直接通过遍历索引取得数据，而无需回表，这减少了很多的随机io操作。减少io操作，特别的随机io其实是dba主要的优化策略。所以，在真正的实际应用中，覆盖索引是主要的提升性能的优化手段之一。</p>
 </li>
-<li><p>效率高<br>索引列越多，通过索引筛选出的数据越少。有1000W条数据的表，有如下sql:select from table where col1=1 and col2=2 and col3=3,假设假设每个条件可以筛选出10%的数据，如果只有单值索引，那么通过该索引能筛选出1000W10%=100w条数据，然后再回表从100w条数据中找到符合col2=2 and col3= 3的数据，然后再排序，再分页；如果是联合索引，通过索引筛选出1000w10% 10% *10%=1w，效率提升可想而知!</p>
+<li><p>效率高<br>索引列越多，通过索引筛选出的数据越少。有1000W条数据的表，有如下sql:select from table where col1=1 and col2=2 and col3=3,假设假设每个条件可以筛选出10%的数据，如果只有单值索引，那么通过该索引能筛选出1000W*10%=100w条数据，然后再回表从100w条数据中找到符合col2=2 and col3= 3的数据，然后再排序，再分页；如果是联合索引，通过索引筛选出1000w*10%*10%*10%=1w，效率提升可想而知!</p>
 </li>
 </ol>
 <h2 id="二-组合索引如何使用"><a href="#二-组合索引如何使用" class="headerlink" title="二.组合索引如何使用"></a>二.组合索引如何使用</h2><p>最左原则</p>
