@@ -64,9 +64,9 @@
       <category term="WordPress" scheme="http://yoursite.com/categories/WordPress/"/>
     
     
-      <category term="WordPress" scheme="http://yoursite.com/tags/WordPress/"/>
-    
       <category term="Template" scheme="http://yoursite.com/tags/Template/"/>
+    
+      <category term="WordPress" scheme="http://yoursite.com/tags/WordPress/"/>
     
   </entry>
   
@@ -91,9 +91,9 @@
       <category term="WordPress" scheme="http://yoursite.com/categories/WordPress/"/>
     
     
-      <category term="Filter" scheme="http://yoursite.com/tags/Filter/"/>
-    
       <category term="WordPress" scheme="http://yoursite.com/tags/WordPress/"/>
+    
+      <category term="Filter" scheme="http://yoursite.com/tags/Filter/"/>
     
   </entry>
   
