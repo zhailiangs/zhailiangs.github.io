@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-06-29T06:33:51.184Z</updated>
+  <updated>2022-07-05T06:44:56.922Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>torrc配置项 HTTPTunnelPort</title>
+    <link href="http://yoursite.com/2022/07/05/torrc-HTTPTunnelPort/"/>
+    <id>http://yoursite.com/2022/07/05/torrc-HTTPTunnelPort/</id>
+    <published>2022-07-05T06:44:56.844Z</published>
+    <updated>2022-07-05T06:44:56.922Z</updated>
+    
+    <content type="html"><![CDATA[<p>新版本的Tor提供了一个http代理端口的配置项：</p><p>vi /etc/tor/torrc<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HTTPTunnelPort 1081</span><br></pre></td></tr></table></figure></p><p>这样就不需要通过第三方软件吧socks转换成http了</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;新版本的Tor提供了一个http代理端口的配置项：&lt;/p&gt;
+&lt;p&gt;vi /etc/tor/torrc&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;lin
+      
+    
+    </summary>
+    
+      <category term="爬虫" scheme="http://yoursite.com/categories/%E7%88%AC%E8%99%AB/"/>
+    
+    
+      <category term="Tor" scheme="http://yoursite.com/tags/Tor/"/>
+    
+  </entry>
   
   <entry>
     <title>组合索引</title>
@@ -64,9 +90,9 @@
       <category term="WordPress" scheme="http://yoursite.com/categories/WordPress/"/>
     
     
-      <category term="Template" scheme="http://yoursite.com/tags/Template/"/>
-    
       <category term="WordPress" scheme="http://yoursite.com/tags/WordPress/"/>
+    
+      <category term="Template" scheme="http://yoursite.com/tags/Template/"/>
     
   </entry>
   
@@ -91,9 +117,9 @@
       <category term="WordPress" scheme="http://yoursite.com/categories/WordPress/"/>
     
     
-      <category term="WordPress" scheme="http://yoursite.com/tags/WordPress/"/>
-    
       <category term="Filter" scheme="http://yoursite.com/tags/Filter/"/>
+    
+      <category term="WordPress" scheme="http://yoursite.com/tags/WordPress/"/>
     
   </entry>
   
