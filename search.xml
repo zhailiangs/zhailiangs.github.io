@@ -1,69 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>APScheduler中BlockingScheduler和BackgroundScheduler的区别</title>
-    <url>/2018/05/18/apscheduler-backgroundscheduler/</url>
-    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>APScheduler是基于Quartz的一个Python定时任务框架，提供了基于日期、固定时间间隔以及crontab类型的任务，并且可以持久化任务。</p>
-<p>这里简单列一下常用的若干调度器：</p>
-<p>BlockingScheduler：仅可用在当前你的进程之内，与当前的进行共享计算资源<br>BackgroundScheduler:　在后台运行调度，不影响当前的系统计算运行<br>AsyncIOScheduler:　如果当前系统中使用了async module，则需要使用异步的调度器<br>GeventScheduler:　如果使用了gevent，则需要使用该调度<br>TornadoScheduler:　如果使用了Tornado, 则使用当前的调度器<br>TwistedScheduler:Twister应用的调度器<br>QtScheduler:　Qt的调度器</p>
-<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>我在使用APScheduler过程中想使用BackgroundScheduler调度器，结果任务一直无法执行，后来换用BlockingScheduler，结果可以正常执行。</p>
-<p>BackgroundScheduler调度器代码：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">from datetime import datetime</span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line">scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">scheduler.start()</span><br><span class="line">scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 16:56:01&apos;,args=[&apos;my_test3&apos;],id=&apos;my_test4&apos;)</span><br></pre></td></tr></table></figure>
-<p>BlockingScheduler调度器代码：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">import datetime</span><br><span class="line">from apscheduler.schedulers.blocking import BlockingScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line"># 使用sqlite存储作业</span><br><span class="line">sqlitedb = r&quot;sqlitedb.db&quot;</span><br><span class="line">url = r&apos;sqlite:///%s&apos; %sqlitedb</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    print(datetime.datetime.now())</span><br><span class="line">    print(&apos;-&apos; * 10 + text + &apos;-&apos; * 10)</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=url)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sched = BlockingScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults)</span><br><span class="line">sched.add_job(test,next_run_time= args=[&apos;my_test&apos;],id=&apos;my_test&apos;)</span><br><span class="line">sched.start()</span><br></pre></td></tr></table></figure>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>BackgroundScheduler调度器依赖于python脚本的主进程，如果主进程不存在定时任务也就不存在，我的代码里面没有可以维持脚本运行的主进程所以无法执行定时任务</p>
-<h2 id="正确示例代码"><a href="#正确示例代码" class="headerlink" title="正确示例代码"></a>正确示例代码</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">from datetime import datetime</span><br><span class="line">import time</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">    &#125;</span><br><span class="line">    executors = &#123;</span><br><span class="line">        &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">        &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">    &#125;</span><br><span class="line">    job_defaults = &#123;</span><br><span class="line">        &apos;coalesce&apos;: False,</span><br><span class="line">        &apos;max_instances&apos;: 3</span><br><span class="line">    &#125;</span><br><span class="line">    scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">    #scheduler.add_job(tick, &apos;interval&apos;, seconds=3)</span><br><span class="line">    scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 17:12:01&apos;, args=[&apos;my_test5&apos;],id=&apos;my_test5&apos;)</span><br><span class="line">    scheduler.start()  #这里的调度任务是独立的一个线程</span><br><span class="line">    print(&apos;Press Ctrl+&#123;0&#125; to exit&apos;.format(&apos;Break&apos; if os.name == &apos;nt&apos; else &apos;C&apos;))</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        # This is here to simulate application activity (which keeps the main thread alive).</span><br><span class="line">        while True:</span><br><span class="line">            time.sleep(2)    #其他任务是独立的线程执行</span><br><span class="line">            print(&apos;sleep!&apos;)</span><br><span class="line">    except (KeyboardInterrupt, SystemExit):</span><br><span class="line">        # Not strictly necessary if daemonic mode is enabled but should be done if possible</span><br><span class="line">        scheduler.shutdown()</span><br><span class="line">        print(&apos;Exit The Job!&apos;)</span><br></pre></td></tr></table></figure>
-<p>参考链接:  </p>
-<p><a href="https://www.cnblogs.com/hushaojun/p/5189109.html" target="_blank" rel="noopener">https://www.cnblogs.com/hushaojun/p/5189109.html</a><br><a href="https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1](https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1)" target="_blank" rel="noopener">https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1](https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1)</a></p>
+    <title>安卓APP安全证书验证分类</title>
+    <url>/2021/04/22/android-app-https-ca/</url>
+    <content><![CDATA[<p><img src="/images/ca.png" alt="安卓APP安全证书验证分类" title="安卓APP安全证书验证分类"></p>
 ]]></content>
       <categories>
-        <category>Python</category>
+        <category>APP抓包</category>
       </categories>
-      <tags>
-        <tag>Python</tag>
-        <tag>APScheduler</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hexo文章属性冒号后面要加空格</title>
-    <url>/2018/05/12/article-title/</url>
-    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>刚开始使用hexo，生成静态文件老是报错，错误提示如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">can not read a block mapping entry; a multiline key may implicit key at line</span><br></pre></td></tr></table></figure></p>
-<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>冒号后面加空格</p>
-<p>错误写法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags:[hexo入门]</span><br><span class="line">categories:hexo</span><br></pre></td></tr></table></figure></p>
-<p>正确写法:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags: [hexo入门]</span><br><span class="line">categories: hexo</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>hexo</category>
-      </categories>
-      <tags>
-        <tag>hexo入门</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>组合索引</title>
-    <url>/2022/06/29/db-index/</url>
-    <content><![CDATA[<p>首先我们看看组合索引的与单列索引的区别：</p>
-<h2 id="一-为什么要使用联合索引"><a href="#一-为什么要使用联合索引" class="headerlink" title="一.为什么要使用联合索引"></a>一.为什么要使用联合索引</h2><ol>
-<li><p>减少开销<br>建一个联合索引(col1,col2,col3)，实际相当于建了(col1),(col1,col2),(col1,col2,col3)三个索引。每多一个索引，都会增加写操作的开销和磁盘空间的开销。对于大量数据的表，使用联合索引会大大的减少开销！</p>
-</li>
-<li><p>覆盖索引<br>对联合索引(col1,col2,col3)，如果有如下的sql: select col1,col2,col3 from test where col1=1 and col2=2。那么MySQL可以直接通过遍历索引取得数据，而无需回表，这减少了很多的随机io操作。减少io操作，特别的随机io其实是dba主要的优化策略。所以，在真正的实际应用中，覆盖索引是主要的提升性能的优化手段之一。</p>
-</li>
-<li><p>效率高<br>索引列越多，通过索引筛选出的数据越少。有1000W条数据的表，有如下sql:select from table where col1=1 and col2=2 and col3=3,假设假设每个条件可以筛选出10%的数据，如果只有单值索引，那么通过该索引能筛选出1000W*10%=100w条数据，然后再回表从100w条数据中找到符合col2=2 and col3= 3的数据，然后再排序，再分页；如果是联合索引，通过索引筛选出1000w*10%*10%*10%=1w，效率提升可想而知!</p>
-</li>
-</ol>
-<h2 id="二-组合索引如何使用"><a href="#二-组合索引如何使用" class="headerlink" title="二.组合索引如何使用"></a>二.组合索引如何使用</h2><p>最左原则</p>
-<p>例如组合索引（a,b,c），组合索引的生效原则是</p>
-<p>从前往后依次使用生效，如果中间某个索引没有使用，那么断点前面的索引部分起作用，断点后面的索引没有起作用；</p>
-<p>对于组合索引:Mysql从左到右的使用索引中的字段，一个查询可以只使用索引中的一部份，但只能是最左侧部分。例如索引是key index (a,b,c). 可以支持a | a,b| a,b,c 3种组合进行查找，但不支持 b,c进行查找 .当最左侧字段是常量引用时，索引就十分有效。</p>
-<p>两个或更多个列上的索引被称作复合索引。<br>利用索引中的附加列，您可以缩小搜索的范围，但使用一个具有两列的索引 不同于使用两个单独的索引。复合索引的结构与电话簿类似，人名由姓和名构成，电话簿首先按姓氏对进行排序，然后按名字对有相同姓氏的人进行排序。如果您知 道姓，电话簿将非常有用；如果您知道姓和名，电话簿则更为有用，但如果您只知道名不姓，电话簿将没有用处。<br>所以说创建复合索引时，应该仔细考虑列的顺序。对索引中的所有列执行搜索或仅对前几列执行搜索时，复合索引非常有用；仅对后面的任意列执行搜索时，复合索引则没有用处。</p>
-<p>原文链接：<a href="https://blog.csdn.net/qq_46661297/article/details/106226732" target="_blank" rel="noopener">https://blog.csdn.net/qq_46661297/article/details/106226732</a></p>
-]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>索引</tag>
-      </tags>
   </entry>
   <entry>
     <title>树莓派 + V2Ray 配置路由器科学上网</title>
@@ -143,39 +87,66 @@
       </tags>
   </entry>
   <entry>
-    <title>Django灵活使用csrf</title>
-    <url>/2021/04/22/django-csrf/</url>
-    <content><![CDATA[<ol>
-<li><p><strong>基本使用</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">form表单中添加</span><br><span class="line">&#123;% csrf_token %&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>全站禁用</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># &apos;django.middleware.csrf.CsrfViewMiddleware&apos;,</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>局部禁用</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&apos;django.middleware.csrf.CsrfViewMiddleware&apos;,# 不注释</span><br><span class="line"></span><br><span class="line">from django.views.decorators.csrf import csrf_exempt</span><br><span class="line"></span><br><span class="line">@csrf_exempt</span><br><span class="line">def csrf1(request):</span><br><span class="line"></span><br><span class="line">    if request.method == &apos;GET&apos;:</span><br><span class="line">        return render(request,&apos;csrf1.html&apos;)</span><br><span class="line">    else:</span><br><span class="line">        return HttpResponse(&apos;ok&apos;)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>局部使用</strong></p>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># &apos;django.middleware.csrf.CsrfViewMiddleware&apos;, # 需要注释这一句话</span><br><span class="line"></span><br><span class="line">from django.views.decorators.csrf import csrf_exempt,csrf_protect</span><br><span class="line"></span><br><span class="line">@csrf_protect</span><br><span class="line">def csrf1(request):</span><br><span class="line"></span><br><span class="line">    if request.method == &apos;GET&apos;:</span><br><span class="line">        return render(request,&apos;csrf1.html&apos;)</span><br><span class="line">    else:</span><br><span class="line">        return HttpResponse(&apos;ok&apos;)</span><br></pre></td></tr></table></figure>
-<ol start="5">
-<li><p><strong>CBV模式局部禁用</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">from django.utils.decorators import method_decorator</span><br><span class="line">from django.views.decorators.csrf import csrf_exempt, csrf_protect</span><br><span class="line">from django.shortcuts import render, HttpResponse</span><br><span class="line">from django.views import View</span><br><span class="line">class Cs(View):</span><br><span class="line">    # @method_decorator(csrf_exempt) 建议用这个，具体原因后续再讲</span><br><span class="line">    @csrf_exempt</span><br><span class="line">    def dispatch(self, request, *args, **kwargs):</span><br><span class="line">        return super().dispatch(request, *args, **kwargs)</span><br><span class="line"></span><br><span class="line">    def get(self, request, *args, **kwargs):</span><br><span class="line">        return HttpResponse(&apos;GET，响应内容&apos;)</span><br><span class="line"></span><br><span class="line">    def post(self, request, *args, **kwargs):</span><br><span class="line">        return HttpResponse(&apos;Post，响应内容&apos;)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>CBV 局部使用</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">from django.utils.decorators import method_decorator</span><br><span class="line">from django.views.decorators.csrf import csrf_exempt, csrf_protect</span><br><span class="line">from django.shortcuts import render, HttpResponse</span><br><span class="line">from django.views import View</span><br><span class="line">class Cs(View):</span><br><span class="line">    # @method_decorator(csrf_exempt) 建议用这个，具体原因后续再讲</span><br><span class="line">    @csrf_exempt</span><br><span class="line">    def dispatch(self, request, *args, **kwargs):</span><br><span class="line">        return super().dispatch(request, *args, **kwargs)</span><br><span class="line"></span><br><span class="line">    def get(self, request, *args, **kwargs):</span><br><span class="line">        return HttpResponse(&apos;GET，响应内容&apos;)</span><br><span class="line"></span><br><span class="line">    def post(self, request, *args, **kwargs):</span><br><span class="line">        return HttpResponse(&apos;Post，响应内容&apos;)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>关于method_decorator的使用</strong></p>
-</li>
-</ol>
-<p>Converts a function decorator into a method decorator. It can be used to decorate methods or classes; in the latter case, name is the name of the method to be decorated and is required.<br>name这个参数是必备的，是为了装饰类中的get方法还是post方法。。。等等</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">from django.utils.decorators import method_decorator</span><br><span class="line">def test(func):  # 装饰器</span><br><span class="line">    def inner(*args, **kwargs):</span><br><span class="line">        print(&apos;hello,23232323&apos;)</span><br><span class="line">        return func(*args, **kwargs)</span><br><span class="line"></span><br><span class="line">    return inner</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@method_decorator(test, name=&apos;get&apos;)</span><br><span class="line">class Cs(View):</span><br><span class="line">    # @method_decorator(csrf_exempt)</span><br><span class="line">    # @method_decorator(csrf_protect)</span><br><span class="line">    def dispatch(self, request, *args, **kwargs):</span><br><span class="line">        return super().dispatch(request, *args, **kwargs)</span><br><span class="line"></span><br><span class="line">    def get(self, request, *args, **kwargs):</span><br><span class="line">        return HttpResponse(&apos;GET，响应内容&apos;)</span><br><span class="line"></span><br><span class="line">    def post(self, request, *args, **kwargs):</span><br><span class="line">        return HttpResponse(&apos;Post，响应内容&apos;)</span><br></pre></td></tr></table></figure>
-<p>作者：不_一<br>链接：<a href="https://www.jianshu.com/p/f69b241e0894" target="_blank" rel="noopener">https://www.jianshu.com/p/f69b241e0894</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+    <title>Hexo文章加密</title>
+    <url>/2020/04/16/article-password/</url>
+    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>打开themes-&gt;next-&gt;layout-&gt;_partials-&gt;head.swig文件,在以下位置插入这样一段代码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    (function()&#123;</span><br><span class="line">        if(&apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">            if (prompt(&apos;请输入文章密码&apos;) !== &apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">                alert(&apos;密码错误！&apos;);</span><br><span class="line">                history.back();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)();</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
 ]]></content>
       <categories>
-        <category>Django</category>
+        <category>Hexo</category>
       </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>APScheduler中BlockingScheduler和BackgroundScheduler的区别</title>
+    <url>/2018/05/18/apscheduler-backgroundscheduler/</url>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>APScheduler是基于Quartz的一个Python定时任务框架，提供了基于日期、固定时间间隔以及crontab类型的任务，并且可以持久化任务。</p>
+<p>这里简单列一下常用的若干调度器：</p>
+<p>BlockingScheduler：仅可用在当前你的进程之内，与当前的进行共享计算资源<br>BackgroundScheduler:　在后台运行调度，不影响当前的系统计算运行<br>AsyncIOScheduler:　如果当前系统中使用了async module，则需要使用异步的调度器<br>GeventScheduler:　如果使用了gevent，则需要使用该调度<br>TornadoScheduler:　如果使用了Tornado, 则使用当前的调度器<br>TwistedScheduler:Twister应用的调度器<br>QtScheduler:　Qt的调度器</p>
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>我在使用APScheduler过程中想使用BackgroundScheduler调度器，结果任务一直无法执行，后来换用BlockingScheduler，结果可以正常执行。</p>
+<p>BackgroundScheduler调度器代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">from datetime import datetime</span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line">scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">scheduler.start()</span><br><span class="line">scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 16:56:01&apos;,args=[&apos;my_test3&apos;],id=&apos;my_test4&apos;)</span><br></pre></td></tr></table></figure>
+<p>BlockingScheduler调度器代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">import datetime</span><br><span class="line">from apscheduler.schedulers.blocking import BlockingScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line"># 使用sqlite存储作业</span><br><span class="line">sqlitedb = r&quot;sqlitedb.db&quot;</span><br><span class="line">url = r&apos;sqlite:///%s&apos; %sqlitedb</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    print(datetime.datetime.now())</span><br><span class="line">    print(&apos;-&apos; * 10 + text + &apos;-&apos; * 10)</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=url)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sched = BlockingScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults)</span><br><span class="line">sched.add_job(test,next_run_time= args=[&apos;my_test&apos;],id=&apos;my_test&apos;)</span><br><span class="line">sched.start()</span><br></pre></td></tr></table></figure>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>BackgroundScheduler调度器依赖于python脚本的主进程，如果主进程不存在定时任务也就不存在，我的代码里面没有可以维持脚本运行的主进程所以无法执行定时任务</p>
+<h2 id="正确示例代码"><a href="#正确示例代码" class="headerlink" title="正确示例代码"></a>正确示例代码</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">from datetime import datetime</span><br><span class="line">import time</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">    &#125;</span><br><span class="line">    executors = &#123;</span><br><span class="line">        &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">        &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">    &#125;</span><br><span class="line">    job_defaults = &#123;</span><br><span class="line">        &apos;coalesce&apos;: False,</span><br><span class="line">        &apos;max_instances&apos;: 3</span><br><span class="line">    &#125;</span><br><span class="line">    scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">    #scheduler.add_job(tick, &apos;interval&apos;, seconds=3)</span><br><span class="line">    scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 17:12:01&apos;, args=[&apos;my_test5&apos;],id=&apos;my_test5&apos;)</span><br><span class="line">    scheduler.start()  #这里的调度任务是独立的一个线程</span><br><span class="line">    print(&apos;Press Ctrl+&#123;0&#125; to exit&apos;.format(&apos;Break&apos; if os.name == &apos;nt&apos; else &apos;C&apos;))</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        # This is here to simulate application activity (which keeps the main thread alive).</span><br><span class="line">        while True:</span><br><span class="line">            time.sleep(2)    #其他任务是独立的线程执行</span><br><span class="line">            print(&apos;sleep!&apos;)</span><br><span class="line">    except (KeyboardInterrupt, SystemExit):</span><br><span class="line">        # Not strictly necessary if daemonic mode is enabled but should be done if possible</span><br><span class="line">        scheduler.shutdown()</span><br><span class="line">        print(&apos;Exit The Job!&apos;)</span><br></pre></td></tr></table></figure>
+<p>参考链接:  </p>
+<p><a href="https://www.cnblogs.com/hushaojun/p/5189109.html" target="_blank" rel="noopener">https://www.cnblogs.com/hushaojun/p/5189109.html</a><br><a href="https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1](https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1)" target="_blank" rel="noopener">https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1](https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1)</a></p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>APScheduler</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Android7.0以上版本抓取https包问题</title>
+    <url>/2021/04/22/android-app-https/</url>
+    <content><![CDATA[<p>Android7以后，系统不再信任用户级的证书，只信任系统级的证书，所以要抓包就需要把我们的代理程序证书安装至Android的系统目录中</p>
+<ol>
+<li><strong>证书生成</strong><br>将Filddler或者其他抓包程序的证书导出，一般为xxx.cer或者xxx.pem</li>
+</ol>
+<p>证书转换，已经是pem格式的证书不需要执行这一步<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform DER -in xxx.cer -out cacert.pem</span><br></pre></td></tr></table></figure></p>
+<ol start="2">
+<li><strong>对pem证书进行重命名</strong></li>
+</ol>
+<p>openssl版本在1.0以上的版本的执行这一句<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash_old -in cacert.pem</span><br></pre></td></tr></table></figure></p>
+<p>openssl版本在1.0以下的版本的执行这一句<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash -in cacert.pem</span><br></pre></td></tr></table></figure></p>
+<p>将输出的类似269953fb的值进行复制, 使用上面复制的值（类似于269953fb）对pem证书进行重命名,重命名为： 269953fb.0，切记不要忘记”.0”</p>
+<ol start="3">
+<li><strong>将新证书放入手机系统证书目录，然后重启Android设备以生效</strong><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">adb push 269953fb.0 /sdcard/tmp/269953fb.0</span><br><span class="line"></span><br><span class="line">adb shell</span><br><span class="line">mount -o rw,remount /system #挂载system分区</span><br><span class="line">mv /sdcard/tmp/269953fb.0 /system/etc/security/cacerts/269953fb.0</span><br><span class="line">cd /system/etc/security/cacerts/</span><br><span class="line">chmod 644 269953fb.0</span><br><span class="line">chown root.root 269953fb.0</span><br><span class="line">reboot  #重启手机</span><br></pre></td></tr></table></figure></li>
+</ol>
+]]></content>
+      <categories>
+        <category>APP抓包</category>
+      </categories>
+      <tags>
+        <tag>fiddler</tag>
+        <tag>https</tag>
+      </tags>
   </entry>
   <entry>
     <title>同步/异步、并发/并行、线程/进程</title>
@@ -290,25 +261,103 @@
       </tags>
   </entry>
   <entry>
-    <title>Hexo文章加密</title>
-    <url>/2020/04/16/article-password/</url>
-    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>打开themes-&gt;next-&gt;layout-&gt;_partials-&gt;head.swig文件,在以下位置插入这样一段代码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    (function()&#123;</span><br><span class="line">        if(&apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">            if (prompt(&apos;请输入文章密码&apos;) !== &apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">                alert(&apos;密码错误！&apos;);</span><br><span class="line">                history.back();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)();</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+    <title>Centos显示tcp，udp的端口和进程等相关情况</title>
+    <url>/2018/05/18/centos-tcp-udp-show/</url>
+    <content><![CDATA[<h2 id="netstat命令"><a href="#netstat命令" class="headerlink" title="netstat命令"></a>netstat命令</h2><p>netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际的网络连接以及每一个网络接口设备<br>netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。<br>该命令的一般格式为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat [选项]</span><br><span class="line">    命令中各选项的含义如下：</span><br><span class="line">    -a 显示所有socket，包括正在监听的。</span><br><span class="line">    -c 每隔1秒就重新显示一遍，直到用户中断它。</span><br><span class="line">    -i 显示所有网络接口的信息，格式同“ifconfig -e”。</span><br><span class="line">    -n 以网络IP地址代替名称，显示出网络连接情形。</span><br><span class="line">    -r 显示核心路由表，格式同“route -e”。</span><br><span class="line">    -t 显示TCP协议的连接情况。</span><br><span class="line">    -u 显示UDP协议的连接情况。</span><br><span class="line">    -v 显示正在进行的工作。</span><br></pre></td></tr></table></figure>
+<h2 id="netstat-tunlp"><a href="#netstat-tunlp" class="headerlink" title="netstat -tunlp"></a>netstat -tunlp</h2><p>用于显示tcp，udp的端口和进程等相关情况<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat -tunlp</span><br></pre></td></tr></table></figure></p>
 ]]></content>
       <categories>
-        <category>Hexo</category>
+        <category>Linux</category>
       </categories>
       <tags>
-        <tag>Hexo</tag>
+        <tag>linux</tag>
+        <tag>CentOS</tag>
       </tags>
   </entry>
   <entry>
-    <title>安卓APP安全证书验证分类</title>
-    <url>/2021/04/22/android-app-https-ca/</url>
-    <content><![CDATA[<p><img src="/images/ca.png" alt="安卓APP安全证书验证分类" title="安卓APP安全证书验证分类"></p>
+    <title>Django灵活使用csrf</title>
+    <url>/2021/04/22/django-csrf/</url>
+    <content><![CDATA[<ol>
+<li><p><strong>基本使用</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">form表单中添加</span><br><span class="line">&#123;% csrf_token %&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>全站禁用</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># &apos;django.middleware.csrf.CsrfViewMiddleware&apos;,</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>局部禁用</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&apos;django.middleware.csrf.CsrfViewMiddleware&apos;,# 不注释</span><br><span class="line"></span><br><span class="line">from django.views.decorators.csrf import csrf_exempt</span><br><span class="line"></span><br><span class="line">@csrf_exempt</span><br><span class="line">def csrf1(request):</span><br><span class="line"></span><br><span class="line">    if request.method == &apos;GET&apos;:</span><br><span class="line">        return render(request,&apos;csrf1.html&apos;)</span><br><span class="line">    else:</span><br><span class="line">        return HttpResponse(&apos;ok&apos;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>局部使用</strong></p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># &apos;django.middleware.csrf.CsrfViewMiddleware&apos;, # 需要注释这一句话</span><br><span class="line"></span><br><span class="line">from django.views.decorators.csrf import csrf_exempt,csrf_protect</span><br><span class="line"></span><br><span class="line">@csrf_protect</span><br><span class="line">def csrf1(request):</span><br><span class="line"></span><br><span class="line">    if request.method == &apos;GET&apos;:</span><br><span class="line">        return render(request,&apos;csrf1.html&apos;)</span><br><span class="line">    else:</span><br><span class="line">        return HttpResponse(&apos;ok&apos;)</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li><p><strong>CBV模式局部禁用</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">from django.utils.decorators import method_decorator</span><br><span class="line">from django.views.decorators.csrf import csrf_exempt, csrf_protect</span><br><span class="line">from django.shortcuts import render, HttpResponse</span><br><span class="line">from django.views import View</span><br><span class="line">class Cs(View):</span><br><span class="line">    # @method_decorator(csrf_exempt) 建议用这个，具体原因后续再讲</span><br><span class="line">    @csrf_exempt</span><br><span class="line">    def dispatch(self, request, *args, **kwargs):</span><br><span class="line">        return super().dispatch(request, *args, **kwargs)</span><br><span class="line"></span><br><span class="line">    def get(self, request, *args, **kwargs):</span><br><span class="line">        return HttpResponse(&apos;GET，响应内容&apos;)</span><br><span class="line"></span><br><span class="line">    def post(self, request, *args, **kwargs):</span><br><span class="line">        return HttpResponse(&apos;Post，响应内容&apos;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>CBV 局部使用</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">from django.utils.decorators import method_decorator</span><br><span class="line">from django.views.decorators.csrf import csrf_exempt, csrf_protect</span><br><span class="line">from django.shortcuts import render, HttpResponse</span><br><span class="line">from django.views import View</span><br><span class="line">class Cs(View):</span><br><span class="line">    # @method_decorator(csrf_exempt) 建议用这个，具体原因后续再讲</span><br><span class="line">    @csrf_exempt</span><br><span class="line">    def dispatch(self, request, *args, **kwargs):</span><br><span class="line">        return super().dispatch(request, *args, **kwargs)</span><br><span class="line"></span><br><span class="line">    def get(self, request, *args, **kwargs):</span><br><span class="line">        return HttpResponse(&apos;GET，响应内容&apos;)</span><br><span class="line"></span><br><span class="line">    def post(self, request, *args, **kwargs):</span><br><span class="line">        return HttpResponse(&apos;Post，响应内容&apos;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>关于method_decorator的使用</strong></p>
+</li>
+</ol>
+<p>Converts a function decorator into a method decorator. It can be used to decorate methods or classes; in the latter case, name is the name of the method to be decorated and is required.<br>name这个参数是必备的，是为了装饰类中的get方法还是post方法。。。等等</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">from django.utils.decorators import method_decorator</span><br><span class="line">def test(func):  # 装饰器</span><br><span class="line">    def inner(*args, **kwargs):</span><br><span class="line">        print(&apos;hello,23232323&apos;)</span><br><span class="line">        return func(*args, **kwargs)</span><br><span class="line"></span><br><span class="line">    return inner</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@method_decorator(test, name=&apos;get&apos;)</span><br><span class="line">class Cs(View):</span><br><span class="line">    # @method_decorator(csrf_exempt)</span><br><span class="line">    # @method_decorator(csrf_protect)</span><br><span class="line">    def dispatch(self, request, *args, **kwargs):</span><br><span class="line">        return super().dispatch(request, *args, **kwargs)</span><br><span class="line"></span><br><span class="line">    def get(self, request, *args, **kwargs):</span><br><span class="line">        return HttpResponse(&apos;GET，响应内容&apos;)</span><br><span class="line"></span><br><span class="line">    def post(self, request, *args, **kwargs):</span><br><span class="line">        return HttpResponse(&apos;Post，响应内容&apos;)</span><br></pre></td></tr></table></figure>
+<p>作者：不_一<br>链接：<a href="https://www.jianshu.com/p/f69b241e0894" target="_blank" rel="noopener">https://www.jianshu.com/p/f69b241e0894</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
 ]]></content>
       <categories>
-        <category>APP抓包</category>
+        <category>Django</category>
       </categories>
+  </entry>
+  <entry>
+    <title>hexo文章属性冒号后面要加空格</title>
+    <url>/2018/05/12/article-title/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>刚开始使用hexo，生成静态文件老是报错，错误提示如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">can not read a block mapping entry; a multiline key may implicit key at line</span><br></pre></td></tr></table></figure></p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>冒号后面加空格</p>
+<p>错误写法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags:[hexo入门]</span><br><span class="line">categories:hexo</span><br></pre></td></tr></table></figure></p>
+<p>正确写法:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags: [hexo入门]</span><br><span class="line">categories: hexo</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>hexo入门</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Nginx设置虚拟目录alias</title>
+    <url>/2021/04/22/nginx-alias/</url>
+    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location ^~ /random_img/ &#123;</span><br><span class="line">    alias /home/random_img/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Nginx</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>组合索引</title>
+    <url>/2022/06/29/db-index/</url>
+    <content><![CDATA[<p>首先我们看看组合索引的与单列索引的区别：</p>
+<h2 id="一-为什么要使用联合索引"><a href="#一-为什么要使用联合索引" class="headerlink" title="一.为什么要使用联合索引"></a>一.为什么要使用联合索引</h2><ol>
+<li><p>减少开销<br>建一个联合索引(col1,col2,col3)，实际相当于建了(col1),(col1,col2),(col1,col2,col3)三个索引。每多一个索引，都会增加写操作的开销和磁盘空间的开销。对于大量数据的表，使用联合索引会大大的减少开销！</p>
+</li>
+<li><p>覆盖索引<br>对联合索引(col1,col2,col3)，如果有如下的sql: select col1,col2,col3 from test where col1=1 and col2=2。那么MySQL可以直接通过遍历索引取得数据，而无需回表，这减少了很多的随机io操作。减少io操作，特别的随机io其实是dba主要的优化策略。所以，在真正的实际应用中，覆盖索引是主要的提升性能的优化手段之一。</p>
+</li>
+<li><p>效率高<br>索引列越多，通过索引筛选出的数据越少。有1000W条数据的表，有如下sql:select from table where col1=1 and col2=2 and col3=3,假设假设每个条件可以筛选出10%的数据，如果只有单值索引，那么通过该索引能筛选出1000W*10%=100w条数据，然后再回表从100w条数据中找到符合col2=2 and col3= 3的数据，然后再排序，再分页；如果是联合索引，通过索引筛选出1000w*10%*10%*10%=1w，效率提升可想而知!</p>
+</li>
+</ol>
+<h2 id="二-组合索引如何使用"><a href="#二-组合索引如何使用" class="headerlink" title="二.组合索引如何使用"></a>二.组合索引如何使用</h2><p>最左原则</p>
+<p>例如组合索引（a,b,c），组合索引的生效原则是</p>
+<p>从前往后依次使用生效，如果中间某个索引没有使用，那么断点前面的索引部分起作用，断点后面的索引没有起作用；</p>
+<p>对于组合索引:Mysql从左到右的使用索引中的字段，一个查询可以只使用索引中的一部份，但只能是最左侧部分。例如索引是key index (a,b,c). 可以支持a | a,b| a,b,c 3种组合进行查找，但不支持 b,c进行查找 .当最左侧字段是常量引用时，索引就十分有效。</p>
+<p>两个或更多个列上的索引被称作复合索引。<br>利用索引中的附加列，您可以缩小搜索的范围，但使用一个具有两列的索引 不同于使用两个单独的索引。复合索引的结构与电话簿类似，人名由姓和名构成，电话簿首先按姓氏对进行排序，然后按名字对有相同姓氏的人进行排序。如果您知 道姓，电话簿将非常有用；如果您知道姓和名，电话簿则更为有用，但如果您只知道名不姓，电话簿将没有用处。<br>所以说创建复合索引时，应该仔细考虑列的顺序。对索引中的所有列执行搜索或仅对前几列执行搜索时，复合索引非常有用；仅对后面的任意列执行搜索时，复合索引则没有用处。</p>
+<p>原文链接：<a href="https://blog.csdn.net/qq_46661297/article/details/106226732" target="_blank" rel="noopener">https://blog.csdn.net/qq_46661297/article/details/106226732</a></p>
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>索引</tag>
+      </tags>
   </entry>
   <entry>
     <title>Hello World</title>
@@ -349,35 +398,53 @@
       </tags>
   </entry>
   <entry>
+    <title>torrc配置项 HTTPTunnelPort</title>
+    <url>/2022/07/05/torrc-HTTPTunnelPort/</url>
+    <content><![CDATA[<p>新版本的Tor提供了一个http代理端口的配置项：</p>
+<p>vi /etc/tor/torrc<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">HTTPTunnelPort 1081</span><br></pre></td></tr></table></figure></p>
+<p>这样就不需要通过第三方软件吧socks转换成http了</p>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+      <tags>
+        <tag>Tor</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>给python的pip设置代理</title>
+    <url>/2021/03/23/python-pip-proxy/</url>
+    <content><![CDATA[<p>由于网络原因，访问国外的pip源超级慢，因此可以给pip设置代理或设置国内源提高速度</p>
+<ul>
+<li>Windows：</li>
+</ul>
+<ol>
+<li>进入%APPDATA%目录，例如：C:\Users\用户名\AppData\Roaming</li>
+<li>新建pip文件夹，如果有则跳过</li>
+<li>新建pip.ini文件，设置pip源<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[global]</span><br><span class="line">proxy=http://127.0.0.1:1081</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li>Linux：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi ~/.pip/pip.conf</span><br></pre></td></tr></table></figure>
+<p>用vi编辑pip.conf文件，内容与Windows下pip.ini文件的内容一样</p>
+<p>原文链接:<a href="https://blog.csdn.net/weixin_42191996/article/details/102332805" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42191996/article/details/102332805</a></p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>pip</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>python3.8.6安装时提示Detected Windows 7 SP1 without KB2533623</title>
     <url>/2021/03/23/python-install-erro/</url>
     <content><![CDATA[<p>下载的安装包，双击安装时，提示安装失败，经过界面中的提示，打开日志后，最后一行提示：Detected Windows 7 SP1 without KB2533623<br>解决办法：<br>需要更新安装win7系统的KB2533623，我的是64位操作系统<br>下载地址：<a href="https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu" target="_blank" rel="noopener">https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu</a><br>百度网盘：<br>链接: <a href="https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA" target="_blank" rel="noopener">https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA</a> 提取码: wdqs 复制这段内容后打开百度网盘手机App，操作更方便哦<br>下载完成后，安装重启电脑即可。<br>————————————————<br>版权声明：本文为CSDN博主「雪诺颜」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/lxiaoqqin/article/details/106402866" target="_blank" rel="noopener">https://blog.csdn.net/lxiaoqqin/article/details/106402866</a></p>
 ]]></content>
       <categories>
         <category>Python</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Centos显示tcp，udp的端口和进程等相关情况</title>
-    <url>/2018/05/18/centos-tcp-udp-show/</url>
-    <content><![CDATA[<h2 id="netstat命令"><a href="#netstat命令" class="headerlink" title="netstat命令"></a>netstat命令</h2><p>netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际的网络连接以及每一个网络接口设备<br>netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。<br>该命令的一般格式为：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat [选项]</span><br><span class="line">    命令中各选项的含义如下：</span><br><span class="line">    -a 显示所有socket，包括正在监听的。</span><br><span class="line">    -c 每隔1秒就重新显示一遍，直到用户中断它。</span><br><span class="line">    -i 显示所有网络接口的信息，格式同“ifconfig -e”。</span><br><span class="line">    -n 以网络IP地址代替名称，显示出网络连接情形。</span><br><span class="line">    -r 显示核心路由表，格式同“route -e”。</span><br><span class="line">    -t 显示TCP协议的连接情况。</span><br><span class="line">    -u 显示UDP协议的连接情况。</span><br><span class="line">    -v 显示正在进行的工作。</span><br></pre></td></tr></table></figure>
-<h2 id="netstat-tunlp"><a href="#netstat-tunlp" class="headerlink" title="netstat -tunlp"></a>netstat -tunlp</h2><p>用于显示tcp，udp的端口和进程等相关情况<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat -tunlp</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>CentOS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Nginx设置虚拟目录alias</title>
-    <url>/2021/04/22/nginx-alias/</url>
-    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location ^~ /random_img/ &#123;</span><br><span class="line">    alias /home/random_img/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Nginx</category>
       </categories>
   </entry>
   <entry>
@@ -407,35 +474,29 @@
         <category>爬虫</category>
       </categories>
       <tags>
-        <tag>爬虫</tag>
         <tag>Tor</tag>
+        <tag>爬虫</tag>
       </tags>
   </entry>
   <entry>
-    <title>给python的pip设置代理</title>
-    <url>/2021/03/23/python-pip-proxy/</url>
-    <content><![CDATA[<p>由于网络原因，访问国外的pip源超级慢，因此可以给pip设置代理或设置国内源提高速度</p>
-<ul>
-<li>Windows：</li>
-</ul>
-<ol>
-<li>进入%APPDATA%目录，例如：C:\Users\用户名\AppData\Roaming</li>
-<li>新建pip文件夹，如果有则跳过</li>
-<li>新建pip.ini文件，设置pip源<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[global]</span><br><span class="line">proxy=http://127.0.0.1:1081</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ul>
-<li>Linux：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi ~/.pip/pip.conf</span><br></pre></td></tr></table></figure>
-<p>用vi编辑pip.conf文件，内容与Windows下pip.ini文件的内容一样</p>
-<p>原文链接:<a href="https://blog.csdn.net/weixin_42191996/article/details/102332805" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42191996/article/details/102332805</a></p>
+    <title>WordPress 创建自定义 URL 页面模板</title>
+    <url>/2022/06/29/wordpress-loadcustom-template/</url>
+    <content><![CDATA[<p>WordPress 创建模板的其实都非常的简单，而 WordPress 添加自定义页面一般有两种方法，一种是使用自定义模板，另外一种是使用 template_redirect 动作钩子来实现自定义页面。这也是子凡最近在开发博客导航中屡试不爽的一个功能，其中主要就是为了完成博客导航中 URL 的一个统一及规范，所以这就成了最好的一个方法了。</p>
+<p>WordPress 自定义创建页面模板其实非常的简单，但是也比较的有局限性，因为 WordPress 在 page 页面类型中的 url 是不支持同名存在的，所以一旦与分类目录活着标签别名相同后，自定义固定链接使用文章名的链接就会出现错误，这也使得不能规范博客导航中的 URL 链接，所以这就成了子凡在开发博客导航中一直纠结的一个梗，所以最后不得不弃用 WordPress 自定义模板的这个功能。</p>
+<p>template_redirect 动作钩子很有用，因为它是 WordPress 知道用户正在浏览的页面的关键。它在特定的页面选择 theme template 之前执行。在只在网站的前端触发，并不在管理员页面触发。直接调用 WordPress 的 API. 来解决这个问题。</p>
+<p>老规矩，在当前主题 functions.php 中添加一下代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//自定义页面模板</span><br><span class="line">function loadCustomTemplate($template) &#123;</span><br><span class="line">    global $wp_query;</span><br><span class="line">    if(!file_exists($template))return;</span><br><span class="line">    $wp_query-&gt;is_page = true;</span><br><span class="line">    $wp_query-&gt;is_single = false;</span><br><span class="line">    $wp_query-&gt;is_home = false;</span><br><span class="line">    $wp_query-&gt;comments = false;</span><br><span class="line">    // if we have a 404 status</span><br><span class="line">    if ($wp_query-&gt;is_404) &#123;</span><br><span class="line">        // set status of 404 to false</span><br><span class="line">        unset($wp_query-&gt;query[&quot;error&quot;]);</span><br><span class="line">        $wp_query-&gt;query_vars[&quot;error&quot;]=&quot;&quot;;</span><br><span class="line">        $wp_query-&gt;is_404=false;</span><br><span class="line">    &#125;</span><br><span class="line">    // change the header to 200 OK</span><br><span class="line">    header(&quot;HTTP/1.1 200 OK&quot;);</span><br><span class="line">    //load our template</span><br><span class="line">    include($template);</span><br><span class="line">    exit;</span><br><span class="line">&#125;</span><br><span class="line">function templateRedirect() &#123;</span><br><span class="line">    $basename = basename($_SERVER[&apos;REQUEST_URI&apos;], &apos;?&apos; . $_SERVER[&apos;QUERY_STRING&apos;]);</span><br><span class="line">    loadCustomTemplate(TEMPLATEPATH.&apos;/blogs/&apos;.&quot;/$basename.php&quot;);</span><br><span class="line">&#125;</span><br><span class="line">add_action(&apos;template_redirect&apos;, &apos;templateRedirect&apos;);</span><br></pre></td></tr></table></figure>
+<p>这样就实现了 WordPress 查找主题文件夹下/blogs 文件夹下的 php 文件，并且将相匹配的 URL 请求转交给对应的 php 文件来处理的效果，与此同时，这个 php 文件还保持了对 WordPress API 的调用，因此留给我们的空间非常大。</p>
+<p>如果我们需要自定义某个页面链接的模板，就需要在主题文件夹下的/blogs 目录创建一个 xxx.php 的 php 文件。这里页面的内容子凡就不提供代码示例了。</p>
+<p>那么最后我们就只需要输入 domain.com/xxx 就能显示这个 xxx.php 的文件内容了，并且 xxx.php 这个文件是支持所有 WordPress 函数的，具有主题的框架和 CSS 样式，非常方便好用。</p>
+<p>原文链接：<a href="https://zhangzifan.com/wordpress-template-redirect.html" target="_blank" rel="noopener">https://zhangzifan.com/wordpress-template-redirect.html</a></p>
 ]]></content>
       <categories>
-        <category>Python</category>
+        <category>WordPress</category>
       </categories>
       <tags>
-        <tag>pip</tag>
+        <tag>Template</tag>
+        <tag>WordPress</tag>
       </tags>
   </entry>
   <entry>
@@ -503,8 +564,8 @@
         <category>WordPress</category>
       </categories>
       <tags>
-        <tag>Filter</tag>
         <tag>WordPress</tag>
+        <tag>Filter</tag>
       </tags>
   </entry>
   <entry>
@@ -598,67 +659,6 @@
       <tags>
         <tag>V2Ray</tag>
         <tag>树莓派</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>WordPress 创建自定义 URL 页面模板</title>
-    <url>/2022/06/29/wordpress-loadcustom-template/</url>
-    <content><![CDATA[<p>WordPress 创建模板的其实都非常的简单，而 WordPress 添加自定义页面一般有两种方法，一种是使用自定义模板，另外一种是使用 template_redirect 动作钩子来实现自定义页面。这也是子凡最近在开发博客导航中屡试不爽的一个功能，其中主要就是为了完成博客导航中 URL 的一个统一及规范，所以这就成了最好的一个方法了。</p>
-<p>WordPress 自定义创建页面模板其实非常的简单，但是也比较的有局限性，因为 WordPress 在 page 页面类型中的 url 是不支持同名存在的，所以一旦与分类目录活着标签别名相同后，自定义固定链接使用文章名的链接就会出现错误，这也使得不能规范博客导航中的 URL 链接，所以这就成了子凡在开发博客导航中一直纠结的一个梗，所以最后不得不弃用 WordPress 自定义模板的这个功能。</p>
-<p>template_redirect 动作钩子很有用，因为它是 WordPress 知道用户正在浏览的页面的关键。它在特定的页面选择 theme template 之前执行。在只在网站的前端触发，并不在管理员页面触发。直接调用 WordPress 的 API. 来解决这个问题。</p>
-<p>老规矩，在当前主题 functions.php 中添加一下代码：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//自定义页面模板</span><br><span class="line">function loadCustomTemplate($template) &#123;</span><br><span class="line">    global $wp_query;</span><br><span class="line">    if(!file_exists($template))return;</span><br><span class="line">    $wp_query-&gt;is_page = true;</span><br><span class="line">    $wp_query-&gt;is_single = false;</span><br><span class="line">    $wp_query-&gt;is_home = false;</span><br><span class="line">    $wp_query-&gt;comments = false;</span><br><span class="line">    // if we have a 404 status</span><br><span class="line">    if ($wp_query-&gt;is_404) &#123;</span><br><span class="line">        // set status of 404 to false</span><br><span class="line">        unset($wp_query-&gt;query[&quot;error&quot;]);</span><br><span class="line">        $wp_query-&gt;query_vars[&quot;error&quot;]=&quot;&quot;;</span><br><span class="line">        $wp_query-&gt;is_404=false;</span><br><span class="line">    &#125;</span><br><span class="line">    // change the header to 200 OK</span><br><span class="line">    header(&quot;HTTP/1.1 200 OK&quot;);</span><br><span class="line">    //load our template</span><br><span class="line">    include($template);</span><br><span class="line">    exit;</span><br><span class="line">&#125;</span><br><span class="line">function templateRedirect() &#123;</span><br><span class="line">    $basename = basename($_SERVER[&apos;REQUEST_URI&apos;], &apos;?&apos; . $_SERVER[&apos;QUERY_STRING&apos;]);</span><br><span class="line">    loadCustomTemplate(TEMPLATEPATH.&apos;/blogs/&apos;.&quot;/$basename.php&quot;);</span><br><span class="line">&#125;</span><br><span class="line">add_action(&apos;template_redirect&apos;, &apos;templateRedirect&apos;);</span><br></pre></td></tr></table></figure>
-<p>这样就实现了 WordPress 查找主题文件夹下/blogs 文件夹下的 php 文件，并且将相匹配的 URL 请求转交给对应的 php 文件来处理的效果，与此同时，这个 php 文件还保持了对 WordPress API 的调用，因此留给我们的空间非常大。</p>
-<p>如果我们需要自定义某个页面链接的模板，就需要在主题文件夹下的/blogs 目录创建一个 xxx.php 的 php 文件。这里页面的内容子凡就不提供代码示例了。</p>
-<p>那么最后我们就只需要输入 domain.com/xxx 就能显示这个 xxx.php 的文件内容了，并且 xxx.php 这个文件是支持所有 WordPress 函数的，具有主题的框架和 CSS 样式，非常方便好用。</p>
-<p>原文链接：<a href="https://zhangzifan.com/wordpress-template-redirect.html" target="_blank" rel="noopener">https://zhangzifan.com/wordpress-template-redirect.html</a></p>
-]]></content>
-      <categories>
-        <category>WordPress</category>
-      </categories>
-      <tags>
-        <tag>WordPress</tag>
-        <tag>Template</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Android7.0以上版本抓取https包问题</title>
-    <url>/2021/04/22/android-app-https/</url>
-    <content><![CDATA[<p>Android7以后，系统不再信任用户级的证书，只信任系统级的证书，所以要抓包就需要把我们的代理程序证书安装至Android的系统目录中</p>
-<ol>
-<li><strong>证书生成</strong><br>将Filddler或者其他抓包程序的证书导出，一般为xxx.cer或者xxx.pem</li>
-</ol>
-<p>证书转换，已经是pem格式的证书不需要执行这一步<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform DER -in xxx.cer -out cacert.pem</span><br></pre></td></tr></table></figure></p>
-<ol start="2">
-<li><strong>对pem证书进行重命名</strong></li>
-</ol>
-<p>openssl版本在1.0以上的版本的执行这一句<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash_old -in cacert.pem</span><br></pre></td></tr></table></figure></p>
-<p>openssl版本在1.0以下的版本的执行这一句<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash -in cacert.pem</span><br></pre></td></tr></table></figure></p>
-<p>将输出的类似269953fb的值进行复制, 使用上面复制的值（类似于269953fb）对pem证书进行重命名,重命名为： 269953fb.0，切记不要忘记”.0”</p>
-<ol start="3">
-<li><strong>将新证书放入手机系统证书目录，然后重启Android设备以生效</strong><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">adb push 269953fb.0 /sdcard/tmp/269953fb.0</span><br><span class="line"></span><br><span class="line">adb shell</span><br><span class="line">mount -o rw,remount /system #挂载system分区</span><br><span class="line">mv /sdcard/tmp/269953fb.0 /system/etc/security/cacerts/269953fb.0</span><br><span class="line">cd /system/etc/security/cacerts/</span><br><span class="line">chmod 644 269953fb.0</span><br><span class="line">chown root.root 269953fb.0</span><br><span class="line">reboot  #重启手机</span><br></pre></td></tr></table></figure></li>
-</ol>
-]]></content>
-      <categories>
-        <category>APP抓包</category>
-      </categories>
-      <tags>
-        <tag>fiddler</tag>
-        <tag>https</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>torrc配置项 HTTPTunnelPort</title>
-    <url>/2022/07/05/torrc-HTTPTunnelPort/</url>
-    <content><![CDATA[<p>新版本的Tor提供了一个http代理端口的配置项：</p>
-<p>vi /etc/tor/torrc<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">HTTPTunnelPort 1081</span><br></pre></td></tr></table></figure></p>
-<p>这样就不需要通过第三方软件吧socks转换成http了</p>
-]]></content>
-      <categories>
-        <category>爬虫</category>
-      </categories>
-      <tags>
-        <tag>Tor</tag>
       </tags>
   </entry>
 </search>
