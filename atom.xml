@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-07-07T03:11:10.789Z</updated>
+  <updated>2022-07-27T05:52:57.846Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>openssl常用操作</title>
+    <link href="http://yoursite.com/2022/07/27/openssl-cmd/"/>
+    <id>http://yoursite.com/2022/07/27/openssl-cmd/</id>
+    <published>2022-07-27T05:45:09.942Z</published>
+    <updated>2022-07-27T05:52:57.846Z</updated>
+    
+    <content type="html"><![CDATA[<p>PKCS＃12（也称为PKCS12或PFX）是一种二进制格式，用于将证书链和私钥存储在单个可加密文件中。 PKCS＃12文件通常用于在Windows和macOS计算机上导入和导出证书和私钥，并且通常具有文件扩展名 .p12 or .pfx.</p><p>查看所有信息:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -info -in apiclient_cert.p12 -nodes</span><br></pre></td></tr></table></figure></p><p>导出证书(公钥):<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out cert.pem -nokeys</span><br></pre></td></tr></table></figure></p><p>导出私钥:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out private_key.pem -nodes -nocerts</span><br></pre></td></tr></table></figure></p><p>查看证书(公钥)序列号:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -in cert.pem -noout -serial</span><br></pre></td></tr></table></figure></p><p>将证书(公钥)转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rsa -in rsa_public_key.pem -out rsa_public_key.der -pubin -outform der</span><br></pre></td></tr></table></figure></p><p>将私钥转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rsa -in rsa_private_key.pem -out rsa_private_key.der -outform der</span><br></pre></td></tr></table></figure></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;PKCS＃12（也称为PKCS12或PFX）是一种二进制格式，用于将证书链和私钥存储在单个可加密文件中。 PKCS＃12文件通常用于在Windows和macOS计算机上导入和导出证书和私钥，并且通常具有文件扩展名 .p12 or .pfx.&lt;/p&gt;
+&lt;p&gt;查看所有信息:&lt;b
+      
+    
+    </summary>
+    
+      <category term="APP抓包" scheme="http://yoursite.com/categories/APP%E6%8A%93%E5%8C%85/"/>
+    
+    
+      <category term="https" scheme="http://yoursite.com/tags/https/"/>
+    
+      <category term="openssl" scheme="http://yoursite.com/tags/openssl/"/>
+    
+  </entry>
   
   <entry>
     <title>树莓派 + V2Ray 配置路由器科学上网</title>
