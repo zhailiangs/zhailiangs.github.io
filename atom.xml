@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-10-08T06:10:52.347Z</updated>
+  <updated>2022-10-24T01:27:05.707Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>chrome内置翻译无法使用的原因</title>
+    <link href="http://yoursite.com/2022/10/24/chrome-googletrans/"/>
+    <id>http://yoursite.com/2022/10/24/chrome-googletrans/</id>
+    <published>2022-10-24T01:27:05.655Z</published>
+    <updated>2022-10-24T01:27:05.707Z</updated>
+    
+    <content type="html"><![CDATA[<p>translate.googleapis.com（Google 翻译 API）,因为停止了中国大陆的服务,不再分配中国内地的服务器地址，所以chrome浏览器内置的 Google 翻译无法使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chrome浏览器内置API不支持扩展配置的socks5代理，所以挂梯子是无效的，除非用系统代理。</span><br></pre></td></tr></table></figure></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;translate.googleapis.com（Google 翻译 API）,因为停止了中国大陆的服务,不再分配中国内地的服务器地址，所以chrome浏览器内置的 Google 翻译无法使用&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;tabl
+      
+    
+    </summary>
+    
+      <category term="Chrome" scheme="http://yoursite.com/categories/Chrome/"/>
+    
+    
+      <category term="chrome" scheme="http://yoursite.com/tags/chrome/"/>
+    
+      <category term="翻译" scheme="http://yoursite.com/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+  </entry>
   
   <entry>
     <title>使用kill杀死含有指定关键字的进程</title>
@@ -523,31 +550,6 @@
       <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
     
       <category term="CentOS" scheme="http://yoursite.com/tags/CentOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>hexo文章属性冒号后面要加空格</title>
-    <link href="http://yoursite.com/2018/05/12/article-title/"/>
-    <id>http://yoursite.com/2018/05/12/article-title/</id>
-    <published>2018-05-12T05:01:31.000Z</published>
-    <updated>2018-05-21T02:33:46.339Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>刚开始使用hexo，生成静态文件老是报错，错误提示如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">can not read a block mapping entry; a multiline key may implicit key at line</span><br></pre></td></tr></table></figure></p><h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>冒号后面加空格</p><p>错误写法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tags:[hexo入门]</span><br><span class="line">categories:hexo</span><br></pre></td></tr></table></figure></p><p>正确写法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tags: [hexo入门]</span><br><span class="line">categories: hexo</span><br></pre></td></tr></table></figure></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;问题&quot;&gt;&lt;a href=&quot;#问题&quot; class=&quot;headerlink&quot; title=&quot;问题&quot;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;p&gt;刚开始使用hexo，生成静态文件老是报错，错误提示如下：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table
-      
-    
-    </summary>
-    
-      <category term="hexo" scheme="http://yoursite.com/categories/hexo/"/>
-    
-    
-      <category term="hexo入门" scheme="http://yoursite.com/tags/hexo%E5%85%A5%E9%97%A8/"/>
     
   </entry>
   
