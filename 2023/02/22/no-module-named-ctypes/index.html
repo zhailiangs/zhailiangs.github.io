@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="进程,kill," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -88,18 +88,17 @@
 
 
 
-<meta name="description" content="命令：1ps -ef|grep keyword|grep -v grep|cut -c 9-15|xargs kill -9 批量杀死包含关键字“keyword”的进程。 “ps -ef” ——查看所有进程 “grep keyword” ——列出所有含有关键字”./amplxe-gui”的进程 “grep -v grep” ——在列出的进程中去除含有关键字”grep”的进程（因为我们在前一步生成的">
-<meta name="keywords" content="进程,kill">
+<meta name="description" content="#错误原因 Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用kill杀死含有指定关键字的进程">
-<meta property="og:url" content="http://yoursite.com/2022/10/08/linux-kill-keyword/index.html">
+<meta property="og:title" content="ModuleNotFoundError&amp;#58; No module named &amp;#39;&amp;#95;ctypes&amp;#39; 解决方法">
+<meta property="og:url" content="http://yoursite.com/2023/02/22/no-module-named-ctypes/index.html">
 <meta property="og:site_name" content="zhailiangs&#39;blog">
-<meta property="og:description" content="命令：1ps -ef|grep keyword|grep -v grep|cut -c 9-15|xargs kill -9 批量杀死包含关键字“keyword”的进程。 “ps -ef” ——查看所有进程 “grep keyword” ——列出所有含有关键字”./amplxe-gui”的进程 “grep -v grep” ——在列出的进程中去除含有关键字”grep”的进程（因为我们在前一步生成的">
+<meta property="og:description" content="#错误原因 Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2022-10-08T06:10:52.347Z">
+<meta property="og:updated_time" content="2023-02-22T02:41:23.673Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用kill杀死含有指定关键字的进程">
-<meta name="twitter:description" content="命令：1ps -ef|grep keyword|grep -v grep|cut -c 9-15|xargs kill -9 批量杀死包含关键字“keyword”的进程。 “ps -ef” ——查看所有进程 “grep keyword” ——列出所有含有关键字”./amplxe-gui”的进程 “grep -v grep” ——在列出的进程中去除含有关键字”grep”的进程（因为我们在前一步生成的">
+<meta name="twitter:title" content="ModuleNotFoundError&amp;#58; No module named &amp;#39;&amp;#95;ctypes&amp;#39; 解决方法">
+<meta name="twitter:description" content="#错误原因 Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所">
 
 
 
@@ -138,13 +137,13 @@
 </script>
 
 
-  <link rel="canonical" href="http://yoursite.com/2022/10/08/linux-kill-keyword/"/>
+  <link rel="canonical" href="http://yoursite.com/2023/02/22/no-module-named-ctypes/"/>
 
 
 
 
 
-  <title>使用kill杀死含有指定关键字的进程 | zhailiangs'blog</title>
+  <title>ModuleNotFoundError&#58; No module named &#39;&#95;ctypes&#39; 解决方法 | zhailiangs'blog</title>
   
 
 
@@ -305,7 +304,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/08/linux-kill-keyword/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/02/22/no-module-named-ctypes/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zhailiangs">
@@ -322,7 +321,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">使用kill杀死含有指定关键字的进程</h1>
+          <h1 class="post-title" itemprop="name headline">ModuleNotFoundError&#58; No module named &#39;&#95;ctypes&#39; 解决方法</h1>
         
 
         <div class="post-meta">
@@ -334,8 +333,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-10-08T14:10:52+08:00">
-                2022-10-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-22T10:20:47+08:00">
+                2023-02-22
               </time>
             
 
@@ -357,8 +356,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
                   </a>
                 </span>
 
@@ -375,8 +374,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2022/10/08/linux-kill-keyword/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2022/10/08/linux-kill-keyword/" itemprop="commentCount"></span>
+                <a href="/2023/02/22/no-module-named-ctypes/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2023/02/22/no-module-named-ctypes/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -409,15 +408,13 @@
       
 
       
-        <p>命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef|grep keyword|grep -v grep|cut -c 9-15|xargs kill -9</span><br></pre></td></tr></table></figure></p>
-<p>批量杀死包含关键字“keyword”的进程。</p>
-<p>“ps -ef” ——查看所有进程</p>
-<p>“grep keyword” ——列出所有含有关键字”./amplxe-gui”的进程</p>
-<p>“grep -v grep” ——在列出的进程中去除含有关键字”grep”的进程（因为我们在前一步生成的grep进程也包含关键字）</p>
-<p>“cut -c 9-15” ——截取输入行的第9个字符到第15个字符，而这正好是进程号PID</p>
-<p>“xargs kill -9” ——xargs 命令是用来把前面命令的输出结果（PID）作为”kill -9”命令的参数，并执行该命令。”kill -9”会强行杀掉指定进程。</p>
-<p>另一种方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps aux|grep keyword|grep -v grep |awk &apos;&#123;print $1&#125;&apos;|xargs kill -9</span><br></pre></td></tr></table></figure></p>
-
+        <p>#错误原因</p>
+<p>Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。<br>由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所以在安装pip的时候就报了&quot;ModuleNotFoundError: No module named &#39;&#95;ctypes&#39;&quot;的错误。</p>
+<p>#解决方案</p>
+<p>其实很简单安装一下外部函数库(libffi)就可以了，操作步骤如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install libffi-devel -y</span><br></pre></td></tr></table></figure>
+<p>源码安装的python3 重新编译安装， 如果通过yum安装的 那么直接执行命令 yum install python</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/local/python3</span><br><span class="line"> </span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -432,14 +429,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/进程/" rel="tag"># 进程</a>
-          
-            <a href="/tags/kill/" rel="tag"># kill</a>
-          
-        </div>
-      
 
       
       
@@ -449,8 +438,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2022/07/27/openssl-cmd/" rel="next" title="openssl常用操作">
-                <i class="fa fa-chevron-left"></i> openssl常用操作
+              <a href="/2022/10/24/chrome-googletrans/" rel="next" title="chrome内置翻译无法使用的原因">
+                <i class="fa fa-chevron-left"></i> chrome内置翻译无法使用的原因
               </a>
             
           </div>
@@ -458,10 +447,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2022/10/24/chrome-googletrans/" rel="prev" title="chrome内置翻译无法使用的原因">
-                chrome内置翻译无法使用的原因 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
