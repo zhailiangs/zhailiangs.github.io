@@ -1,28 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hexo文章加密</title>
-    <url>/2020/04/16/article-password/</url>
-    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>打开themes-&gt;next-&gt;layout-&gt;_partials-&gt;head.swig文件,在以下位置插入这样一段代码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    (function()&#123;</span><br><span class="line">        if(&apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">            if (prompt(&apos;请输入文章密码&apos;) !== &apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">                alert(&apos;密码错误！&apos;);</span><br><span class="line">                history.back();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)();</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+    <title>安卓APP安全证书验证分类</title>
+    <url>/2021/04/22/android-app-https-ca/</url>
+    <content><![CDATA[<p><img src="/images/ca.png" alt="安卓APP安全证书验证分类" title="安卓APP安全证书验证分类"></p>
 ]]></content>
       <categories>
-        <category>Hexo</category>
+        <category>APP抓包</category>
       </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
   </entry>
   <entry>
-    <title>chrome内置翻译无法使用的原因</title>
-    <url>/2022/10/24/chrome-googletrans/</url>
-    <content><![CDATA[<p>translate.googleapis.com（Google 翻译 API）,因为停止了中国大陆的服务,不再分配中国内地的服务器地址，所以chrome浏览器内置的 Google 翻译无法使用<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">chrome浏览器内置API不支持扩展配置的socks5代理，所以挂梯子是无效的，除非用系统代理。</span><br></pre></td></tr></table></figure></p>
+    <title>树莓派 + V2Ray 配置路由器科学上网</title>
+    <url>/2022/07/07/V2Ray-Raspberry-Pi/</url>
+    <content><![CDATA[<p>这篇文章主要是记录如何在将树莓派作为旁路由，配合 V2Ray，搭建透明代理，以实现局域网内设备的无感科学上网。</p>
+<p>#1. 刷写系统<br>我使用的是 Ubuntu Server 20.04，当然，其他系统也可以。刷写工具为 Win32DiskImager。</p>
+<p>#2. 更改 APT 软件源<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># apt edit-sources</span><br></pre></td></tr></table></figure></p>
+<p>这里选择你喜欢的编辑器即可，我选择的是 Vim。</p>
+<p>如果你也一样，可以像我接下来这样替换软件源，此处我选择清华源。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">:%s/ports.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g</span><br></pre></td></tr></table></figure></p>
+<p>修改后保存并退出即可。之后运行：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># apt update &amp;&amp; apt upgrade</span><br></pre></td></tr></table></figure></p>
+<p>更新并升级。</p>
+<p>#3. 配置内核、网络（静态地址）<br>新版 Ubuntu 默认使用 Netplan + Systemd-networkd 管理网络，而 Netplan 文件使用了可读性高且人性化的 YAML 格式文件。</p>
+<p>vim /etc/netplan/50-cloud-init.yaml<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">network:</span><br><span class="line">    ethernets:</span><br><span class="line">        eth0:</span><br><span class="line">            dhcp4: false</span><br><span class="line">            dhcp6: false</span><br><span class="line">            link-local: [] # 停止自动获取 IP 地址</span><br><span class="line">            accept-ra: false # 同时不接受 IPv6 地址的广播</span><br><span class="line">            # optional: true # 值为「真」时，开机时不等待获取到网络。这里作为路由器，我就注释掉了</span><br><span class="line">            addresses:</span><br><span class="line">                - 192.168.0.5/24 # IP 地址，注意有子网长度，相当于 IP 地址 + 子网掩码</span><br><span class="line">            gateway4: 192.168.0.1 # 网关地址</span><br><span class="line">            nameservers:</span><br><span class="line">                addresses:</span><br><span class="line">                    - 192.168.0.1 # DNS 服务器地址</span><br><span class="line">    version: 2</span><br></pre></td></tr></table></figure></p>
+<p>保存退出后运行：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netplan apply</span><br></pre></td></tr></table></figure></p>
+<p>这里由于配置了修改了 IP，如果使用 SSH 连接的话，将会断线，重连即可。</p>
+<p>使用：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ip addr show</span><br></pre></td></tr></table></figure></p>
+<p>可以查看本机 IP 地址。</p>
+<p>编辑 /etc/sysctl.conf 配置包转发：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Uncomment the next line to enable packet forwarding for IPv4</span><br><span class="line">net.ipv4.ip_forward=1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># sysctl -p</span><br></pre></td></tr></table></figure>
+<p>运行以上指令后，转发即可生效。</p>
+<p>#4. 安装 V2Ray<br>使用官方脚本即可<em>（实话说这域名不错）</em>。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wget https://install.direct/go.sh</span><br><span class="line">bash go.sh</span><br></pre></td></tr></table></figure></p>
+<p>然而由于安装时脚本需要从 GitHub 上下载最新的程序文件，所以速度很慢。所以需要通过本机代理下载或者在其他设备上下载后进行本地安装。</p>
+<p>运行<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># bash go.sh -h</span><br></pre></td></tr></table></figure></p>
+<p>后可以看到以下输出：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">./install-release.sh [-h] [-c] [--remove] [-p proxy] [-f] [--version vx.y.z] [-l file]</span><br><span class="line">  -h, --help            Show help</span><br><span class="line">  -p, --proxy           To download through a proxy server, use -p socks5://127.0.0.1:1080 or -p http://127.0.0.1:3128 etc</span><br><span class="line">  -f, --force           Force install</span><br><span class="line">      --version         Install a particular version, use --version v3.15</span><br><span class="line">  -l, --local           Install from a local file</span><br><span class="line">      --remove          Remove installed V2Ray</span><br><span class="line">  -c, --check           Check for update</span><br></pre></td></tr></table></figure></p>
+<p>这里我通过一台境外 VPS 下载安装包，之后通过 scp 指令传输到本地进行安装。具体步骤请自行查询。注意手动从 GitHub 上进行下载时要选对架构，实在分不清可以先运行一下脚本，这是会输出下载链接，然后结束运行，复制链接，下载。</p>
+<p>安装过程中脚本会自动修复依赖和创建 Systemd 单元。</p>
+<p>#5. 配置 V2Ray<br>接下来我们就要进入重头戏：配置 V2Ray 透明代理。我的思路是由 V2Ray 的 Dokodemo door（任意门）协议接收除 53 端口的 UDP 和特殊地址以外的流量，之后通过内置的路由功能进行分流，分流方式为代理被墙域名和 IP 列表，其他全部直连。至于 53 端口的 UDP 流量，也就是 DNS 查询，通过一个 DNS 分流器进行分流，以防污染。</p>
+<p>好，思路解释完毕，下面开始实践。首先我们编辑 V2Ray 配置文件：/etc/v2ray/config.json。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;, // 错误日志目录</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;, // 访问日志目录</span><br><span class="line">    &quot;loglevel&quot;: &quot;error&quot; // 错误日志级别</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;protocol&quot;: &quot;dokodemo-door&quot;, // 透明代理流量入口</span><br><span class="line">      &quot;port&quot;: 12345, // 端口，可自定义</span><br><span class="line">      &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;network&quot;: &quot;tcp,udp&quot;,</span><br><span class="line">        &quot;followRedirect&quot;: true</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;sniffing&quot;: &#123;</span><br><span class="line">        &quot;enabled&quot;: true,</span><br><span class="line">        &quot;destOverride&quot;: [</span><br><span class="line">          &quot;http&quot;,</span><br><span class="line">          &quot;tls&quot;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;streamSettings&quot;: &#123;</span><br><span class="line">        &quot;sockopt&quot;: &#123;</span><br><span class="line">          &quot;tproxy&quot;: &quot;tproxy&quot; // 使用 TPROXY 方式实现透明代理，相应的还有 REDIRECT 方式</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;port&quot;: 1080,</span><br><span class="line">      &quot;protocol&quot;: &quot;socks&quot;, // SOCKS 代理，可选，方便测试</span><br><span class="line">      &quot;sniffing&quot;: &#123;</span><br><span class="line">        &quot;enabled&quot;: true,</span><br><span class="line">        &quot;destOverride&quot;: [</span><br><span class="line">          &quot;http&quot;,</span><br><span class="line">          &quot;tls&quot;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;auth&quot;: &quot;noauth&quot;,</span><br><span class="line">        &quot;udp&quot;: true,</span><br><span class="line">        &quot;ip&quot;: &quot;127.0.0.1&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;port&quot;: 8081,</span><br><span class="line">      &quot;protocol&quot;: &quot;http&quot;, // HTTP 代理，可选，想用、会用可以保留</span><br><span class="line">      &quot;sniffing&quot;: &#123;</span><br><span class="line">        &quot;enabled&quot;: true,</span><br><span class="line">        &quot;destOverride&quot;: [</span><br><span class="line">          &quot;http&quot;,</span><br><span class="line">          &quot;tls&quot;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  &quot;outbounds&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;tag&quot;: &quot;direct&quot;, // 出口流量直连标签</span><br><span class="line">      &quot;protocol&quot;: &quot;freedom&quot;,</span><br><span class="line">      &quot;streamSettings&quot;: &#123;</span><br><span class="line">        &quot;sockopt&quot;: &#123;</span><br><span class="line">          &quot;mark&quot;: 2 // 一个可爱的小标记，数字自定义（可能有范围，使用「2」即可），后面能用到</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;tag&quot;: &quot;proxy&quot;, // 出口流量代理标签</span><br><span class="line">      &quot;protocol&quot;: &quot;vmess&quot;, // V2Ray 服务端信息配置</span><br><span class="line">      &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;vnext&quot;: [</span><br><span class="line">          &#123;</span><br><span class="line">            &quot;address&quot;: &quot;服务器地址或域名&quot;,</span><br><span class="line">            &quot;port&quot;: 端口,</span><br><span class="line">            &quot;users&quot;: [</span><br><span class="line">              &#123;</span><br><span class="line">                &quot;id&quot;: &quot;UUID&quot;,</span><br><span class="line">                &quot;alterId&quot;: 4,</span><br><span class="line">                &quot;security&quot;: &quot;auto&quot;</span><br><span class="line">              &#125;</span><br><span class="line">            ]</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;streamSettings&quot;: &#123;</span><br><span class="line">        &quot;network&quot;: &quot;ws&quot;, // WebSocket 传输方式配置，请根据实际情况进行修改</span><br><span class="line">        &quot;wsSettings&quot;: &#123;</span><br><span class="line">          &quot;path&quot;: &quot;路径&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;security&quot;: &quot;tls&quot;,</span><br><span class="line">        &quot;sockopt&quot;: &#123;</span><br><span class="line">          &quot;mark&quot;: 2 // 和上面一样可爱的小标记，两者需相同，后面能用到</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;tag&quot;: &quot;block&quot;, // 出口流量丢弃标签</span><br><span class="line">      &quot;protocol&quot;: &quot;blackhole&quot;,</span><br><span class="line">      &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;response&quot;: &#123;</span><br><span class="line">          &quot;type&quot;: &quot;http&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  &quot;routing&quot;: &#123;</span><br><span class="line">    &quot;domainStrategy&quot;: &quot;IPIfNonMatch&quot;, // 此方式匹配最为全面</span><br><span class="line">    &quot;rules&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;outboundTag&quot;: &quot;proxy&quot;,</span><br><span class="line">        &quot;ip&quot;: [</span><br><span class="line">          // 需要远程解析的 DNS 服务器地址，单独列出，方便维护，与后面 DNS 分流器中的地址相同</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;outboundTag&quot;: &quot;block&quot;,</span><br><span class="line">        &quot;domain&quot;: [</span><br><span class="line">          // 一些想要禁止访问的域名，如广告</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;outboundTag&quot;: &quot;block&quot;,</span><br><span class="line">        &quot;ip&quot;: [</span><br><span class="line">          // 一些想要禁止的 IP，目的同上</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;outboundTag&quot;: &quot;proxy&quot;,</span><br><span class="line">        &quot;domain&quot;: [</span><br><span class="line">          // 一些想要代理的域名，如被墙的域名</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;outboundTag&quot;: &quot;proxy&quot;,</span><br><span class="line">        &quot;ip&quot;: [</span><br><span class="line">          // 一些想要代理的 IP，目的同上（Telegram 就需要指定 IP 走代理）</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>配置文件虽然很长，但是配合注释来看比较好理解，请根据实际情况进行修改。需要注意的是，如果在 VSCode、Vim 等编辑器中修改本文件，可能会对有注释的地方报错，这是因为 JSON 格式的文件理论上不支持注释，然而 V2Ray 程序却支持，所以不删除注释也不会影响正常使用。</p>
+<p>另外，上面的配置最后有几个包含「一些想要」注释开头的数组（即中括号「[]」内），其中的内容需要按照实际情况进行修改，这里我分享一下自用的规则：config_routing.json，下载后补充到上面配置文件中即可。这里需要注意的是，我分享的规则中的 Block 部分由于过于强力，可能会导致一些网站无法正常使用（已发现并修改：B 站登录界面、优酷播放界面），所以介意的话可以删除这一部分。如果想要使用，还要解决这个问题，请在网页功能无法正常使用时打开浏览器的开发人员工具，里面应该会提示某一域名（IP）无法访问的错误，之后在配置中查找此域名（IP）并将其删除即可。</p>
+<p>如果以上步骤都做好了，那么就可以保存退出了。</p>
+<p>现在运行<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/usr/bin/v2ray/v2ray -config /etc/v2ray/config.json -test</span><br></pre></td></tr></table></figure></p>
+<p>如果无报错，出现 Configuration OK. 则说明配置文件表面上没有错误。</p>
+<p>最后，需要修改一下 /etc/systemd/system/v2ray.service 文件，以免运行时出现错误：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Service]</span><br><span class="line">CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_NET_RAW CAP_NET_ADMIN</span><br><span class="line"># 4.23.1 需要在 「CapabilityBoundingSet」 的最后添加 「CAP_NET_ADMIN」，否则透明代理无法正常使用</span><br><span class="line">LimitNPROC=500</span><br><span class="line">LimitNOFILE=1000000</span><br><span class="line"># 修改后解决日志中出现非常多「too many open files」的问题</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+<p>这里有一个可选的步骤，如果细心查看配置的话，可能会在路由规则中发现与 geosite:category-ads-all 类似的奇怪字样，这些其实是 V2Ray 中自带的域名（IP）规则，但是此规则文件只能随着 V2Ray 版本更新而更新，所以如果有新的域名出现，不会及时进行补充（虽然内置规则加上配置中的其他规则足够了）。不过有人利用 GitHub Action 每天自动生成此规则文件，其中除了官方自带的地址，又增加了一些地址，以便更好的满足使用者的需求。</p>
+<p>使用方法很简单：用 geoip.dat 和 geosite.dat 两个文件替换 /usr/bin/v2ray 目录下的同名文件即可。</p>
+<p>最后重启 V2Ray。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># systemctl restart v2ray</span><br></pre></td></tr></table></figure></p>
+<p>之后可以使用 cURL 测试配置是否正确（所以建议添加 SOCKS 代理以便测试）。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ curl -x socks5h://127.0.0.1:1080 google.com</span><br><span class="line">&lt;HTML&gt;&lt;HEAD&gt;&lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html;charset=utf-8&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;TITLE&gt;301 Moved&lt;/TITLE&gt;&lt;/HEAD&gt;&lt;BODY&gt;</span><br><span class="line">&lt;H1&gt;301 Moved&lt;/H1&gt;</span><br><span class="line">The document has moved</span><br><span class="line">&lt;A HREF=&quot;http://www.google.com/&quot;&gt;here&lt;/A&gt;.</span><br><span class="line">&lt;/BODY&gt;&lt;/HTML&gt;</span><br></pre></td></tr></table></figure>
+<p>如出现问题，请检查配置和日志文件（可能需要调整错误日志级别以获取更多信息）。</p>
+<p>#6. 配置 DNS 服务器（Telescope DNS 分流器）<br>Telescope DNS 是一位大佬用 Go 语言开发的 DNS 分流器，在这里使用非常合适，大家觉得好用可以去给项目一个 Star。</p>
+<p>安装与配置 Systemd 单元的教程在项目主页上面都有，这里不作过多讲解。</p>
+<p>如果已经安装好了，先不要着急启动。</p>
+<p>首先，我们修改 Telescope DNS 的配置文件：/etc/ts-dns/ts-dns.toml。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Telescope DNS Configure File</span><br><span class="line"># https://github.com/wolf-joe/ts-dns</span><br><span class="line"></span><br><span class="line">listen = &quot;:53&quot;  # 监听端口</span><br><span class="line">gfwlist = &quot;gfwlist.txt&quot;  # gfwlist文件路径，release包中已预下载。官方地址：https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt</span><br><span class="line">gfwlist_b64 = true  # 是否使用base64解码gfwlist文件，默认为true</span><br><span class="line">cnip = &quot;cnip.txt&quot;  # 中国ip网段列表，用于辅助域名分组</span><br><span class="line">disable_ipv6 = true  # 禁用IPv6地址解析，默认为false</span><br><span class="line"></span><br><span class="line">hosts_files = [&quot;/etc/hosts&quot;]  # hosts文件路径，支持多hosts</span><br><span class="line">[hosts] # 自定义域名映射</span><br><span class="line">&quot;cloudflare-dns.com&quot; = &quot;1.0.0.1&quot;  # 防止下文提到的DoH回环解析，此处地址与 V2Ray 路由规则中的地址相同</span><br><span class="line">&quot;dns.google&quot; = &quot;8.8.8.8&quot;</span><br><span class="line">&quot;dns.adguard.com&quot; = &quot;176.103.130.130&quot;</span><br><span class="line">&quot;dns.quad9.net&quot; = &quot;9.9.9.9&quot;</span><br><span class="line"></span><br><span class="line">[query_log]</span><br><span class="line">file = &quot;&quot;  # dns请求日志文件，值为/dev/null时不记录，值为空时记录到stdout</span><br><span class="line">ignore_qtypes = [&quot;DNSKEY&quot;, &quot;NS&quot;]  # 不记录指定类型的dns请求，默认为空</span><br><span class="line">ignore_cache = true  # 不记录命中缓存的dns请求，默认为false</span><br><span class="line">ignore_hosts = true  # 不记录命中hosts的dns请求，默认为false</span><br><span class="line"></span><br><span class="line">[cache]  # dns缓存配置</span><br><span class="line">size = 4096  # 缓存大小，为负数时禁用缓存</span><br><span class="line">min_ttl = 60  # 最小ttl，单位为秒</span><br><span class="line">max_ttl = 86400  # 最大ttl，单位为秒</span><br><span class="line"></span><br><span class="line">[groups] # 对域名进行分组</span><br><span class="line">  [groups.clean]  # 必选分组，默认域名所在分组</span><br><span class="line">  dns = [&quot;223.5.5.5&quot;, &quot;114.114.114.114&quot;]  # DNS服务器列表，默认使用53端口</span><br><span class="line">  concurrent = true  # 并发请求dns服务器列表</span><br><span class="line"></span><br><span class="line">  [groups.dirty]  # 必选分组，匹配GFWList的域名会归类到该组</span><br><span class="line">  # 警告：如果本机的dns指向ts-dns自身，且DoH地址中的域名被归类到该组，则会出现回环解析的情况，此时需要在上面的hosts中指定对应IP</span><br><span class="line">  doh = [&quot;https://dns.quad9.net/dns-query&quot;, &quot;https://dns.adguard.com/dns-query&quot;, &quot;https://cloudflare-dns.com/dns-query&quot;, &quot;https://dns.google/dns-query&quot;]  # dns over https服务器，由于分流到此处的域名大多被墙，需要通过代理访问，所以选择 DNS 远程解析以获取最佳速度</span><br><span class="line">  concurrent = true</span><br></pre></td></tr></table></figure></p>
+<p>需要注意的是，如果系统使用了 Systemd-resolved 或其他监听 53 端口的 DNS 解析服务，需要将其停止，否则 Telescope DNS 无法启动。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># systemctl stop systemd-resolved</span><br><span class="line"># systemctl disable systemd-resolved</span><br></pre></td></tr></table></figure></p>
+<p>之后就可以开启 Telescope DNS 并设置自启。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># systemctl start ts-dns</span><br><span class="line"># systemctl enable ts-dns</span><br></pre></td></tr></table></figure></p>
+<p>再之后需要修改 /etc/netplan/50-cloud-init.yaml 和 /etc/resolv.conf。建议删除原有的 resolv.conf 文件并重新创建。</p>
+<p>vim /etc/netplan/50-cloud-init.yaml<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">network:</span><br><span class="line">    ethernets:</span><br><span class="line">        eth0:</span><br><span class="line">            dhcp4: false</span><br><span class="line">            dhcp6: false</span><br><span class="line">            link-local: [] # 停止自动获取 IP 地址</span><br><span class="line">            accept-ra: false # 同时不接受 IPv6 地址的广播</span><br><span class="line">            # optional: true # 值为「真」时，开机时不等待获取到网络。这里作为路由器，我就注释掉了</span><br><span class="line">            addresses:</span><br><span class="line">                - 192.168.0.5/24 # IP 地址，注意有子网长度，相当于 IP 地址 + 子网掩码</span><br><span class="line">            gateway4: 192.168.0.1 # 网关地址</span><br><span class="line">            # nameservers:</span><br><span class="line">                # addresses:</span><br><span class="line">                    # - 192.168.0.1 # DNS 服务器地址</span><br><span class="line">    version: 2</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># netplan apply</span><br></pre></td></tr></table></figure>
+<p>rm /etc/resolv.conf<br>vim /etc/resolv.conf<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nameserver 127.0.0.1</span><br><span class="line">options edns0</span><br></pre></td></tr></table></figure></p>
+<p>配置完成后，可以使用 dig 或 nslookup 指令检测 DNS 解析是否正常。如出现问题，可以查看日志获取更多信息。</p>
+<p>另外，如果执行命令出现 sudo: unable to resolve host xxx: Temporary failure in name resolution，可以在 /etc/hosts 中将主机名，也就是这里的 xxx 添加到 127.0.0.1 之后。</p>
+<p>#7. 配置 iptables<br>iptables 的配置是最关键的一步，只有这里配置完成后，透明代理才能正常使用，少或多一条规则都可能引起很多问题。以下所有指令都需要管理员权限运行。</p>
+<p>配置策略路由：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ip rule add fwmark 1 table 100 # 一个不可爱的小标记「1」，理论自定义，其他未测试</span><br><span class="line">ip route add local default dev lo table 100</span><br></pre></td></tr></table></figure></p>
+<p>配置防火墙：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">iptables -t mangle -N V2RAY</span><br><span class="line">iptables -t mangle -A V2RAY -d 0.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 10.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 100.64.0.0/10 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 127.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 169.254.0.0/16 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 172.16.0.0/12 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 192.0.0.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 192.0.2.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 192.88.99.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 192.168.0.0/16 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 198.18.0.0/15 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 198.51.100.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 203.0.113.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 224.0.0.0/4 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 240.0.0.0/4 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 255.255.255.255/32 -j RETURN # 以上均为特殊地址，直连</span><br><span class="line">iptables -t mangle -A V2RAY -p udp --dport 53 -j RETURN # 国内域名查询，直连</span><br><span class="line">iptables -t mangle -A V2RAY -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1</span><br><span class="line">iptables -t mangle -A V2RAY -p udp -j TPROXY --on-port 12345 --tproxy-mark 1 </span><br><span class="line"># 代理需要加一个不可爱的标记</span><br><span class="line">iptables -t mangle -A PREROUTING -j V2RAY</span><br><span class="line"></span><br><span class="line">iptables -t mangle -N V2RAY_MARK # 本机代理</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 0.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 10.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 100.64.0.0/10 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 169.254.0.0/16 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 172.16.0.0/12 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 192.0.0.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 192.0.2.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 192.88.99.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 192.168.0.0/16 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 198.18.0.0/15 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 198.51.100.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 203.0.113.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 224.0.0.0/4 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 240.0.0.0/4 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 255.255.255.255/32 -j RETURN # 除本机外，其他直连</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -p udp --dport 53 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -j RETURN -m mark --mark 2 # 打一个可爱的标记</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -p tcp -j MARK --set-mark 1 # 同样需要不可爱的标记</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -p udp -j MARK --set-mark 1</span><br><span class="line">iptables -t mangle -A OUTPUT -j V2RAY_MARK</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ lsmod | grep TPROXY</span><br><span class="line">…</span><br><span class="line">xt_TPROXY              20480  2</span><br><span class="line">…</span><br></pre></td></tr></table></figure>
+<p>如未出现此模块，说明系统未自动加载，需要手动设置。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># modprobe xt_TPROXY</span><br></pre></td></tr></table></figure>
+<p>之后编辑 /etc/modules 设置开机自动加载。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">…</span><br><span class="line">xt_TPROXY</span><br></pre></td></tr></table></figure></p>
+<p>保存并退出即可。</p>
+<p>执行上述命令之后，理论上应该成功了，同样可以使用 cURL 进行测试。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ curl google.com</span><br></pre></td></tr></table></figure></p>
+<p>出现和上文中一样的结果，说明没有问题了。现在只需将局域网内其他设备的网关和 DNS 服务器换成透明代理设备的 IP 即可。如果没有配置成功，那么就再一次阅读上文，检查配置，以及配合搜索引擎解决问题，实在不行可以请求大佬提供帮助。</p>
+<p>不过呢，由于最后输入的一大串指令只是临时生效，重启后就需要重新配置，所有我们需要将其保存下来，并编写 Systemd 单元以方便使用。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># mkdir /etc/iptables</span><br><span class="line"># iptables-save -f /etc/iptables/v2tproxy.rules</span><br><span class="line"># vim /etc/systemd/system/v2tproxy.service</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Transparent proxy configurations for V2Ray</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=oneshot</span><br><span class="line">ExecStart=/sbin/ip rule add fwmark 1 table 100 ; /sbin/ip route add local default dev lo table 100 ; /sbin/iptables-restore /etc/iptables/v2tproxy.rules</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line"># systemctl enable v2tproxy</span><br></pre></td></tr></table></figure>
+<p>至此，一切都大功告成了。</p>
+<p>原文链接:<a href="https://moecm.com/tproxy-with-v2ray-on-rpi/" target="_blank" rel="noopener">https://moecm.com/tproxy-with-v2ray-on-rpi/</a></p>
 ]]></content>
       <categories>
-        <category>Chrome</category>
+        <category>技术教程</category>
       </categories>
       <tags>
-        <tag>chrome</tag>
-        <tag>翻译</tag>
+        <tag>V2Ray</tag>
+        <tag>树莓派</tag>
       </tags>
   </entry>
   <entry>
@@ -38,6 +99,18 @@
       </categories>
       <tags>
         <tag>hexo入门</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo文章加密</title>
+    <url>/2020/04/16/article-password/</url>
+    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>打开themes-&gt;next-&gt;layout-&gt;_partials-&gt;head.swig文件,在以下位置插入这样一段代码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    (function()&#123;</span><br><span class="line">        if(&apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">            if (prompt(&apos;请输入文章密码&apos;) !== &apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">                alert(&apos;密码错误！&apos;);</span><br><span class="line">                history.back();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)();</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -67,30 +140,6 @@
       </tags>
   </entry>
   <entry>
-    <title>APScheduler中BlockingScheduler和BackgroundScheduler的区别</title>
-    <url>/2018/05/18/apscheduler-backgroundscheduler/</url>
-    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>APScheduler是基于Quartz的一个Python定时任务框架，提供了基于日期、固定时间间隔以及crontab类型的任务，并且可以持久化任务。</p>
-<p>这里简单列一下常用的若干调度器：</p>
-<p>BlockingScheduler：仅可用在当前你的进程之内，与当前的进行共享计算资源<br>BackgroundScheduler:　在后台运行调度，不影响当前的系统计算运行<br>AsyncIOScheduler:　如果当前系统中使用了async module，则需要使用异步的调度器<br>GeventScheduler:　如果使用了gevent，则需要使用该调度<br>TornadoScheduler:　如果使用了Tornado, 则使用当前的调度器<br>TwistedScheduler:Twister应用的调度器<br>QtScheduler:　Qt的调度器</p>
-<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>我在使用APScheduler过程中想使用BackgroundScheduler调度器，结果任务一直无法执行，后来换用BlockingScheduler，结果可以正常执行。</p>
-<p>BackgroundScheduler调度器代码：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">from datetime import datetime</span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line">scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">scheduler.start()</span><br><span class="line">scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 16:56:01&apos;,args=[&apos;my_test3&apos;],id=&apos;my_test4&apos;)</span><br></pre></td></tr></table></figure>
-<p>BlockingScheduler调度器代码：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">import datetime</span><br><span class="line">from apscheduler.schedulers.blocking import BlockingScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line"># 使用sqlite存储作业</span><br><span class="line">sqlitedb = r&quot;sqlitedb.db&quot;</span><br><span class="line">url = r&apos;sqlite:///%s&apos; %sqlitedb</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    print(datetime.datetime.now())</span><br><span class="line">    print(&apos;-&apos; * 10 + text + &apos;-&apos; * 10)</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=url)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sched = BlockingScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults)</span><br><span class="line">sched.add_job(test,next_run_time= args=[&apos;my_test&apos;],id=&apos;my_test&apos;)</span><br><span class="line">sched.start()</span><br></pre></td></tr></table></figure>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>BackgroundScheduler调度器依赖于python脚本的主进程，如果主进程不存在定时任务也就不存在，我的代码里面没有可以维持脚本运行的主进程所以无法执行定时任务</p>
-<h2 id="正确示例代码"><a href="#正确示例代码" class="headerlink" title="正确示例代码"></a>正确示例代码</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">from datetime import datetime</span><br><span class="line">import time</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">    &#125;</span><br><span class="line">    executors = &#123;</span><br><span class="line">        &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">        &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">    &#125;</span><br><span class="line">    job_defaults = &#123;</span><br><span class="line">        &apos;coalesce&apos;: False,</span><br><span class="line">        &apos;max_instances&apos;: 3</span><br><span class="line">    &#125;</span><br><span class="line">    scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">    #scheduler.add_job(tick, &apos;interval&apos;, seconds=3)</span><br><span class="line">    scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 17:12:01&apos;, args=[&apos;my_test5&apos;],id=&apos;my_test5&apos;)</span><br><span class="line">    scheduler.start()  #这里的调度任务是独立的一个线程</span><br><span class="line">    print(&apos;Press Ctrl+&#123;0&#125; to exit&apos;.format(&apos;Break&apos; if os.name == &apos;nt&apos; else &apos;C&apos;))</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        # This is here to simulate application activity (which keeps the main thread alive).</span><br><span class="line">        while True:</span><br><span class="line">            time.sleep(2)    #其他任务是独立的线程执行</span><br><span class="line">            print(&apos;sleep!&apos;)</span><br><span class="line">    except (KeyboardInterrupt, SystemExit):</span><br><span class="line">        # Not strictly necessary if daemonic mode is enabled but should be done if possible</span><br><span class="line">        scheduler.shutdown()</span><br><span class="line">        print(&apos;Exit The Job!&apos;)</span><br></pre></td></tr></table></figure>
-<p>参考链接:  </p>
-<p><a href="https://www.cnblogs.com/hushaojun/p/5189109.html" target="_blank" rel="noopener">https://www.cnblogs.com/hushaojun/p/5189109.html</a><br><a href="https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1](https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1)" target="_blank" rel="noopener">https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1](https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1)</a></p>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-        <tag>APScheduler</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Centos显示tcp，udp的端口和进程等相关情况</title>
     <url>/2018/05/18/centos-tcp-udp-show/</url>
     <content><![CDATA[<h2 id="netstat命令"><a href="#netstat命令" class="headerlink" title="netstat命令"></a>netstat命令</h2><p>netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际的网络连接以及每一个网络接口设备<br>netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。<br>该命令的一般格式为：</p>
@@ -103,32 +152,6 @@
       <tags>
         <tag>linux</tag>
         <tag>CentOS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>组合索引</title>
-    <url>/2022/06/29/db-index/</url>
-    <content><![CDATA[<p>首先我们看看组合索引的与单列索引的区别：</p>
-<h2 id="一-为什么要使用联合索引"><a href="#一-为什么要使用联合索引" class="headerlink" title="一.为什么要使用联合索引"></a>一.为什么要使用联合索引</h2><ol>
-<li><p>减少开销<br>建一个联合索引(col1,col2,col3)，实际相当于建了(col1),(col1,col2),(col1,col2,col3)三个索引。每多一个索引，都会增加写操作的开销和磁盘空间的开销。对于大量数据的表，使用联合索引会大大的减少开销！</p>
-</li>
-<li><p>覆盖索引<br>对联合索引(col1,col2,col3)，如果有如下的sql: select col1,col2,col3 from test where col1=1 and col2=2。那么MySQL可以直接通过遍历索引取得数据，而无需回表，这减少了很多的随机io操作。减少io操作，特别的随机io其实是dba主要的优化策略。所以，在真正的实际应用中，覆盖索引是主要的提升性能的优化手段之一。</p>
-</li>
-<li><p>效率高<br>索引列越多，通过索引筛选出的数据越少。有1000W条数据的表，有如下sql:select from table where col1=1 and col2=2 and col3=3,假设假设每个条件可以筛选出10%的数据，如果只有单值索引，那么通过该索引能筛选出1000W*10%=100w条数据，然后再回表从100w条数据中找到符合col2=2 and col3= 3的数据，然后再排序，再分页；如果是联合索引，通过索引筛选出1000w*10%*10%*10%=1w，效率提升可想而知!</p>
-</li>
-</ol>
-<h2 id="二-组合索引如何使用"><a href="#二-组合索引如何使用" class="headerlink" title="二.组合索引如何使用"></a>二.组合索引如何使用</h2><p>最左原则</p>
-<p>例如组合索引（a,b,c），组合索引的生效原则是</p>
-<p>从前往后依次使用生效，如果中间某个索引没有使用，那么断点前面的索引部分起作用，断点后面的索引没有起作用；</p>
-<p>对于组合索引:Mysql从左到右的使用索引中的字段，一个查询可以只使用索引中的一部份，但只能是最左侧部分。例如索引是key index (a,b,c). 可以支持a | a,b| a,b,c 3种组合进行查找，但不支持 b,c进行查找 .当最左侧字段是常量引用时，索引就十分有效。</p>
-<p>两个或更多个列上的索引被称作复合索引。<br>利用索引中的附加列，您可以缩小搜索的范围，但使用一个具有两列的索引 不同于使用两个单独的索引。复合索引的结构与电话簿类似，人名由姓和名构成，电话簿首先按姓氏对进行排序，然后按名字对有相同姓氏的人进行排序。如果您知 道姓，电话簿将非常有用；如果您知道姓和名，电话簿则更为有用，但如果您只知道名不姓，电话簿将没有用处。<br>所以说创建复合索引时，应该仔细考虑列的顺序。对索引中的所有列执行搜索或仅对前几列执行搜索时，复合索引非常有用；仅对后面的任意列执行搜索时，复合索引则没有用处。</p>
-<p>原文链接：<a href="https://blog.csdn.net/qq_46661297/article/details/106226732" target="_blank" rel="noopener">https://blog.csdn.net/qq_46661297/article/details/106226732</a></p>
-]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>索引</tag>
       </tags>
   </entry>
   <entry>
@@ -279,12 +302,109 @@
       </categories>
   </entry>
   <entry>
+    <title>APScheduler中BlockingScheduler和BackgroundScheduler的区别</title>
+    <url>/2018/05/18/apscheduler-backgroundscheduler/</url>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>APScheduler是基于Quartz的一个Python定时任务框架，提供了基于日期、固定时间间隔以及crontab类型的任务，并且可以持久化任务。</p>
+<p>这里简单列一下常用的若干调度器：</p>
+<p>BlockingScheduler：仅可用在当前你的进程之内，与当前的进行共享计算资源<br>BackgroundScheduler:　在后台运行调度，不影响当前的系统计算运行<br>AsyncIOScheduler:　如果当前系统中使用了async module，则需要使用异步的调度器<br>GeventScheduler:　如果使用了gevent，则需要使用该调度<br>TornadoScheduler:　如果使用了Tornado, 则使用当前的调度器<br>TwistedScheduler:Twister应用的调度器<br>QtScheduler:　Qt的调度器</p>
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>我在使用APScheduler过程中想使用BackgroundScheduler调度器，结果任务一直无法执行，后来换用BlockingScheduler，结果可以正常执行。</p>
+<p>BackgroundScheduler调度器代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">from datetime import datetime</span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line">scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">scheduler.start()</span><br><span class="line">scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 16:56:01&apos;,args=[&apos;my_test3&apos;],id=&apos;my_test4&apos;)</span><br></pre></td></tr></table></figure>
+<p>BlockingScheduler调度器代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">import datetime</span><br><span class="line">from apscheduler.schedulers.blocking import BlockingScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line"># 使用sqlite存储作业</span><br><span class="line">sqlitedb = r&quot;sqlitedb.db&quot;</span><br><span class="line">url = r&apos;sqlite:///%s&apos; %sqlitedb</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    print(datetime.datetime.now())</span><br><span class="line">    print(&apos;-&apos; * 10 + text + &apos;-&apos; * 10)</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=url)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sched = BlockingScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults)</span><br><span class="line">sched.add_job(test,next_run_time= args=[&apos;my_test&apos;],id=&apos;my_test&apos;)</span><br><span class="line">sched.start()</span><br></pre></td></tr></table></figure>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>BackgroundScheduler调度器依赖于python脚本的主进程，如果主进程不存在定时任务也就不存在，我的代码里面没有可以维持脚本运行的主进程所以无法执行定时任务</p>
+<h2 id="正确示例代码"><a href="#正确示例代码" class="headerlink" title="正确示例代码"></a>正确示例代码</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">from datetime import datetime</span><br><span class="line">import time</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">    &#125;</span><br><span class="line">    executors = &#123;</span><br><span class="line">        &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">        &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">    &#125;</span><br><span class="line">    job_defaults = &#123;</span><br><span class="line">        &apos;coalesce&apos;: False,</span><br><span class="line">        &apos;max_instances&apos;: 3</span><br><span class="line">    &#125;</span><br><span class="line">    scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">    #scheduler.add_job(tick, &apos;interval&apos;, seconds=3)</span><br><span class="line">    scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 17:12:01&apos;, args=[&apos;my_test5&apos;],id=&apos;my_test5&apos;)</span><br><span class="line">    scheduler.start()  #这里的调度任务是独立的一个线程</span><br><span class="line">    print(&apos;Press Ctrl+&#123;0&#125; to exit&apos;.format(&apos;Break&apos; if os.name == &apos;nt&apos; else &apos;C&apos;))</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        # This is here to simulate application activity (which keeps the main thread alive).</span><br><span class="line">        while True:</span><br><span class="line">            time.sleep(2)    #其他任务是独立的线程执行</span><br><span class="line">            print(&apos;sleep!&apos;)</span><br><span class="line">    except (KeyboardInterrupt, SystemExit):</span><br><span class="line">        # Not strictly necessary if daemonic mode is enabled but should be done if possible</span><br><span class="line">        scheduler.shutdown()</span><br><span class="line">        print(&apos;Exit The Job!&apos;)</span><br></pre></td></tr></table></figure>
+<p>参考链接:  </p>
+<p><a href="https://www.cnblogs.com/hushaojun/p/5189109.html" target="_blank" rel="noopener">https://www.cnblogs.com/hushaojun/p/5189109.html</a><br><a href="https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1](https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1)" target="_blank" rel="noopener">https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1](https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1)</a></p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>APScheduler</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Nginx设置虚拟目录alias</title>
     <url>/2021/04/22/nginx-alias/</url>
     <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location ^~ /random_img/ &#123;</span><br><span class="line">    alias /home/random_img/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>Nginx</category>
       </categories>
+  </entry>
+  <entry>
+    <title>chrome内置翻译无法使用的原因</title>
+    <url>/2022/10/24/chrome-googletrans/</url>
+    <content><![CDATA[<p>translate.googleapis.com（Google 翻译 API）,因为停止了中国大陆的服务,不再分配中国内地的服务器地址，所以chrome浏览器内置的 Google 翻译无法使用<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">chrome浏览器内置API不支持扩展配置的socks5代理，所以挂梯子是无效的，除非用系统代理。</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>Chrome</category>
+      </categories>
+      <tags>
+        <tag>chrome</tag>
+        <tag>翻译</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用kill杀死含有指定关键字的进程</title>
+    <url>/2022/10/08/linux-kill-keyword/</url>
+    <content><![CDATA[<p>命令：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ps -ef|grep keyword|grep -v grep|cut -c 9-15|xargs kill -9</span><br></pre></td></tr></table></figure></p>
+<p>批量杀死包含关键字“keyword”的进程。</p>
+<p>“ps -ef” ——查看所有进程</p>
+<p>“grep keyword” ——列出所有含有关键字”./amplxe-gui”的进程</p>
+<p>“grep -v grep” ——在列出的进程中去除含有关键字”grep”的进程（因为我们在前一步生成的grep进程也包含关键字）</p>
+<p>“cut -c 9-15” ——截取输入行的第9个字符到第15个字符，而这正好是进程号PID</p>
+<p>“xargs kill -9” ——xargs 命令是用来把前面命令的输出结果（PID）作为”kill -9”命令的参数，并执行该命令。”kill -9”会强行杀掉指定进程。</p>
+<p>另一种方式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ps aux|grep keyword|grep -v grep |awk &apos;&#123;print $1&#125;&apos;|xargs kill -9</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>进程</tag>
+        <tag>kill</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>组合索引</title>
+    <url>/2022/06/29/db-index/</url>
+    <content><![CDATA[<p>首先我们看看组合索引的与单列索引的区别：</p>
+<h2 id="一-为什么要使用联合索引"><a href="#一-为什么要使用联合索引" class="headerlink" title="一.为什么要使用联合索引"></a>一.为什么要使用联合索引</h2><ol>
+<li><p>减少开销<br>建一个联合索引(col1,col2,col3)，实际相当于建了(col1),(col1,col2),(col1,col2,col3)三个索引。每多一个索引，都会增加写操作的开销和磁盘空间的开销。对于大量数据的表，使用联合索引会大大的减少开销！</p>
+</li>
+<li><p>覆盖索引<br>对联合索引(col1,col2,col3)，如果有如下的sql: select col1,col2,col3 from test where col1=1 and col2=2。那么MySQL可以直接通过遍历索引取得数据，而无需回表，这减少了很多的随机io操作。减少io操作，特别的随机io其实是dba主要的优化策略。所以，在真正的实际应用中，覆盖索引是主要的提升性能的优化手段之一。</p>
+</li>
+<li><p>效率高<br>索引列越多，通过索引筛选出的数据越少。有1000W条数据的表，有如下sql:select from table where col1=1 and col2=2 and col3=3,假设假设每个条件可以筛选出10%的数据，如果只有单值索引，那么通过该索引能筛选出1000W*10%=100w条数据，然后再回表从100w条数据中找到符合col2=2 and col3= 3的数据，然后再排序，再分页；如果是联合索引，通过索引筛选出1000w*10%*10%*10%=1w，效率提升可想而知!</p>
+</li>
+</ol>
+<h2 id="二-组合索引如何使用"><a href="#二-组合索引如何使用" class="headerlink" title="二.组合索引如何使用"></a>二.组合索引如何使用</h2><p>最左原则</p>
+<p>例如组合索引（a,b,c），组合索引的生效原则是</p>
+<p>从前往后依次使用生效，如果中间某个索引没有使用，那么断点前面的索引部分起作用，断点后面的索引没有起作用；</p>
+<p>对于组合索引:Mysql从左到右的使用索引中的字段，一个查询可以只使用索引中的一部份，但只能是最左侧部分。例如索引是key index (a,b,c). 可以支持a | a,b| a,b,c 3种组合进行查找，但不支持 b,c进行查找 .当最左侧字段是常量引用时，索引就十分有效。</p>
+<p>两个或更多个列上的索引被称作复合索引。<br>利用索引中的附加列，您可以缩小搜索的范围，但使用一个具有两列的索引 不同于使用两个单独的索引。复合索引的结构与电话簿类似，人名由姓和名构成，电话簿首先按姓氏对进行排序，然后按名字对有相同姓氏的人进行排序。如果您知 道姓，电话簿将非常有用；如果您知道姓和名，电话簿则更为有用，但如果您只知道名不姓，电话簿将没有用处。<br>所以说创建复合索引时，应该仔细考虑列的顺序。对索引中的所有列执行搜索或仅对前几列执行搜索时，复合索引非常有用；仅对后面的任意列执行搜索时，复合索引则没有用处。</p>
+<p>原文链接：<a href="https://blog.csdn.net/qq_46661297/article/details/106226732" target="_blank" rel="noopener">https://blog.csdn.net/qq_46661297/article/details/106226732</a></p>
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>索引</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2018/05/12/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
   </entry>
   <entry>
     <title>Fiddler证书清除并重新配置</title>
@@ -311,57 +431,31 @@
       </tags>
   </entry>
   <entry>
-    <title>openssl常用操作</title>
-    <url>/2022/07/27/openssl-cmd/</url>
-    <content><![CDATA[<p>PKCS＃12（也称为PKCS12或PFX）是一种二进制格式，用于将证书链和私钥存储在单个可加密文件中。 PKCS＃12文件通常用于在Windows和macOS计算机上导入和导出证书和私钥，并且通常具有文件扩展名 .p12 or .pfx.</p>
-<p>查看所有信息:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -info -in apiclient_cert.p12 -nodes</span><br></pre></td></tr></table></figure></p>
-<p>导出证书(公钥):<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out cert.pem -nokeys</span><br></pre></td></tr></table></figure></p>
-<p>导出私钥:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out private_key.pem -nodes -nocerts</span><br></pre></td></tr></table></figure></p>
-<p>查看证书(公钥)序列号:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -in cert.pem -noout -serial</span><br></pre></td></tr></table></figure></p>
-<p>将证书(公钥)转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl rsa -in rsa_public_key.pem -out rsa_public_key.der -pubin -outform der</span><br></pre></td></tr></table></figure></p>
-<p>将私钥转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl rsa -in rsa_private_key.pem -out rsa_private_key.der -outform der</span><br></pre></td></tr></table></figure></p>
+    <title>给python的pip设置代理</title>
+    <url>/2021/03/23/python-pip-proxy/</url>
+    <content><![CDATA[<p>由于网络原因，访问国外的pip源超级慢，因此可以给pip设置代理或设置国内源提高速度</p>
+<ul>
+<li>Windows：</li>
+</ul>
+<ol>
+<li>进入%APPDATA%目录，例如：C:\Users\用户名\AppData\Roaming</li>
+<li>新建pip文件夹，如果有则跳过</li>
+<li>新建pip.ini文件，设置pip源<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[global]</span><br><span class="line">proxy=http://127.0.0.1:1081</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li>Linux：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi ~/.pip/pip.conf</span><br></pre></td></tr></table></figure>
+<p>用vi编辑pip.conf文件，内容与Windows下pip.ini文件的内容一样</p>
+<p>原文链接:<a href="https://blog.csdn.net/weixin_42191996/article/details/102332805" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42191996/article/details/102332805</a></p>
 ]]></content>
       <categories>
-        <category>APP抓包</category>
+        <category>Python</category>
       </categories>
       <tags>
-        <tag>https</tag>
-        <tag>openssl</tag>
+        <tag>pip</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>使用kill杀死含有指定关键字的进程</title>
-    <url>/2022/10/08/linux-kill-keyword/</url>
-    <content><![CDATA[<p>命令：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ps -ef|grep keyword|grep -v grep|cut -c 9-15|xargs kill -9</span><br></pre></td></tr></table></figure></p>
-<p>批量杀死包含关键字“keyword”的进程。</p>
-<p>“ps -ef” ——查看所有进程</p>
-<p>“grep keyword” ——列出所有含有关键字”./amplxe-gui”的进程</p>
-<p>“grep -v grep” ——在列出的进程中去除含有关键字”grep”的进程（因为我们在前一步生成的grep进程也包含关键字）</p>
-<p>“cut -c 9-15” ——截取输入行的第9个字符到第15个字符，而这正好是进程号PID</p>
-<p>“xargs kill -9” ——xargs 命令是用来把前面命令的输出结果（PID）作为”kill -9”命令的参数，并执行该命令。”kill -9”会强行杀掉指定进程。</p>
-<p>另一种方式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ps aux|grep keyword|grep -v grep |awk &apos;&#123;print $1&#125;&apos;|xargs kill -9</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>进程</tag>
-        <tag>kill</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2018/05/12/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-]]></content>
   </entry>
   <entry>
     <title>torrc配置项 HTTPTunnelPort</title>
@@ -415,42 +509,6 @@
 ]]></content>
       <categories>
         <category>Python</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>给python的pip设置代理</title>
-    <url>/2021/03/23/python-pip-proxy/</url>
-    <content><![CDATA[<p>由于网络原因，访问国外的pip源超级慢，因此可以给pip设置代理或设置国内源提高速度</p>
-<ul>
-<li>Windows：</li>
-</ul>
-<ol>
-<li>进入%APPDATA%目录，例如：C:\Users\用户名\AppData\Roaming</li>
-<li>新建pip文件夹，如果有则跳过</li>
-<li>新建pip.ini文件，设置pip源<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[global]</span><br><span class="line">proxy=http://127.0.0.1:1081</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ul>
-<li>Linux：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi ~/.pip/pip.conf</span><br></pre></td></tr></table></figure>
-<p>用vi编辑pip.conf文件，内容与Windows下pip.ini文件的内容一样</p>
-<p>原文链接:<a href="https://blog.csdn.net/weixin_42191996/article/details/102332805" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42191996/article/details/102332805</a></p>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>pip</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>安卓APP安全证书验证分类</title>
-    <url>/2021/04/22/android-app-https-ca/</url>
-    <content><![CDATA[<p><img src="/images/ca.png" alt="安卓APP安全证书验证分类" title="安卓APP安全证书验证分类"></p>
-]]></content>
-      <categories>
-        <category>APP抓包</category>
       </categories>
   </entry>
   <entry>
@@ -544,80 +602,22 @@
       </tags>
   </entry>
   <entry>
-    <title>树莓派 + V2Ray 配置路由器科学上网</title>
-    <url>/2022/07/07/V2Ray-Raspberry-Pi/</url>
-    <content><![CDATA[<p>这篇文章主要是记录如何在将树莓派作为旁路由，配合 V2Ray，搭建透明代理，以实现局域网内设备的无感科学上网。</p>
-<p>#1. 刷写系统<br>我使用的是 Ubuntu Server 20.04，当然，其他系统也可以。刷写工具为 Win32DiskImager。</p>
-<p>#2. 更改 APT 软件源<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># apt edit-sources</span><br></pre></td></tr></table></figure></p>
-<p>这里选择你喜欢的编辑器即可，我选择的是 Vim。</p>
-<p>如果你也一样，可以像我接下来这样替换软件源，此处我选择清华源。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">:%s/ports.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g</span><br></pre></td></tr></table></figure></p>
-<p>修改后保存并退出即可。之后运行：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># apt update &amp;&amp; apt upgrade</span><br></pre></td></tr></table></figure></p>
-<p>更新并升级。</p>
-<p>#3. 配置内核、网络（静态地址）<br>新版 Ubuntu 默认使用 Netplan + Systemd-networkd 管理网络，而 Netplan 文件使用了可读性高且人性化的 YAML 格式文件。</p>
-<p>vim /etc/netplan/50-cloud-init.yaml<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">network:</span><br><span class="line">    ethernets:</span><br><span class="line">        eth0:</span><br><span class="line">            dhcp4: false</span><br><span class="line">            dhcp6: false</span><br><span class="line">            link-local: [] # 停止自动获取 IP 地址</span><br><span class="line">            accept-ra: false # 同时不接受 IPv6 地址的广播</span><br><span class="line">            # optional: true # 值为「真」时，开机时不等待获取到网络。这里作为路由器，我就注释掉了</span><br><span class="line">            addresses:</span><br><span class="line">                - 192.168.0.5/24 # IP 地址，注意有子网长度，相当于 IP 地址 + 子网掩码</span><br><span class="line">            gateway4: 192.168.0.1 # 网关地址</span><br><span class="line">            nameservers:</span><br><span class="line">                addresses:</span><br><span class="line">                    - 192.168.0.1 # DNS 服务器地址</span><br><span class="line">    version: 2</span><br></pre></td></tr></table></figure></p>
-<p>保存退出后运行：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netplan apply</span><br></pre></td></tr></table></figure></p>
-<p>这里由于配置了修改了 IP，如果使用 SSH 连接的话，将会断线，重连即可。</p>
-<p>使用：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ip addr show</span><br></pre></td></tr></table></figure></p>
-<p>可以查看本机 IP 地址。</p>
-<p>编辑 /etc/sysctl.conf 配置包转发：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Uncomment the next line to enable packet forwarding for IPv4</span><br><span class="line">net.ipv4.ip_forward=1</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># sysctl -p</span><br></pre></td></tr></table></figure>
-<p>运行以上指令后，转发即可生效。</p>
-<p>#4. 安装 V2Ray<br>使用官方脚本即可<em>（实话说这域名不错）</em>。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wget https://install.direct/go.sh</span><br><span class="line">bash go.sh</span><br></pre></td></tr></table></figure></p>
-<p>然而由于安装时脚本需要从 GitHub 上下载最新的程序文件，所以速度很慢。所以需要通过本机代理下载或者在其他设备上下载后进行本地安装。</p>
-<p>运行<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># bash go.sh -h</span><br></pre></td></tr></table></figure></p>
-<p>后可以看到以下输出：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">./install-release.sh [-h] [-c] [--remove] [-p proxy] [-f] [--version vx.y.z] [-l file]</span><br><span class="line">  -h, --help            Show help</span><br><span class="line">  -p, --proxy           To download through a proxy server, use -p socks5://127.0.0.1:1080 or -p http://127.0.0.1:3128 etc</span><br><span class="line">  -f, --force           Force install</span><br><span class="line">      --version         Install a particular version, use --version v3.15</span><br><span class="line">  -l, --local           Install from a local file</span><br><span class="line">      --remove          Remove installed V2Ray</span><br><span class="line">  -c, --check           Check for update</span><br></pre></td></tr></table></figure></p>
-<p>这里我通过一台境外 VPS 下载安装包，之后通过 scp 指令传输到本地进行安装。具体步骤请自行查询。注意手动从 GitHub 上进行下载时要选对架构，实在分不清可以先运行一下脚本，这是会输出下载链接，然后结束运行，复制链接，下载。</p>
-<p>安装过程中脚本会自动修复依赖和创建 Systemd 单元。</p>
-<p>#5. 配置 V2Ray<br>接下来我们就要进入重头戏：配置 V2Ray 透明代理。我的思路是由 V2Ray 的 Dokodemo door（任意门）协议接收除 53 端口的 UDP 和特殊地址以外的流量，之后通过内置的路由功能进行分流，分流方式为代理被墙域名和 IP 列表，其他全部直连。至于 53 端口的 UDP 流量，也就是 DNS 查询，通过一个 DNS 分流器进行分流，以防污染。</p>
-<p>好，思路解释完毕，下面开始实践。首先我们编辑 V2Ray 配置文件：/etc/v2ray/config.json。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;log&quot;: &#123;</span><br><span class="line">    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;, // 错误日志目录</span><br><span class="line">    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;, // 访问日志目录</span><br><span class="line">    &quot;loglevel&quot;: &quot;error&quot; // 错误日志级别</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;inbounds&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;protocol&quot;: &quot;dokodemo-door&quot;, // 透明代理流量入口</span><br><span class="line">      &quot;port&quot;: 12345, // 端口，可自定义</span><br><span class="line">      &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;network&quot;: &quot;tcp,udp&quot;,</span><br><span class="line">        &quot;followRedirect&quot;: true</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;sniffing&quot;: &#123;</span><br><span class="line">        &quot;enabled&quot;: true,</span><br><span class="line">        &quot;destOverride&quot;: [</span><br><span class="line">          &quot;http&quot;,</span><br><span class="line">          &quot;tls&quot;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;streamSettings&quot;: &#123;</span><br><span class="line">        &quot;sockopt&quot;: &#123;</span><br><span class="line">          &quot;tproxy&quot;: &quot;tproxy&quot; // 使用 TPROXY 方式实现透明代理，相应的还有 REDIRECT 方式</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;port&quot;: 1080,</span><br><span class="line">      &quot;protocol&quot;: &quot;socks&quot;, // SOCKS 代理，可选，方便测试</span><br><span class="line">      &quot;sniffing&quot;: &#123;</span><br><span class="line">        &quot;enabled&quot;: true,</span><br><span class="line">        &quot;destOverride&quot;: [</span><br><span class="line">          &quot;http&quot;,</span><br><span class="line">          &quot;tls&quot;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;auth&quot;: &quot;noauth&quot;,</span><br><span class="line">        &quot;udp&quot;: true,</span><br><span class="line">        &quot;ip&quot;: &quot;127.0.0.1&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;port&quot;: 8081,</span><br><span class="line">      &quot;protocol&quot;: &quot;http&quot;, // HTTP 代理，可选，想用、会用可以保留</span><br><span class="line">      &quot;sniffing&quot;: &#123;</span><br><span class="line">        &quot;enabled&quot;: true,</span><br><span class="line">        &quot;destOverride&quot;: [</span><br><span class="line">          &quot;http&quot;,</span><br><span class="line">          &quot;tls&quot;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  &quot;outbounds&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;tag&quot;: &quot;direct&quot;, // 出口流量直连标签</span><br><span class="line">      &quot;protocol&quot;: &quot;freedom&quot;,</span><br><span class="line">      &quot;streamSettings&quot;: &#123;</span><br><span class="line">        &quot;sockopt&quot;: &#123;</span><br><span class="line">          &quot;mark&quot;: 2 // 一个可爱的小标记，数字自定义（可能有范围，使用「2」即可），后面能用到</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;tag&quot;: &quot;proxy&quot;, // 出口流量代理标签</span><br><span class="line">      &quot;protocol&quot;: &quot;vmess&quot;, // V2Ray 服务端信息配置</span><br><span class="line">      &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;vnext&quot;: [</span><br><span class="line">          &#123;</span><br><span class="line">            &quot;address&quot;: &quot;服务器地址或域名&quot;,</span><br><span class="line">            &quot;port&quot;: 端口,</span><br><span class="line">            &quot;users&quot;: [</span><br><span class="line">              &#123;</span><br><span class="line">                &quot;id&quot;: &quot;UUID&quot;,</span><br><span class="line">                &quot;alterId&quot;: 4,</span><br><span class="line">                &quot;security&quot;: &quot;auto&quot;</span><br><span class="line">              &#125;</span><br><span class="line">            ]</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;streamSettings&quot;: &#123;</span><br><span class="line">        &quot;network&quot;: &quot;ws&quot;, // WebSocket 传输方式配置，请根据实际情况进行修改</span><br><span class="line">        &quot;wsSettings&quot;: &#123;</span><br><span class="line">          &quot;path&quot;: &quot;路径&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;security&quot;: &quot;tls&quot;,</span><br><span class="line">        &quot;sockopt&quot;: &#123;</span><br><span class="line">          &quot;mark&quot;: 2 // 和上面一样可爱的小标记，两者需相同，后面能用到</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;tag&quot;: &quot;block&quot;, // 出口流量丢弃标签</span><br><span class="line">      &quot;protocol&quot;: &quot;blackhole&quot;,</span><br><span class="line">      &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;response&quot;: &#123;</span><br><span class="line">          &quot;type&quot;: &quot;http&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  &quot;routing&quot;: &#123;</span><br><span class="line">    &quot;domainStrategy&quot;: &quot;IPIfNonMatch&quot;, // 此方式匹配最为全面</span><br><span class="line">    &quot;rules&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;outboundTag&quot;: &quot;proxy&quot;,</span><br><span class="line">        &quot;ip&quot;: [</span><br><span class="line">          // 需要远程解析的 DNS 服务器地址，单独列出，方便维护，与后面 DNS 分流器中的地址相同</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;outboundTag&quot;: &quot;block&quot;,</span><br><span class="line">        &quot;domain&quot;: [</span><br><span class="line">          // 一些想要禁止访问的域名，如广告</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;outboundTag&quot;: &quot;block&quot;,</span><br><span class="line">        &quot;ip&quot;: [</span><br><span class="line">          // 一些想要禁止的 IP，目的同上</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;outboundTag&quot;: &quot;proxy&quot;,</span><br><span class="line">        &quot;domain&quot;: [</span><br><span class="line">          // 一些想要代理的域名，如被墙的域名</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">        &quot;outboundTag&quot;: &quot;proxy&quot;,</span><br><span class="line">        &quot;ip&quot;: [</span><br><span class="line">          // 一些想要代理的 IP，目的同上（Telegram 就需要指定 IP 走代理）</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>配置文件虽然很长，但是配合注释来看比较好理解，请根据实际情况进行修改。需要注意的是，如果在 VSCode、Vim 等编辑器中修改本文件，可能会对有注释的地方报错，这是因为 JSON 格式的文件理论上不支持注释，然而 V2Ray 程序却支持，所以不删除注释也不会影响正常使用。</p>
-<p>另外，上面的配置最后有几个包含「一些想要」注释开头的数组（即中括号「[]」内），其中的内容需要按照实际情况进行修改，这里我分享一下自用的规则：config_routing.json，下载后补充到上面配置文件中即可。这里需要注意的是，我分享的规则中的 Block 部分由于过于强力，可能会导致一些网站无法正常使用（已发现并修改：B 站登录界面、优酷播放界面），所以介意的话可以删除这一部分。如果想要使用，还要解决这个问题，请在网页功能无法正常使用时打开浏览器的开发人员工具，里面应该会提示某一域名（IP）无法访问的错误，之后在配置中查找此域名（IP）并将其删除即可。</p>
-<p>如果以上步骤都做好了，那么就可以保存退出了。</p>
-<p>现在运行<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/usr/bin/v2ray/v2ray -config /etc/v2ray/config.json -test</span><br></pre></td></tr></table></figure></p>
-<p>如果无报错，出现 Configuration OK. 则说明配置文件表面上没有错误。</p>
-<p>最后，需要修改一下 /etc/systemd/system/v2ray.service 文件，以免运行时出现错误：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Service]</span><br><span class="line">CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_NET_RAW CAP_NET_ADMIN</span><br><span class="line"># 4.23.1 需要在 「CapabilityBoundingSet」 的最后添加 「CAP_NET_ADMIN」，否则透明代理无法正常使用</span><br><span class="line">LimitNPROC=500</span><br><span class="line">LimitNOFILE=1000000</span><br><span class="line"># 修改后解决日志中出现非常多「too many open files」的问题</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># systemctl daemon-reload</span><br></pre></td></tr></table></figure>
-<p>这里有一个可选的步骤，如果细心查看配置的话，可能会在路由规则中发现与 geosite:category-ads-all 类似的奇怪字样，这些其实是 V2Ray 中自带的域名（IP）规则，但是此规则文件只能随着 V2Ray 版本更新而更新，所以如果有新的域名出现，不会及时进行补充（虽然内置规则加上配置中的其他规则足够了）。不过有人利用 GitHub Action 每天自动生成此规则文件，其中除了官方自带的地址，又增加了一些地址，以便更好的满足使用者的需求。</p>
-<p>使用方法很简单：用 geoip.dat 和 geosite.dat 两个文件替换 /usr/bin/v2ray 目录下的同名文件即可。</p>
-<p>最后重启 V2Ray。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># systemctl restart v2ray</span><br></pre></td></tr></table></figure></p>
-<p>之后可以使用 cURL 测试配置是否正确（所以建议添加 SOCKS 代理以便测试）。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ curl -x socks5h://127.0.0.1:1080 google.com</span><br><span class="line">&lt;HTML&gt;&lt;HEAD&gt;&lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html;charset=utf-8&quot;&gt;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;TITLE&gt;301 Moved&lt;/TITLE&gt;&lt;/HEAD&gt;&lt;BODY&gt;</span><br><span class="line">&lt;H1&gt;301 Moved&lt;/H1&gt;</span><br><span class="line">The document has moved</span><br><span class="line">&lt;A HREF=&quot;http://www.google.com/&quot;&gt;here&lt;/A&gt;.</span><br><span class="line">&lt;/BODY&gt;&lt;/HTML&gt;</span><br></pre></td></tr></table></figure>
-<p>如出现问题，请检查配置和日志文件（可能需要调整错误日志级别以获取更多信息）。</p>
-<p>#6. 配置 DNS 服务器（Telescope DNS 分流器）<br>Telescope DNS 是一位大佬用 Go 语言开发的 DNS 分流器，在这里使用非常合适，大家觉得好用可以去给项目一个 Star。</p>
-<p>安装与配置 Systemd 单元的教程在项目主页上面都有，这里不作过多讲解。</p>
-<p>如果已经安装好了，先不要着急启动。</p>
-<p>首先，我们修改 Telescope DNS 的配置文件：/etc/ts-dns/ts-dns.toml。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Telescope DNS Configure File</span><br><span class="line"># https://github.com/wolf-joe/ts-dns</span><br><span class="line"></span><br><span class="line">listen = &quot;:53&quot;  # 监听端口</span><br><span class="line">gfwlist = &quot;gfwlist.txt&quot;  # gfwlist文件路径，release包中已预下载。官方地址：https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt</span><br><span class="line">gfwlist_b64 = true  # 是否使用base64解码gfwlist文件，默认为true</span><br><span class="line">cnip = &quot;cnip.txt&quot;  # 中国ip网段列表，用于辅助域名分组</span><br><span class="line">disable_ipv6 = true  # 禁用IPv6地址解析，默认为false</span><br><span class="line"></span><br><span class="line">hosts_files = [&quot;/etc/hosts&quot;]  # hosts文件路径，支持多hosts</span><br><span class="line">[hosts] # 自定义域名映射</span><br><span class="line">&quot;cloudflare-dns.com&quot; = &quot;1.0.0.1&quot;  # 防止下文提到的DoH回环解析，此处地址与 V2Ray 路由规则中的地址相同</span><br><span class="line">&quot;dns.google&quot; = &quot;8.8.8.8&quot;</span><br><span class="line">&quot;dns.adguard.com&quot; = &quot;176.103.130.130&quot;</span><br><span class="line">&quot;dns.quad9.net&quot; = &quot;9.9.9.9&quot;</span><br><span class="line"></span><br><span class="line">[query_log]</span><br><span class="line">file = &quot;&quot;  # dns请求日志文件，值为/dev/null时不记录，值为空时记录到stdout</span><br><span class="line">ignore_qtypes = [&quot;DNSKEY&quot;, &quot;NS&quot;]  # 不记录指定类型的dns请求，默认为空</span><br><span class="line">ignore_cache = true  # 不记录命中缓存的dns请求，默认为false</span><br><span class="line">ignore_hosts = true  # 不记录命中hosts的dns请求，默认为false</span><br><span class="line"></span><br><span class="line">[cache]  # dns缓存配置</span><br><span class="line">size = 4096  # 缓存大小，为负数时禁用缓存</span><br><span class="line">min_ttl = 60  # 最小ttl，单位为秒</span><br><span class="line">max_ttl = 86400  # 最大ttl，单位为秒</span><br><span class="line"></span><br><span class="line">[groups] # 对域名进行分组</span><br><span class="line">  [groups.clean]  # 必选分组，默认域名所在分组</span><br><span class="line">  dns = [&quot;223.5.5.5&quot;, &quot;114.114.114.114&quot;]  # DNS服务器列表，默认使用53端口</span><br><span class="line">  concurrent = true  # 并发请求dns服务器列表</span><br><span class="line"></span><br><span class="line">  [groups.dirty]  # 必选分组，匹配GFWList的域名会归类到该组</span><br><span class="line">  # 警告：如果本机的dns指向ts-dns自身，且DoH地址中的域名被归类到该组，则会出现回环解析的情况，此时需要在上面的hosts中指定对应IP</span><br><span class="line">  doh = [&quot;https://dns.quad9.net/dns-query&quot;, &quot;https://dns.adguard.com/dns-query&quot;, &quot;https://cloudflare-dns.com/dns-query&quot;, &quot;https://dns.google/dns-query&quot;]  # dns over https服务器，由于分流到此处的域名大多被墙，需要通过代理访问，所以选择 DNS 远程解析以获取最佳速度</span><br><span class="line">  concurrent = true</span><br></pre></td></tr></table></figure></p>
-<p>需要注意的是，如果系统使用了 Systemd-resolved 或其他监听 53 端口的 DNS 解析服务，需要将其停止，否则 Telescope DNS 无法启动。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># systemctl stop systemd-resolved</span><br><span class="line"># systemctl disable systemd-resolved</span><br></pre></td></tr></table></figure></p>
-<p>之后就可以开启 Telescope DNS 并设置自启。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># systemctl start ts-dns</span><br><span class="line"># systemctl enable ts-dns</span><br></pre></td></tr></table></figure></p>
-<p>再之后需要修改 /etc/netplan/50-cloud-init.yaml 和 /etc/resolv.conf。建议删除原有的 resolv.conf 文件并重新创建。</p>
-<p>vim /etc/netplan/50-cloud-init.yaml<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">network:</span><br><span class="line">    ethernets:</span><br><span class="line">        eth0:</span><br><span class="line">            dhcp4: false</span><br><span class="line">            dhcp6: false</span><br><span class="line">            link-local: [] # 停止自动获取 IP 地址</span><br><span class="line">            accept-ra: false # 同时不接受 IPv6 地址的广播</span><br><span class="line">            # optional: true # 值为「真」时，开机时不等待获取到网络。这里作为路由器，我就注释掉了</span><br><span class="line">            addresses:</span><br><span class="line">                - 192.168.0.5/24 # IP 地址，注意有子网长度，相当于 IP 地址 + 子网掩码</span><br><span class="line">            gateway4: 192.168.0.1 # 网关地址</span><br><span class="line">            # nameservers:</span><br><span class="line">                # addresses:</span><br><span class="line">                    # - 192.168.0.1 # DNS 服务器地址</span><br><span class="line">    version: 2</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># netplan apply</span><br></pre></td></tr></table></figure>
-<p>rm /etc/resolv.conf<br>vim /etc/resolv.conf<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nameserver 127.0.0.1</span><br><span class="line">options edns0</span><br></pre></td></tr></table></figure></p>
-<p>配置完成后，可以使用 dig 或 nslookup 指令检测 DNS 解析是否正常。如出现问题，可以查看日志获取更多信息。</p>
-<p>另外，如果执行命令出现 sudo: unable to resolve host xxx: Temporary failure in name resolution，可以在 /etc/hosts 中将主机名，也就是这里的 xxx 添加到 127.0.0.1 之后。</p>
-<p>#7. 配置 iptables<br>iptables 的配置是最关键的一步，只有这里配置完成后，透明代理才能正常使用，少或多一条规则都可能引起很多问题。以下所有指令都需要管理员权限运行。</p>
-<p>配置策略路由：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ip rule add fwmark 1 table 100 # 一个不可爱的小标记「1」，理论自定义，其他未测试</span><br><span class="line">ip route add local default dev lo table 100</span><br></pre></td></tr></table></figure></p>
-<p>配置防火墙：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">iptables -t mangle -N V2RAY</span><br><span class="line">iptables -t mangle -A V2RAY -d 0.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 10.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 100.64.0.0/10 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 127.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 169.254.0.0/16 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 172.16.0.0/12 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 192.0.0.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 192.0.2.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 192.88.99.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 192.168.0.0/16 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 198.18.0.0/15 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 198.51.100.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 203.0.113.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 224.0.0.0/4 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 240.0.0.0/4 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY -d 255.255.255.255/32 -j RETURN # 以上均为特殊地址，直连</span><br><span class="line">iptables -t mangle -A V2RAY -p udp --dport 53 -j RETURN # 国内域名查询，直连</span><br><span class="line">iptables -t mangle -A V2RAY -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1</span><br><span class="line">iptables -t mangle -A V2RAY -p udp -j TPROXY --on-port 12345 --tproxy-mark 1 </span><br><span class="line"># 代理需要加一个不可爱的标记</span><br><span class="line">iptables -t mangle -A PREROUTING -j V2RAY</span><br><span class="line"></span><br><span class="line">iptables -t mangle -N V2RAY_MARK # 本机代理</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 0.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 10.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 100.64.0.0/10 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 169.254.0.0/16 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 172.16.0.0/12 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 192.0.0.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 192.0.2.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 192.88.99.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 192.168.0.0/16 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 198.18.0.0/15 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 198.51.100.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 203.0.113.0/24 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 224.0.0.0/4 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 240.0.0.0/4 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -d 255.255.255.255/32 -j RETURN # 除本机外，其他直连</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -p udp --dport 53 -j RETURN</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -j RETURN -m mark --mark 2 # 打一个可爱的标记</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -p tcp -j MARK --set-mark 1 # 同样需要不可爱的标记</span><br><span class="line">iptables -t mangle -A V2RAY_MARK -p udp -j MARK --set-mark 1</span><br><span class="line">iptables -t mangle -A OUTPUT -j V2RAY_MARK</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ lsmod | grep TPROXY</span><br><span class="line">…</span><br><span class="line">xt_TPROXY              20480  2</span><br><span class="line">…</span><br></pre></td></tr></table></figure>
-<p>如未出现此模块，说明系统未自动加载，需要手动设置。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># modprobe xt_TPROXY</span><br></pre></td></tr></table></figure>
-<p>之后编辑 /etc/modules 设置开机自动加载。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">…</span><br><span class="line">xt_TPROXY</span><br></pre></td></tr></table></figure></p>
-<p>保存并退出即可。</p>
-<p>执行上述命令之后，理论上应该成功了，同样可以使用 cURL 进行测试。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ curl google.com</span><br></pre></td></tr></table></figure></p>
-<p>出现和上文中一样的结果，说明没有问题了。现在只需将局域网内其他设备的网关和 DNS 服务器换成透明代理设备的 IP 即可。如果没有配置成功，那么就再一次阅读上文，检查配置，以及配合搜索引擎解决问题，实在不行可以请求大佬提供帮助。</p>
-<p>不过呢，由于最后输入的一大串指令只是临时生效，重启后就需要重新配置，所有我们需要将其保存下来，并编写 Systemd 单元以方便使用。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># mkdir /etc/iptables</span><br><span class="line"># iptables-save -f /etc/iptables/v2tproxy.rules</span><br><span class="line"># vim /etc/systemd/system/v2tproxy.service</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Transparent proxy configurations for V2Ray</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=oneshot</span><br><span class="line">ExecStart=/sbin/ip rule add fwmark 1 table 100 ; /sbin/ip route add local default dev lo table 100 ; /sbin/iptables-restore /etc/iptables/v2tproxy.rules</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line"># systemctl enable v2tproxy</span><br></pre></td></tr></table></figure>
-<p>至此，一切都大功告成了。</p>
-<p>原文链接:<a href="https://moecm.com/tproxy-with-v2ray-on-rpi/" target="_blank" rel="noopener">https://moecm.com/tproxy-with-v2ray-on-rpi/</a></p>
+    <title>openssl常用操作</title>
+    <url>/2022/07/27/openssl-cmd/</url>
+    <content><![CDATA[<p>PKCS＃12（也称为PKCS12或PFX）是一种二进制格式，用于将证书链和私钥存储在单个可加密文件中。 PKCS＃12文件通常用于在Windows和macOS计算机上导入和导出证书和私钥，并且通常具有文件扩展名 .p12 or .pfx.</p>
+<p>查看所有信息:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -info -in apiclient_cert.p12 -nodes</span><br></pre></td></tr></table></figure></p>
+<p>导出证书(公钥):<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out cert.pem -nokeys</span><br></pre></td></tr></table></figure></p>
+<p>导出私钥:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out private_key.pem -nodes -nocerts</span><br></pre></td></tr></table></figure></p>
+<p>查看证书(公钥)序列号:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -in cert.pem -noout -serial</span><br></pre></td></tr></table></figure></p>
+<p>将证书(公钥)转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl rsa -in rsa_public_key.pem -out rsa_public_key.der -pubin -outform der</span><br></pre></td></tr></table></figure></p>
+<p>将私钥转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl rsa -in rsa_private_key.pem -out rsa_private_key.der -outform der</span><br></pre></td></tr></table></figure></p>
 ]]></content>
       <categories>
-        <category>技术教程</category>
+        <category>APP抓包</category>
       </categories>
       <tags>
-        <tag>V2Ray</tag>
-        <tag>树莓派</tag>
+        <tag>https</tag>
+        <tag>openssl</tag>
       </tags>
   </entry>
 </search>
