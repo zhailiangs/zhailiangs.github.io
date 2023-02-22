@@ -88,17 +88,17 @@
 
 
 
-<meta name="description" content="#错误原因 Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所">
+<meta name="description" content="错误原因Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所以在">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ModuleNotFoundError&amp;#58; No module named &amp;#39;&amp;#95;ctypes&amp;#39; 解决方法">
 <meta property="og:url" content="http://yoursite.com/2023/02/22/no-module-named-ctypes/index.html">
 <meta property="og:site_name" content="zhailiangs&#39;blog">
-<meta property="og:description" content="#错误原因 Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所">
+<meta property="og:description" content="错误原因Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所以在">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2023-02-22T02:41:23.673Z">
+<meta property="og:updated_time" content="2023-02-22T02:50:52.834Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ModuleNotFoundError&amp;#58; No module named &amp;#39;&amp;#95;ctypes&amp;#39; 解决方法">
-<meta name="twitter:description" content="#错误原因 Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所">
+<meta name="twitter:description" content="错误原因Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所以在">
 
 
 
@@ -408,10 +408,8 @@
       
 
       
-        <p>#错误原因</p>
-<p>Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。<br>由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所以在安装pip的时候就报了&quot;ModuleNotFoundError: No module named &#39;&#95;ctypes&#39;&quot;的错误。</p>
-<p>#解决方案</p>
-<p>其实很简单安装一下外部函数库(libffi)就可以了，操作步骤如下：</p>
+        <h1 id="错误原因"><a href="#错误原因" class="headerlink" title="错误原因"></a>错误原因</h1><p>Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。<br>由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所以在安装pip的时候就报了&quot;ModuleNotFoundError: No module named &#39;&#95;ctypes&#39;&quot;的错误。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>其实很简单安装一下外部函数库(libffi)就可以了，操作步骤如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install libffi-devel -y</span><br></pre></td></tr></table></figure>
 <p>源码安装的python3 重新编译安装， 如果通过yum安装的 那么直接执行命令 yum install python</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/local/python3</span><br><span class="line"> </span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
@@ -505,8 +503,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -587,6 +594,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#错误原因"><span class="nav-number">1.</span> <span class="nav-text">错误原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决方案"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
