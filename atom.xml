@@ -147,8 +147,8 @@
   
   <entry>
     <title>树莓派 + V2Ray 配置路由器科学上网</title>
-    <link href="http://yoursite.com/2022/07/07/V2Ray-Raspberry-Pi/"/>
-    <id>http://yoursite.com/2022/07/07/V2Ray-Raspberry-Pi/</id>
+    <link href="http://yoursite.com/2022/07/07/v2ray-raspberry-pi/"/>
+    <id>http://yoursite.com/2022/07/07/v2ray-raspberry-pi/</id>
     <published>2022-07-07T03:11:10.788Z</published>
     <updated>2022-07-07T03:11:10.789Z</updated>
     
@@ -515,9 +515,9 @@
       <category term="爬虫" scheme="http://yoursite.com/categories/%E7%88%AC%E8%99%AB/"/>
     
     
-      <category term="Tor" scheme="http://yoursite.com/tags/Tor/"/>
-    
       <category term="爬虫" scheme="http://yoursite.com/tags/%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="Tor" scheme="http://yoursite.com/tags/Tor/"/>
     
   </entry>
   
