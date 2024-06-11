@@ -37,9 +37,9 @@
       <category term="WordPress" scheme="http://yoursite.com/categories/WordPress/"/>
     
     
-      <category term="Template" scheme="http://yoursite.com/tags/Template/"/>
-    
       <category term="WordPress" scheme="http://yoursite.com/tags/WordPress/"/>
+    
+      <category term="Template" scheme="http://yoursite.com/tags/Template/"/>
     
   </entry>
   
@@ -64,9 +64,9 @@
       <category term="WordPress" scheme="http://yoursite.com/categories/WordPress/"/>
     
     
-      <category term="WordPress" scheme="http://yoursite.com/tags/WordPress/"/>
-    
       <category term="Filter" scheme="http://yoursite.com/tags/Filter/"/>
+    
+      <category term="WordPress" scheme="http://yoursite.com/tags/WordPress/"/>
     
   </entry>
   
@@ -145,9 +145,9 @@
       <category term="爬虫" scheme="http://yoursite.com/categories/%E7%88%AC%E8%99%AB/"/>
     
     
-      <category term="Tor" scheme="http://yoursite.com/tags/Tor/"/>
-    
       <category term="爬虫" scheme="http://yoursite.com/tags/%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="Tor" scheme="http://yoursite.com/tags/Tor/"/>
     
   </entry>
   
