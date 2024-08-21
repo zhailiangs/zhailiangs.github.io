@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-06-29T06:07:54.202Z</updated>
+  <updated>2024-08-21T02:06:49.615Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>OpenSSL编译安装</title>
+    <link href="http://yoursite.com/2024/08/21/openssl-install/"/>
+    <id>http://yoursite.com/2024/08/21/openssl-install/</id>
+    <published>2024-08-21T02:06:49.213Z</published>
+    <updated>2024-08-21T02:06:49.615Z</updated>
+    
+    <content type="html"><![CDATA[<p>如果 OpenSSL 的库文件安装在 <code>lib64</code> 文件夹而不是 <code>lib</code> 文件夹中，您需要根据实际路径调整配置。以下是修改步骤：</p><h3 id="重新编译和安装-OpenSSL（使用-lib64）"><a href="#重新编译和安装-OpenSSL（使用-lib64）" class="headerlink" title="重新编译和安装 OpenSSL（使用 lib64）"></a>重新编译和安装 OpenSSL（使用 <code>lib64</code>）</h3><h4 id="1-下载-OpenSSL-源码"><a href="#1-下载-OpenSSL-源码" class="headerlink" title="1. 下载 OpenSSL 源码"></a>1. <strong>下载 OpenSSL 源码</strong></h4><p>如果尚未下载 OpenSSL 源码，请从 OpenSSL 官方网站下载：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://www.openssl.org/<span class="built_in">source</span>/openssl-3.3.1.tar.gz</span><br><span class="line">tar -xvzf openssl-3.3.1.tar.gz</span><br><span class="line"><span class="built_in">cd</span> openssl-3.3.1</span><br></pre></td></tr></table></figure><h4 id="2-配置编译选项"><a href="#2-配置编译选项" class="headerlink" title="2. 配置编译选项"></a>2. <strong>配置编译选项</strong></h4><p>在编译之前，使用 <code>./config</code> 命令指定 <code>lib64</code> 作为库文件目录：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./config --prefix=/usr/<span class="built_in">local</span>/openssl-3.3.1 --openssldir=/usr/<span class="built_in">local</span>/openssl-3.3.1 shared zlib</span><br></pre></td></tr></table></figure><p>这里，<code>--prefix</code> 和 <code>--openssldir</code> 是指定安装路径的参数，但 OpenSSL 默认安装到 <code>lib</code> 下。如果最终安装到 <code>lib64</code>，这通常是系统的标准做法。</p><h4 id="3-编译-OpenSSL"><a href="#3-编译-OpenSSL" class="headerlink" title="3. 编译 OpenSSL"></a>3. <strong>编译 OpenSSL</strong></h4><p>使用 <code>make</code> 命令编译 OpenSSL：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure><p>如果有多个 CPU 核心，可以使用 <code>-j</code> 选项加速编译：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j$(nproc)</span><br></pre></td></tr></table></figure><h4 id="4-安装-OpenSSL"><a href="#4-安装-OpenSSL" class="headerlink" title="4. 安装 OpenSSL"></a>4. <strong>安装 OpenSSL</strong></h4><p>编译完成后，使用 <code>make install</code> 安装：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make install</span><br></pre></td></tr></table></figure><h4 id="5-验证安装"><a href="#5-验证安装" class="headerlink" title="5. 验证安装"></a>5. <strong>验证安装</strong></h4><p>确认库文件安装在 <code>lib64</code> 目录下，并检查 OpenSSL 版本：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ls -l /usr/<span class="built_in">local</span>/openssl-3.3.1/lib64/libssl.so.3</span><br><span class="line">ls -l /usr/<span class="built_in">local</span>/openssl-3.3.1/lib64/libcrypto.so.3</span><br><span class="line"></span><br><span class="line">/usr/<span class="built_in">local</span>/openssl-3.3.1/bin/openssl version</span><br></pre></td></tr></table></figure><h4 id="6-配置环境变量"><a href="#6-配置环境变量" class="headerlink" title="6. 配置环境变量"></a>6. <strong>配置环境变量</strong></h4><p>为了让系统自动找到正确的 OpenSSL 库文件，请设置 <code>LD_LIBRARY_PATH</code> 环境变量：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/<span class="built_in">local</span>/openssl-3.3.1/lib64:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure><p>将其添加到 <code>.bashrc</code> 或 <code>.bash_profile</code> 中，以便每次启动终端时自动加载：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'export LD_LIBRARY_PATH=/usr/local/openssl-3.3.1/lib64:$LD_LIBRARY_PATH'</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure><h4 id="7-使用-ldconfig-更新共享库缓存（可选）"><a href="#7-使用-ldconfig-更新共享库缓存（可选）" class="headerlink" title="7. 使用 ldconfig 更新共享库缓存（可选）"></a>7. <strong>使用 <code>ldconfig</code> 更新共享库缓存（可选）</strong></h4><p>将 <code>lib64</code> 目录添加到系统共享库路径中：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo sh -c <span class="string">'echo "/usr/local/openssl-3.3.1/lib64" &gt; /etc/ld.so.conf.d/openssl-3.3.1.conf'</span></span><br><span class="line">sudo ldconfig</span><br></pre></td></tr></table></figure><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>如果 OpenSSL 的库文件安装在 <code>lib64</code> 目录下，确保您在环境变量和配置文件中使用正确的路径。按照上述步骤，您应该能够正确配置并使用 OpenSSL 3.3.1。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;如果 OpenSSL 的库文件安装在 &lt;code&gt;lib64&lt;/code&gt; 文件夹而不是 &lt;code&gt;lib&lt;/code&gt; 文件夹中，您需要根据实际路径调整配置。以下是修改步骤：&lt;/p&gt;
+&lt;h3 id=&quot;重新编译和安装-OpenSSL（使用-lib64）&quot;&gt;&lt;a href=
+      
+    
+    </summary>
+    
+      <category term="OpenSSL" scheme="http://yoursite.com/categories/OpenSSL/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>WordPress 创建自定义 URL 页面模板</title>
@@ -145,9 +169,9 @@
       <category term="爬虫" scheme="http://yoursite.com/categories/%E7%88%AC%E8%99%AB/"/>
     
     
-      <category term="爬虫" scheme="http://yoursite.com/tags/%E7%88%AC%E8%99%AB/"/>
-    
       <category term="Tor" scheme="http://yoursite.com/tags/Tor/"/>
+    
+      <category term="爬虫" scheme="http://yoursite.com/tags/%E7%88%AC%E8%99%AB/"/>
     
   </entry>
   
@@ -511,35 +535,6 @@
     
     
       <category term="Hexo" scheme="http://yoursite.com/tags/Hexo/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Android7.0以上版本抓取https包问题</title>
-    <link href="http://yoursite.com/2024/04/26/android-app-https/"/>
-    <id>http://yoursite.com/2024/04/26/android-app-https/</id>
-    <published>2024-04-26T05:25:15.682Z</published>
-    <updated>2022-01-21T04:54:14.810Z</updated>
-    
-    <content type="html"><![CDATA[<p>Android7以后，系统不再信任用户级的证书，只信任系统级的证书，所以要抓包就需要把我们的代理程序证书安装至Android的系统目录中</p><ol><li><strong>证书生成</strong><br>将Filddler或者其他抓包程序的证书导出，一般为xxx.cer或者xxx.pem</li></ol><p>证书转换，已经是pem格式的证书不需要执行这一步<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -inform DER -in xxx.cer -out cacert.pem</span><br></pre></td></tr></table></figure></p><ol start="2"><li><strong>对pem证书进行重命名</strong></li></ol><p>openssl版本在1.0以上的版本的执行这一句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash_old -in cacert.pem</span><br></pre></td></tr></table></figure></p><p>openssl版本在1.0以下的版本的执行这一句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash -in cacert.pem</span><br></pre></td></tr></table></figure></p><p>将输出的类似269953fb的值进行复制, 使用上面复制的值（类似于269953fb）对pem证书进行重命名,重命名为： 269953fb.0，切记不要忘记”.0”</p><ol start="3"><li><strong>将新证书放入手机系统证书目录，然后重启Android设备以生效</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">adb push 269953fb.0 /sdcard/tmp/269953fb.0</span><br><span class="line"></span><br><span class="line">adb shell</span><br><span class="line">mount -o rw,remount /system #挂载system分区</span><br><span class="line">mv /sdcard/tmp/269953fb.0 /system/etc/security/cacerts/269953fb.0</span><br><span class="line">cd /system/etc/security/cacerts/</span><br><span class="line">chmod 644 269953fb.0</span><br><span class="line">chown root.root 269953fb.0</span><br><span class="line">reboot  #重启手机</span><br></pre></td></tr></table></figure></li></ol>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;Android7以后，系统不再信任用户级的证书，只信任系统级的证书，所以要抓包就需要把我们的代理程序证书安装至Android的系统目录中&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;证书生成&lt;/strong&gt;&lt;br&gt;将Filddler或者其他抓包程序的证书导出，一般为xxx.
-      
-    
-    </summary>
-    
-      <category term="APP抓包" scheme="http://yoursite.com/categories/APP%E6%8A%93%E5%8C%85/"/>
-    
-    
-      <category term="fiddler" scheme="http://yoursite.com/tags/fiddler/"/>
-    
-      <category term="https" scheme="http://yoursite.com/tags/https/"/>
     
   </entry>
   
