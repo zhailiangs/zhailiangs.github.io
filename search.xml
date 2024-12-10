@@ -1,41 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Android7.0以上版本抓取https包问题</title>
-    <url>/2024/04/26/android-app-https/</url>
-    <content><![CDATA[<p>Android7以后，系统不再信任用户级的证书，只信任系统级的证书，所以要抓包就需要把我们的代理程序证书安装至Android的系统目录中</p>
-<ol>
-<li><strong>证书生成</strong><br>将Filddler或者其他抓包程序的证书导出，一般为xxx.cer或者xxx.pem</li>
-</ol>
-<p>证书转换，已经是pem格式的证书不需要执行这一步<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform DER -in xxx.cer -out cacert.pem</span><br></pre></td></tr></table></figure></p>
-<ol start="2">
-<li><strong>对pem证书进行重命名</strong></li>
-</ol>
-<p>openssl版本在1.0以上的版本的执行这一句<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash_old -in cacert.pem</span><br></pre></td></tr></table></figure></p>
-<p>openssl版本在1.0以下的版本的执行这一句<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash -in cacert.pem</span><br></pre></td></tr></table></figure></p>
-<p>将输出的类似269953fb的值进行复制, 使用上面复制的值（类似于269953fb）对pem证书进行重命名,重命名为： 269953fb.0，切记不要忘记”.0”</p>
-<ol start="3">
-<li><strong>将新证书放入手机系统证书目录，然后重启Android设备以生效</strong><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">adb push 269953fb.0 /sdcard/tmp/269953fb.0</span><br><span class="line"></span><br><span class="line">adb shell</span><br><span class="line">mount -o rw,remount /system #挂载system分区</span><br><span class="line">mv /sdcard/tmp/269953fb.0 /system/etc/security/cacerts/269953fb.0</span><br><span class="line">cd /system/etc/security/cacerts/</span><br><span class="line">chmod 644 269953fb.0</span><br><span class="line">chown root.root 269953fb.0</span><br><span class="line">reboot  #重启手机</span><br></pre></td></tr></table></figure></li>
-</ol>
-]]></content>
-      <categories>
-        <category>APP抓包</category>
-      </categories>
-      <tags>
-        <tag>fiddler</tag>
-        <tag>https</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>安卓APP安全证书验证分类</title>
-    <url>/2024/04/26/android-app-https-ca/</url>
-    <content><![CDATA[<p><img src="/images/ca.png" alt="安卓APP安全证书验证分类" title="安卓APP安全证书验证分类"></p>
-]]></content>
-      <categories>
-        <category>APP抓包</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Hexo文章加密</title>
     <url>/2024/04/26/article-password/</url>
     <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>打开themes-&gt;next-&gt;layout-&gt;_partials-&gt;head.swig文件,在以下位置插入这样一段代码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    (function()&#123;</span><br><span class="line">        if(&apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">            if (prompt(&apos;请输入文章密码&apos;) !== &apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">                alert(&apos;密码错误！&apos;);</span><br><span class="line">                history.back();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)();</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
@@ -48,19 +13,13 @@
       </tags>
   </entry>
   <entry>
-    <title>hexo文章属性冒号后面要加空格</title>
-    <url>/2018/05/12/article-title/</url>
-    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>刚开始使用hexo，生成静态文件老是报错，错误提示如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">can not read a block mapping entry; a multiline key may implicit key at line</span><br></pre></td></tr></table></figure></p>
-<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>冒号后面加空格</p>
-<p>错误写法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags:[hexo入门]</span><br><span class="line">categories:hexo</span><br></pre></td></tr></table></figure></p>
-<p>正确写法:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags: [hexo入门]</span><br><span class="line">categories: hexo</span><br></pre></td></tr></table></figure></p>
+    <title>安卓APP安全证书验证分类</title>
+    <url>/2024/04/26/android-app-https-ca/</url>
+    <content><![CDATA[<p><img src="/images/ca.png" alt="安卓APP安全证书验证分类" title="安卓APP安全证书验证分类"></p>
 ]]></content>
       <categories>
-        <category>hexo</category>
+        <category>APP抓包</category>
       </categories>
-      <tags>
-        <tag>hexo入门</tag>
-      </tags>
   </entry>
   <entry>
     <title>APScheduler中BlockingScheduler和BackgroundScheduler的区别</title>
@@ -87,6 +46,47 @@
       </tags>
   </entry>
   <entry>
+    <title>Android7.0以上版本抓取https包问题</title>
+    <url>/2024/04/26/android-app-https/</url>
+    <content><![CDATA[<p>Android7以后，系统不再信任用户级的证书，只信任系统级的证书，所以要抓包就需要把我们的代理程序证书安装至Android的系统目录中</p>
+<ol>
+<li><strong>证书生成</strong><br>将Filddler或者其他抓包程序的证书导出，一般为xxx.cer或者xxx.pem</li>
+</ol>
+<p>证书转换，已经是pem格式的证书不需要执行这一步<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform DER -in xxx.cer -out cacert.pem</span><br></pre></td></tr></table></figure></p>
+<ol start="2">
+<li><strong>对pem证书进行重命名</strong></li>
+</ol>
+<p>openssl版本在1.0以上的版本的执行这一句<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash_old -in cacert.pem</span><br></pre></td></tr></table></figure></p>
+<p>openssl版本在1.0以下的版本的执行这一句<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash -in cacert.pem</span><br></pre></td></tr></table></figure></p>
+<p>将输出的类似269953fb的值进行复制, 使用上面复制的值（类似于269953fb）对pem证书进行重命名,重命名为： 269953fb.0，切记不要忘记”.0”</p>
+<ol start="3">
+<li><strong>将新证书放入手机系统证书目录，然后重启Android设备以生效</strong><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">adb push 269953fb.0 /sdcard/tmp/269953fb.0</span><br><span class="line"></span><br><span class="line">adb shell</span><br><span class="line">mount -o rw,remount /system #挂载system分区</span><br><span class="line">mv /sdcard/tmp/269953fb.0 /system/etc/security/cacerts/269953fb.0</span><br><span class="line">cd /system/etc/security/cacerts/</span><br><span class="line">chmod 644 269953fb.0</span><br><span class="line">chown root.root 269953fb.0</span><br><span class="line">reboot  #重启手机</span><br></pre></td></tr></table></figure></li>
+</ol>
+]]></content>
+      <categories>
+        <category>APP抓包</category>
+      </categories>
+      <tags>
+        <tag>fiddler</tag>
+        <tag>https</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo文章属性冒号后面要加空格</title>
+    <url>/2018/05/12/article-title/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>刚开始使用hexo，生成静态文件老是报错，错误提示如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">can not read a block mapping entry; a multiline key may implicit key at line</span><br></pre></td></tr></table></figure></p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>冒号后面加空格</p>
+<p>错误写法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags:[hexo入门]</span><br><span class="line">categories:hexo</span><br></pre></td></tr></table></figure></p>
+<p>正确写法:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags: [hexo入门]</span><br><span class="line">categories: hexo</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>hexo入门</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>chrome内置翻译无法使用的原因</title>
     <url>/2024/04/26/chrome-googletrans/</url>
     <content><![CDATA[<p>translate.googleapis.com（Google 翻译 API）,因为停止了中国大陆的服务,不再分配中国内地的服务器地址，所以chrome浏览器内置的 Google 翻译无法使用<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">chrome浏览器内置API不支持扩展配置的socks5代理，所以挂梯子是无效的，除非用系统代理。</span><br></pre></td></tr></table></figure></p>
@@ -97,6 +97,66 @@
       <tags>
         <tag>chrome</tag>
         <tag>翻译</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2024/12/10/digitalocean-centos9-lnmp/</url>
+    <content><![CDATA[<p>title: Digitalocean CentOS 9 安装 <code>screen</code> 和设置虚拟内存的简洁命令汇总：<br>tags: [Digitalocean,CentOS9,LNMP]</p>
+<p>1G内存的vps会因为内存不足不能成功安装lnmp</p>
+<h3 id="设置虚拟内存（1GB-Swap）："><a href="#设置虚拟内存（1GB-Swap）：" class="headerlink" title="设置虚拟内存（1GB Swap）："></a>设置虚拟内存（1GB Swap）：</h3><ol>
+<li><p>检查现有 Swap 空间：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建 1GB Swap 文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo fallocate -l 1G /swapfile</span><br></pre></td></tr></table></figure>
+<p>（如不支持 <code>fallocate</code> 可替代为：）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dd <span class="keyword">if</span>=/dev/zero of=/swapfile bs=1M count=1024</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置权限：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo chmod 600 /swapfile</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>标记为 Swap 空间：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mkswap /swapfile</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启用 Swap：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo swapon /swapfile</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>确认：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将 Swap 文件加入开机自动挂载：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'/swapfile none swap sw 0 0'</span> | sudo tee -a /etc/fstab</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="安装-screen："><a href="#安装-screen：" class="headerlink" title="安装 screen："></a>安装 <code>screen</code>：</h3><ol>
+<li><p>更新系统：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf update -y</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启用 EPEL 仓库：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf install epel-release</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 <code>screen</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf install screen</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证安装：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen --version</span><br></pre></td></tr></table></figure></li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>Centos显示tcp，udp的端口和进程等相关情况</title>
+    <url>/2018/05/18/centos-tcp-udp-show/</url>
+    <content><![CDATA[<h2 id="netstat命令"><a href="#netstat命令" class="headerlink" title="netstat命令"></a>netstat命令</h2><p>netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际的网络连接以及每一个网络接口设备<br>netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。<br>该命令的一般格式为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat [选项]</span><br><span class="line">    命令中各选项的含义如下：</span><br><span class="line">    -a 显示所有socket，包括正在监听的。</span><br><span class="line">    -c 每隔1秒就重新显示一遍，直到用户中断它。</span><br><span class="line">    -i 显示所有网络接口的信息，格式同“ifconfig -e”。</span><br><span class="line">    -n 以网络IP地址代替名称，显示出网络连接情形。</span><br><span class="line">    -r 显示核心路由表，格式同“route -e”。</span><br><span class="line">    -t 显示TCP协议的连接情况。</span><br><span class="line">    -u 显示UDP协议的连接情况。</span><br><span class="line">    -v 显示正在进行的工作。</span><br></pre></td></tr></table></figure>
+<h2 id="netstat-tunlp"><a href="#netstat-tunlp" class="headerlink" title="netstat -tunlp"></a>netstat -tunlp</h2><p>用于显示tcp，udp的端口和进程等相关情况<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat -tunlp</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>CentOS</tag>
       </tags>
   </entry>
   <entry>
@@ -212,6 +272,32 @@
       </tags>
   </entry>
   <entry>
+    <title>组合索引</title>
+    <url>/2024/04/26/db-index/</url>
+    <content><![CDATA[<p>首先我们看看组合索引的与单列索引的区别：</p>
+<h2 id="一-为什么要使用联合索引"><a href="#一-为什么要使用联合索引" class="headerlink" title="一.为什么要使用联合索引"></a>一.为什么要使用联合索引</h2><ol>
+<li><p>减少开销<br>建一个联合索引(col1,col2,col3)，实际相当于建了(col1),(col1,col2),(col1,col2,col3)三个索引。每多一个索引，都会增加写操作的开销和磁盘空间的开销。对于大量数据的表，使用联合索引会大大的减少开销！</p>
+</li>
+<li><p>覆盖索引<br>对联合索引(col1,col2,col3)，如果有如下的sql: select col1,col2,col3 from test where col1=1 and col2=2。那么MySQL可以直接通过遍历索引取得数据，而无需回表，这减少了很多的随机io操作。减少io操作，特别的随机io其实是dba主要的优化策略。所以，在真正的实际应用中，覆盖索引是主要的提升性能的优化手段之一。</p>
+</li>
+<li><p>效率高<br>索引列越多，通过索引筛选出的数据越少。有1000W条数据的表，有如下sql:select from table where col1=1 and col2=2 and col3=3,假设假设每个条件可以筛选出10%的数据，如果只有单值索引，那么通过该索引能筛选出1000W*10%=100w条数据，然后再回表从100w条数据中找到符合col2=2 and col3= 3的数据，然后再排序，再分页；如果是联合索引，通过索引筛选出1000w*10%*10%*10%=1w，效率提升可想而知!</p>
+</li>
+</ol>
+<h2 id="二-组合索引如何使用"><a href="#二-组合索引如何使用" class="headerlink" title="二.组合索引如何使用"></a>二.组合索引如何使用</h2><p>最左原则</p>
+<p>例如组合索引（a,b,c），组合索引的生效原则是</p>
+<p>从前往后依次使用生效，如果中间某个索引没有使用，那么断点前面的索引部分起作用，断点后面的索引没有起作用；</p>
+<p>对于组合索引:Mysql从左到右的使用索引中的字段，一个查询可以只使用索引中的一部份，但只能是最左侧部分。例如索引是key index (a,b,c). 可以支持a | a,b| a,b,c 3种组合进行查找，但不支持 b,c进行查找 .当最左侧字段是常量引用时，索引就十分有效。</p>
+<p>两个或更多个列上的索引被称作复合索引。<br>利用索引中的附加列，您可以缩小搜索的范围，但使用一个具有两列的索引 不同于使用两个单独的索引。复合索引的结构与电话簿类似，人名由姓和名构成，电话簿首先按姓氏对进行排序，然后按名字对有相同姓氏的人进行排序。如果您知 道姓，电话簿将非常有用；如果您知道姓和名，电话簿则更为有用，但如果您只知道名不姓，电话簿将没有用处。<br>所以说创建复合索引时，应该仔细考虑列的顺序。对索引中的所有列执行搜索或仅对前几列执行搜索时，复合索引非常有用；仅对后面的任意列执行搜索时，复合索引则没有用处。</p>
+<p>原文链接：<a href="https://blog.csdn.net/qq_46661297/article/details/106226732" target="_blank" rel="noopener">https://blog.csdn.net/qq_46661297/article/details/106226732</a></p>
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>索引</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Django灵活使用csrf</title>
     <url>/2024/04/26/django-csrf/</url>
     <content><![CDATA[<ol>
@@ -247,40 +333,6 @@
       </categories>
   </entry>
   <entry>
-    <title>组合索引</title>
-    <url>/2024/04/26/db-index/</url>
-    <content><![CDATA[<p>首先我们看看组合索引的与单列索引的区别：</p>
-<h2 id="一-为什么要使用联合索引"><a href="#一-为什么要使用联合索引" class="headerlink" title="一.为什么要使用联合索引"></a>一.为什么要使用联合索引</h2><ol>
-<li><p>减少开销<br>建一个联合索引(col1,col2,col3)，实际相当于建了(col1),(col1,col2),(col1,col2,col3)三个索引。每多一个索引，都会增加写操作的开销和磁盘空间的开销。对于大量数据的表，使用联合索引会大大的减少开销！</p>
-</li>
-<li><p>覆盖索引<br>对联合索引(col1,col2,col3)，如果有如下的sql: select col1,col2,col3 from test where col1=1 and col2=2。那么MySQL可以直接通过遍历索引取得数据，而无需回表，这减少了很多的随机io操作。减少io操作，特别的随机io其实是dba主要的优化策略。所以，在真正的实际应用中，覆盖索引是主要的提升性能的优化手段之一。</p>
-</li>
-<li><p>效率高<br>索引列越多，通过索引筛选出的数据越少。有1000W条数据的表，有如下sql:select from table where col1=1 and col2=2 and col3=3,假设假设每个条件可以筛选出10%的数据，如果只有单值索引，那么通过该索引能筛选出1000W*10%=100w条数据，然后再回表从100w条数据中找到符合col2=2 and col3= 3的数据，然后再排序，再分页；如果是联合索引，通过索引筛选出1000w*10%*10%*10%=1w，效率提升可想而知!</p>
-</li>
-</ol>
-<h2 id="二-组合索引如何使用"><a href="#二-组合索引如何使用" class="headerlink" title="二.组合索引如何使用"></a>二.组合索引如何使用</h2><p>最左原则</p>
-<p>例如组合索引（a,b,c），组合索引的生效原则是</p>
-<p>从前往后依次使用生效，如果中间某个索引没有使用，那么断点前面的索引部分起作用，断点后面的索引没有起作用；</p>
-<p>对于组合索引:Mysql从左到右的使用索引中的字段，一个查询可以只使用索引中的一部份，但只能是最左侧部分。例如索引是key index (a,b,c). 可以支持a | a,b| a,b,c 3种组合进行查找，但不支持 b,c进行查找 .当最左侧字段是常量引用时，索引就十分有效。</p>
-<p>两个或更多个列上的索引被称作复合索引。<br>利用索引中的附加列，您可以缩小搜索的范围，但使用一个具有两列的索引 不同于使用两个单独的索引。复合索引的结构与电话簿类似，人名由姓和名构成，电话簿首先按姓氏对进行排序，然后按名字对有相同姓氏的人进行排序。如果您知 道姓，电话簿将非常有用；如果您知道姓和名，电话簿则更为有用，但如果您只知道名不姓，电话簿将没有用处。<br>所以说创建复合索引时，应该仔细考虑列的顺序。对索引中的所有列执行搜索或仅对前几列执行搜索时，复合索引非常有用；仅对后面的任意列执行搜索时，复合索引则没有用处。</p>
-<p>原文链接：<a href="https://blog.csdn.net/qq_46661297/article/details/106226732" target="_blank" rel="noopener">https://blog.csdn.net/qq_46661297/article/details/106226732</a></p>
-]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>索引</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Nginx设置虚拟目录alias</title>
-    <url>/2024/04/26/nginx-alias/</url>
-    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location ^~ /random_img/ &#123;</span><br><span class="line">    alias /home/random_img/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Nginx</category>
-      </categories>
-  </entry>
-  <entry>
     <title>hexo 标题特殊符号引发错误 &amp;#40;冒号、引号、大括号、连字符&amp;#41;</title>
     <url>/2024/04/26/hexo-title-erro/</url>
     <content><![CDATA[<p>可以使用HTML字符实体代替</p>
@@ -289,21 +341,6 @@
       <categories>
         <category>hexo</category>
       </categories>
-  </entry>
-  <entry>
-    <title>Centos显示tcp，udp的端口和进程等相关情况</title>
-    <url>/2018/05/18/centos-tcp-udp-show/</url>
-    <content><![CDATA[<h2 id="netstat命令"><a href="#netstat命令" class="headerlink" title="netstat命令"></a>netstat命令</h2><p>netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际的网络连接以及每一个网络接口设备<br>netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。<br>该命令的一般格式为：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat [选项]</span><br><span class="line">    命令中各选项的含义如下：</span><br><span class="line">    -a 显示所有socket，包括正在监听的。</span><br><span class="line">    -c 每隔1秒就重新显示一遍，直到用户中断它。</span><br><span class="line">    -i 显示所有网络接口的信息，格式同“ifconfig -e”。</span><br><span class="line">    -n 以网络IP地址代替名称，显示出网络连接情形。</span><br><span class="line">    -r 显示核心路由表，格式同“route -e”。</span><br><span class="line">    -t 显示TCP协议的连接情况。</span><br><span class="line">    -u 显示UDP协议的连接情况。</span><br><span class="line">    -v 显示正在进行的工作。</span><br></pre></td></tr></table></figure>
-<h2 id="netstat-tunlp"><a href="#netstat-tunlp" class="headerlink" title="netstat -tunlp"></a>netstat -tunlp</h2><p>用于显示tcp，udp的端口和进程等相关情况<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat -tunlp</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>CentOS</tag>
-      </tags>
   </entry>
   <entry>
     <title>Fiddler证书清除并重新配置</title>
@@ -330,6 +367,28 @@
       </tags>
   </entry>
   <entry>
+    <title>Hello World</title>
+    <url>/2024/04/26/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Nginx设置虚拟目录alias</title>
+    <url>/2024/04/26/nginx-alias/</url>
+    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location ^~ /random_img/ &#123;</span><br><span class="line">    alias /home/random_img/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Nginx</category>
+      </categories>
+  </entry>
+  <entry>
     <title>使用kill杀死含有指定关键字的进程</title>
     <url>/2024/04/26/linux-kill-keyword/</url>
     <content><![CDATA[<p>命令：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ps -ef|grep keyword|grep -v grep|cut -c 9-15|xargs kill -9</span><br></pre></td></tr></table></figure></p>
@@ -348,6 +407,37 @@
         <tag>进程</tag>
         <tag>kill</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>openssl常用操作</title>
+    <url>/2024/04/26/openssl-cmd/</url>
+    <content><![CDATA[<p>PKCS＃12（也称为PKCS12或PFX）是一种二进制格式，用于将证书链和私钥存储在单个可加密文件中。 PKCS＃12文件通常用于在Windows和macOS计算机上导入和导出证书和私钥，并且通常具有文件扩展名 .p12 or .pfx.</p>
+<p>查看所有信息:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -info -in apiclient_cert.p12 -nodes</span><br></pre></td></tr></table></figure></p>
+<p>导出证书(公钥):<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out cert.pem -nokeys</span><br></pre></td></tr></table></figure></p>
+<p>导出私钥:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out private_key.pem -nodes -nocerts</span><br></pre></td></tr></table></figure></p>
+<p>查看证书(公钥)序列号:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -in cert.pem -noout -serial</span><br></pre></td></tr></table></figure></p>
+<p>将证书(公钥)转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl rsa -in rsa_public_key.pem -out rsa_public_key.der -pubin -outform der</span><br></pre></td></tr></table></figure></p>
+<p>将私钥转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl rsa -in rsa_private_key.pem -out rsa_private_key.der -outform der</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>APP抓包</category>
+      </categories>
+      <tags>
+        <tag>https</tag>
+        <tag>openssl</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ModuleNotFoundError&amp;#58; No module named &amp;#39;&amp;#95;ctypes&amp;#39; 解决方法</title>
+    <url>/2024/04/26/no-module-named-ctypes/</url>
+    <content><![CDATA[<h1 id="错误原因"><a href="#错误原因" class="headerlink" title="错误原因"></a>错误原因</h1><p>Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。<br>由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所以在安装pip的时候就报了&quot;ModuleNotFoundError: No module named &#39;&#95;ctypes&#39;&quot;的错误。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>其实很简单安装一下外部函数库(libffi)就可以了，操作步骤如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install libffi-devel -y</span><br></pre></td></tr></table></figure>
+<p>源码安装的python3 重新编译安装， 如果通过yum安装的 那么直接执行命令 yum install python</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">./configure --prefix=/usr/local/python3</span><br><span class="line"> </span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
   </entry>
   <entry>
     <title>OpenSSL编译安装</title>
@@ -379,41 +469,6 @@
       </categories>
   </entry>
   <entry>
-    <title>Hello World</title>
-    <url>/2024/04/26/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>ModuleNotFoundError&amp;#58; No module named &amp;#39;&amp;#95;ctypes&amp;#39; 解决方法</title>
-    <url>/2024/04/26/no-module-named-ctypes/</url>
-    <content><![CDATA[<h1 id="错误原因"><a href="#错误原因" class="headerlink" title="错误原因"></a>错误原因</h1><p>Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。<br>由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所以在安装pip的时候就报了&quot;ModuleNotFoundError: No module named &#39;&#95;ctypes&#39;&quot;的错误。</p>
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>其实很简单安装一下外部函数库(libffi)就可以了，操作步骤如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install libffi-devel -y</span><br></pre></td></tr></table></figure>
-<p>源码安装的python3 重新编译安装， 如果通过yum安装的 那么直接执行命令 yum install python</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">./configure --prefix=/usr/local/python3</span><br><span class="line"> </span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>python3.8.6安装时提示Detected Windows 7 SP1 without KB2533623</title>
-    <url>/2024/04/26/python-install-erro/</url>
-    <content><![CDATA[<p>下载的安装包，双击安装时，提示安装失败，经过界面中的提示，打开日志后，最后一行提示：Detected Windows 7 SP1 without KB2533623<br>解决办法：<br>需要更新安装win7系统的KB2533623，我的是64位操作系统<br>下载地址：<a href="https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu" target="_blank" rel="noopener">https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu</a><br>百度网盘：<br>链接: <a href="https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA" target="_blank" rel="noopener">https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA</a> 提取码: wdqs 复制这段内容后打开百度网盘手机App，操作更方便哦<br>下载完成后，安装重启电脑即可。<br>————————————————<br>版权声明：本文为CSDN博主「雪诺颜」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/lxiaoqqin/article/details/106402866" target="_blank" rel="noopener">https://blog.csdn.net/lxiaoqqin/article/details/106402866</a></p>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-  </entry>
-  <entry>
     <title>torrc配置项 HTTPTunnelPort</title>
     <url>/2024/04/26/torrc-HTTPTunnelPort/</url>
     <content><![CDATA[<p>新版本的Tor提供了一个http代理端口的配置项：</p>
@@ -428,22 +483,70 @@
       </tags>
   </entry>
   <entry>
-    <title>openssl常用操作</title>
-    <url>/2024/04/26/openssl-cmd/</url>
-    <content><![CDATA[<p>PKCS＃12（也称为PKCS12或PFX）是一种二进制格式，用于将证书链和私钥存储在单个可加密文件中。 PKCS＃12文件通常用于在Windows和macOS计算机上导入和导出证书和私钥，并且通常具有文件扩展名 .p12 or .pfx.</p>
-<p>查看所有信息:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -info -in apiclient_cert.p12 -nodes</span><br></pre></td></tr></table></figure></p>
-<p>导出证书(公钥):<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out cert.pem -nokeys</span><br></pre></td></tr></table></figure></p>
-<p>导出私钥:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out private_key.pem -nodes -nocerts</span><br></pre></td></tr></table></figure></p>
-<p>查看证书(公钥)序列号:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -in cert.pem -noout -serial</span><br></pre></td></tr></table></figure></p>
-<p>将证书(公钥)转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl rsa -in rsa_public_key.pem -out rsa_public_key.der -pubin -outform der</span><br></pre></td></tr></table></figure></p>
-<p>将私钥转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl rsa -in rsa_private_key.pem -out rsa_private_key.der -outform der</span><br></pre></td></tr></table></figure></p>
+    <title>给python的pip设置代理</title>
+    <url>/2024/04/26/python-pip-proxy/</url>
+    <content><![CDATA[<p>由于网络原因，访问国外的pip源超级慢，因此可以给pip设置代理或设置国内源提高速度</p>
+<ul>
+<li>Windows：</li>
+</ul>
+<ol>
+<li>进入%APPDATA%目录，例如：C:\Users\用户名\AppData\Roaming</li>
+<li>新建pip文件夹，如果有则跳过</li>
+<li>新建pip.ini文件，设置pip源<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[global]</span><br><span class="line">proxy=http://127.0.0.1:1081</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li>Linux：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi ~/.pip/pip.conf</span><br></pre></td></tr></table></figure>
+<p>用vi编辑pip.conf文件，内容与Windows下pip.ini文件的内容一样</p>
+<p>原文链接:<a href="https://blog.csdn.net/weixin_42191996/article/details/102332805" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42191996/article/details/102332805</a></p>
 ]]></content>
       <categories>
-        <category>APP抓包</category>
+        <category>Python</category>
       </categories>
       <tags>
-        <tag>https</tag>
-        <tag>openssl</tag>
+        <tag>pip</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>python3.8.6安装时提示Detected Windows 7 SP1 without KB2533623</title>
+    <url>/2024/04/26/python-install-erro/</url>
+    <content><![CDATA[<p>下载的安装包，双击安装时，提示安装失败，经过界面中的提示，打开日志后，最后一行提示：Detected Windows 7 SP1 without KB2533623<br>解决办法：<br>需要更新安装win7系统的KB2533623，我的是64位操作系统<br>下载地址：<a href="https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu" target="_blank" rel="noopener">https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu</a><br>百度网盘：<br>链接: <a href="https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA" target="_blank" rel="noopener">https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA</a> 提取码: wdqs 复制这段内容后打开百度网盘手机App，操作更方便哦<br>下载完成后，安装重启电脑即可。<br>————————————————<br>版权声明：本文为CSDN博主「雪诺颜」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/lxiaoqqin/article/details/106402866" target="_blank" rel="noopener">https://blog.csdn.net/lxiaoqqin/article/details/106402866</a></p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>利用Tor网络实现自动切换IP的爬虫</title>
+    <url>/2024/04/26/tor-spider/</url>
+    <content><![CDATA[<p>当从网络上采集数据时经常会遇到IP被限制的情况，需要不停的更换IP。Tor拥有庞大的IP池，可以帮助我们实现IP切换。如果你的爬虫程序在linux环境下运行请参考<a href="https://zhuanlan.zhihu.com/p/24261906" target="_blank" rel="noopener">《基于Tor网络的多ip爬虫》</a>,下面只介绍windows环境下如何使用。</p>
+<h2 id="安装-Tor-Browser"><a href="#安装-Tor-Browser" class="headerlink" title="安装 Tor Browser"></a>安装 Tor Browser</h2><p>下载地址：<a href="https://www.torproject.org/download/" target="_blank" rel="noopener">https://www.torproject.org/download/</a></p>
+<p>安装过程中记住 Tor Browser 的安装路径，安装完成后找到tor.exe的位置，例如：D:\Browser\TorBrowser\Tor\tor.exe</p>
+<h2 id="下载-Vidalia"><a href="#下载-Vidalia" class="headerlink" title="下载 Vidalia"></a>下载 Vidalia</h2><p>Vidalia的下载地址：<a href="https://people.torproject.org/~erinn/vidalia-standalone-bundles/" target="_blank" rel="noopener">https://people.torproject.org/~erinn/vidalia-standalone-bundles/</a> 下载该页面的最下面那个即可：vidalia-standalone-0.2.21-win32-1_zh-CN.exe，安装完成之后，以管理员权限运行Start Vidalia.exe，进行下面的设定：</p>
+<p><img src="/images/tor-spider-1.png" alt="点击显示设定" title="点击显示设定"><br><img src="/images/tor-spider-2.png" alt="填写tor.exe的路径" title="填写tor.exe的路径"><br><img src="/images/tor-spider-3.png" alt="设置本地代理" title="设置本地代理"><br><img src="/images/tor-spider-4.png" alt="点击启动Tor" title="点击启动Tor"></p>
+<p>如果你的爬虫程序支持设置socks5代理，把代理IP设置为127.0.0.1 端口设置为9050 就可以了<br>如果你的爬虫程序仅支持HTTP代理，则还需要进行下面的操作安装Polipo，将socks5代理转换为HTTP代理</p>
+<h2 id="下载安装Polipo"><a href="#下载安装Polipo" class="headerlink" title="下载安装Polipo"></a>下载安装Polipo</h2><p>下载地址：<a href="http://www.pps.univ-paris-diderot.fr/~jch/software/files/polipo/" target="_blank" rel="noopener">http://www.pps.univ-paris-diderot.fr/~jch/software/files/polipo/</a></p>
+<p>选择polipo-1.1.0-win32.zip，下载并解压，然后编辑解压后的文件config.sample，在文件的开头加上以下配置：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">socksParentProxy = &quot;localhost:9050&quot;</span><br><span class="line"></span><br><span class="line">socksProxyType = socks5</span><br><span class="line"></span><br><span class="line">diskCacheRoot = &quot;&quot;</span><br></pre></td></tr></table></figure></p>
+<p>使用cmd命令运行该目录下的程序：polipo.exe -c config.sample</p>
+<p><img src="/images/tor-spider-5.png" alt="使用cmd命令运行该目录下的程序" title="使用cmd命令运行该目录下的程序"></p>
+<p>转换后的HTTP代理为127.0.0.1:8123</p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><ol>
+<li>长时间无法连接Tor：<ul>
+<li>检查用来连接Tor的代理是否可用</li>
+<li>如果使用V2ray来连接Tor, 需要在V2ray的配置中关闭流量探测<br><img src="/images/tor-spider-6.png" alt="不要勾选开启流量探测" title="不要勾选开启流量探测"></li>
+</ul>
+</li>
+<li>待补充</li>
+</ol>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+      <tags>
+        <tag>Tor</tag>
+        <tag>爬虫</tag>
       </tags>
   </entry>
   <entry>
@@ -524,61 +627,24 @@
       </tags>
   </entry>
   <entry>
-    <title>给python的pip设置代理</title>
-    <url>/2024/04/26/python-pip-proxy/</url>
-    <content><![CDATA[<p>由于网络原因，访问国外的pip源超级慢，因此可以给pip设置代理或设置国内源提高速度</p>
-<ul>
-<li>Windows：</li>
-</ul>
-<ol>
-<li>进入%APPDATA%目录，例如：C:\Users\用户名\AppData\Roaming</li>
-<li>新建pip文件夹，如果有则跳过</li>
-<li>新建pip.ini文件，设置pip源<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[global]</span><br><span class="line">proxy=http://127.0.0.1:1081</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ul>
-<li>Linux：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi ~/.pip/pip.conf</span><br></pre></td></tr></table></figure>
-<p>用vi编辑pip.conf文件，内容与Windows下pip.ini文件的内容一样</p>
-<p>原文链接:<a href="https://blog.csdn.net/weixin_42191996/article/details/102332805" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42191996/article/details/102332805</a></p>
+    <title>WordPress 创建自定义 URL 页面模板</title>
+    <url>/2024/04/26/wordpress-loadcustom-template/</url>
+    <content><![CDATA[<p>WordPress 创建模板的其实都非常的简单，而 WordPress 添加自定义页面一般有两种方法，一种是使用自定义模板，另外一种是使用 template_redirect 动作钩子来实现自定义页面。这也是子凡最近在开发博客导航中屡试不爽的一个功能，其中主要就是为了完成博客导航中 URL 的一个统一及规范，所以这就成了最好的一个方法了。</p>
+<p>WordPress 自定义创建页面模板其实非常的简单，但是也比较的有局限性，因为 WordPress 在 page 页面类型中的 url 是不支持同名存在的，所以一旦与分类目录活着标签别名相同后，自定义固定链接使用文章名的链接就会出现错误，这也使得不能规范博客导航中的 URL 链接，所以这就成了子凡在开发博客导航中一直纠结的一个梗，所以最后不得不弃用 WordPress 自定义模板的这个功能。</p>
+<p>template_redirect 动作钩子很有用，因为它是 WordPress 知道用户正在浏览的页面的关键。它在特定的页面选择 theme template 之前执行。在只在网站的前端触发，并不在管理员页面触发。直接调用 WordPress 的 API. 来解决这个问题。</p>
+<p>老规矩，在当前主题 functions.php 中添加一下代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//自定义页面模板</span><br><span class="line">function loadCustomTemplate($template) &#123;</span><br><span class="line">    global $wp_query;</span><br><span class="line">    if(!file_exists($template))return;</span><br><span class="line">    $wp_query-&gt;is_page = true;</span><br><span class="line">    $wp_query-&gt;is_single = false;</span><br><span class="line">    $wp_query-&gt;is_home = false;</span><br><span class="line">    $wp_query-&gt;comments = false;</span><br><span class="line">    // if we have a 404 status</span><br><span class="line">    if ($wp_query-&gt;is_404) &#123;</span><br><span class="line">        // set status of 404 to false</span><br><span class="line">        unset($wp_query-&gt;query[&quot;error&quot;]);</span><br><span class="line">        $wp_query-&gt;query_vars[&quot;error&quot;]=&quot;&quot;;</span><br><span class="line">        $wp_query-&gt;is_404=false;</span><br><span class="line">    &#125;</span><br><span class="line">    // change the header to 200 OK</span><br><span class="line">    header(&quot;HTTP/1.1 200 OK&quot;);</span><br><span class="line">    //load our template</span><br><span class="line">    include($template);</span><br><span class="line">    exit;</span><br><span class="line">&#125;</span><br><span class="line">function templateRedirect() &#123;</span><br><span class="line">    $basename = basename($_SERVER[&apos;REQUEST_URI&apos;], &apos;?&apos; . $_SERVER[&apos;QUERY_STRING&apos;]);</span><br><span class="line">    loadCustomTemplate(TEMPLATEPATH.&apos;/blogs/&apos;.&quot;/$basename.php&quot;);</span><br><span class="line">&#125;</span><br><span class="line">add_action(&apos;template_redirect&apos;, &apos;templateRedirect&apos;);</span><br></pre></td></tr></table></figure>
+<p>这样就实现了 WordPress 查找主题文件夹下/blogs 文件夹下的 php 文件，并且将相匹配的 URL 请求转交给对应的 php 文件来处理的效果，与此同时，这个 php 文件还保持了对 WordPress API 的调用，因此留给我们的空间非常大。</p>
+<p>如果我们需要自定义某个页面链接的模板，就需要在主题文件夹下的/blogs 目录创建一个 xxx.php 的 php 文件。这里页面的内容子凡就不提供代码示例了。</p>
+<p>那么最后我们就只需要输入 domain.com/xxx 就能显示这个 xxx.php 的文件内容了，并且 xxx.php 这个文件是支持所有 WordPress 函数的，具有主题的框架和 CSS 样式，非常方便好用。</p>
+<p>原文链接：<a href="https://zhangzifan.com/wordpress-template-redirect.html" target="_blank" rel="noopener">https://zhangzifan.com/wordpress-template-redirect.html</a></p>
 ]]></content>
       <categories>
-        <category>Python</category>
+        <category>WordPress</category>
       </categories>
       <tags>
-        <tag>pip</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>利用Tor网络实现自动切换IP的爬虫</title>
-    <url>/2024/04/26/tor-spider/</url>
-    <content><![CDATA[<p>当从网络上采集数据时经常会遇到IP被限制的情况，需要不停的更换IP。Tor拥有庞大的IP池，可以帮助我们实现IP切换。如果你的爬虫程序在linux环境下运行请参考<a href="https://zhuanlan.zhihu.com/p/24261906" target="_blank" rel="noopener">《基于Tor网络的多ip爬虫》</a>,下面只介绍windows环境下如何使用。</p>
-<h2 id="安装-Tor-Browser"><a href="#安装-Tor-Browser" class="headerlink" title="安装 Tor Browser"></a>安装 Tor Browser</h2><p>下载地址：<a href="https://www.torproject.org/download/" target="_blank" rel="noopener">https://www.torproject.org/download/</a></p>
-<p>安装过程中记住 Tor Browser 的安装路径，安装完成后找到tor.exe的位置，例如：D:\Browser\TorBrowser\Tor\tor.exe</p>
-<h2 id="下载-Vidalia"><a href="#下载-Vidalia" class="headerlink" title="下载 Vidalia"></a>下载 Vidalia</h2><p>Vidalia的下载地址：<a href="https://people.torproject.org/~erinn/vidalia-standalone-bundles/" target="_blank" rel="noopener">https://people.torproject.org/~erinn/vidalia-standalone-bundles/</a> 下载该页面的最下面那个即可：vidalia-standalone-0.2.21-win32-1_zh-CN.exe，安装完成之后，以管理员权限运行Start Vidalia.exe，进行下面的设定：</p>
-<p><img src="/images/tor-spider-1.png" alt="点击显示设定" title="点击显示设定"><br><img src="/images/tor-spider-2.png" alt="填写tor.exe的路径" title="填写tor.exe的路径"><br><img src="/images/tor-spider-3.png" alt="设置本地代理" title="设置本地代理"><br><img src="/images/tor-spider-4.png" alt="点击启动Tor" title="点击启动Tor"></p>
-<p>如果你的爬虫程序支持设置socks5代理，把代理IP设置为127.0.0.1 端口设置为9050 就可以了<br>如果你的爬虫程序仅支持HTTP代理，则还需要进行下面的操作安装Polipo，将socks5代理转换为HTTP代理</p>
-<h2 id="下载安装Polipo"><a href="#下载安装Polipo" class="headerlink" title="下载安装Polipo"></a>下载安装Polipo</h2><p>下载地址：<a href="http://www.pps.univ-paris-diderot.fr/~jch/software/files/polipo/" target="_blank" rel="noopener">http://www.pps.univ-paris-diderot.fr/~jch/software/files/polipo/</a></p>
-<p>选择polipo-1.1.0-win32.zip，下载并解压，然后编辑解压后的文件config.sample，在文件的开头加上以下配置：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">socksParentProxy = &quot;localhost:9050&quot;</span><br><span class="line"></span><br><span class="line">socksProxyType = socks5</span><br><span class="line"></span><br><span class="line">diskCacheRoot = &quot;&quot;</span><br></pre></td></tr></table></figure></p>
-<p>使用cmd命令运行该目录下的程序：polipo.exe -c config.sample</p>
-<p><img src="/images/tor-spider-5.png" alt="使用cmd命令运行该目录下的程序" title="使用cmd命令运行该目录下的程序"></p>
-<p>转换后的HTTP代理为127.0.0.1:8123</p>
-<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><ol>
-<li>长时间无法连接Tor：<ul>
-<li>检查用来连接Tor的代理是否可用</li>
-<li>如果使用V2ray来连接Tor, 需要在V2ray的配置中关闭流量探测<br><img src="/images/tor-spider-6.png" alt="不要勾选开启流量探测" title="不要勾选开启流量探测"></li>
-</ul>
-</li>
-<li>待补充</li>
-</ol>
-]]></content>
-      <categories>
-        <category>爬虫</category>
-      </categories>
-      <tags>
-        <tag>Tor</tag>
-        <tag>爬虫</tag>
+        <tag>Template</tag>
+        <tag>WordPress</tag>
       </tags>
   </entry>
   <entry>
@@ -646,29 +712,8 @@
         <category>WordPress</category>
       </categories>
       <tags>
+        <tag>WordPress</tag>
         <tag>Filter</tag>
-        <tag>WordPress</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>WordPress 创建自定义 URL 页面模板</title>
-    <url>/2024/04/26/wordpress-loadcustom-template/</url>
-    <content><![CDATA[<p>WordPress 创建模板的其实都非常的简单，而 WordPress 添加自定义页面一般有两种方法，一种是使用自定义模板，另外一种是使用 template_redirect 动作钩子来实现自定义页面。这也是子凡最近在开发博客导航中屡试不爽的一个功能，其中主要就是为了完成博客导航中 URL 的一个统一及规范，所以这就成了最好的一个方法了。</p>
-<p>WordPress 自定义创建页面模板其实非常的简单，但是也比较的有局限性，因为 WordPress 在 page 页面类型中的 url 是不支持同名存在的，所以一旦与分类目录活着标签别名相同后，自定义固定链接使用文章名的链接就会出现错误，这也使得不能规范博客导航中的 URL 链接，所以这就成了子凡在开发博客导航中一直纠结的一个梗，所以最后不得不弃用 WordPress 自定义模板的这个功能。</p>
-<p>template_redirect 动作钩子很有用，因为它是 WordPress 知道用户正在浏览的页面的关键。它在特定的页面选择 theme template 之前执行。在只在网站的前端触发，并不在管理员页面触发。直接调用 WordPress 的 API. 来解决这个问题。</p>
-<p>老规矩，在当前主题 functions.php 中添加一下代码：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//自定义页面模板</span><br><span class="line">function loadCustomTemplate($template) &#123;</span><br><span class="line">    global $wp_query;</span><br><span class="line">    if(!file_exists($template))return;</span><br><span class="line">    $wp_query-&gt;is_page = true;</span><br><span class="line">    $wp_query-&gt;is_single = false;</span><br><span class="line">    $wp_query-&gt;is_home = false;</span><br><span class="line">    $wp_query-&gt;comments = false;</span><br><span class="line">    // if we have a 404 status</span><br><span class="line">    if ($wp_query-&gt;is_404) &#123;</span><br><span class="line">        // set status of 404 to false</span><br><span class="line">        unset($wp_query-&gt;query[&quot;error&quot;]);</span><br><span class="line">        $wp_query-&gt;query_vars[&quot;error&quot;]=&quot;&quot;;</span><br><span class="line">        $wp_query-&gt;is_404=false;</span><br><span class="line">    &#125;</span><br><span class="line">    // change the header to 200 OK</span><br><span class="line">    header(&quot;HTTP/1.1 200 OK&quot;);</span><br><span class="line">    //load our template</span><br><span class="line">    include($template);</span><br><span class="line">    exit;</span><br><span class="line">&#125;</span><br><span class="line">function templateRedirect() &#123;</span><br><span class="line">    $basename = basename($_SERVER[&apos;REQUEST_URI&apos;], &apos;?&apos; . $_SERVER[&apos;QUERY_STRING&apos;]);</span><br><span class="line">    loadCustomTemplate(TEMPLATEPATH.&apos;/blogs/&apos;.&quot;/$basename.php&quot;);</span><br><span class="line">&#125;</span><br><span class="line">add_action(&apos;template_redirect&apos;, &apos;templateRedirect&apos;);</span><br></pre></td></tr></table></figure>
-<p>这样就实现了 WordPress 查找主题文件夹下/blogs 文件夹下的 php 文件，并且将相匹配的 URL 请求转交给对应的 php 文件来处理的效果，与此同时，这个 php 文件还保持了对 WordPress API 的调用，因此留给我们的空间非常大。</p>
-<p>如果我们需要自定义某个页面链接的模板，就需要在主题文件夹下的/blogs 目录创建一个 xxx.php 的 php 文件。这里页面的内容子凡就不提供代码示例了。</p>
-<p>那么最后我们就只需要输入 domain.com/xxx 就能显示这个 xxx.php 的文件内容了，并且 xxx.php 这个文件是支持所有 WordPress 函数的，具有主题的框架和 CSS 样式，非常方便好用。</p>
-<p>原文链接：<a href="https://zhangzifan.com/wordpress-template-redirect.html" target="_blank" rel="noopener">https://zhangzifan.com/wordpress-template-redirect.html</a></p>
-]]></content>
-      <categories>
-        <category>WordPress</category>
-      </categories>
-      <tags>
-        <tag>WordPress</tag>
-        <tag>Template</tag>
       </tags>
   </entry>
 </search>
