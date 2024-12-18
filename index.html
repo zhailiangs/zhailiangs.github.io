@@ -320,7 +320,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2024/12/10/digitalocean-centos9-lnmp/" itemprop="url">未命名</a></h1>
+                <a class="post-title-link" href="/2024/12/10/digitalocean-centos9-lnmp/" itemprop="url">Digitalocean CentOS 9 安装 `screen` 和设置虚拟内存的命令汇总</a></h1>
         
 
         <div class="post-meta">
@@ -382,8 +382,13 @@
       
         
           
-          title: Digitalocean CentOS 9 安装 screen 和设置虚拟内存的简洁命令汇总：tags: [Digitalocean,CentOS9,LNMP]
-1G内存的vps会因为内
+          1G内存的vps会因为内存不足不能成功安装lnmp，解决方法如下：
+设置虚拟内存（1GB Swap）：
+检查现有 Swap 空间：
+1swapon --show
+
+创建 1GB Swap 文件：
+1s
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1933,7 +1938,7 @@ Windows：
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

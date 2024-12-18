@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hexo文章加密</title>
-    <url>/2024/04/26/article-password/</url>
-    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>打开themes-&gt;next-&gt;layout-&gt;_partials-&gt;head.swig文件,在以下位置插入这样一段代码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    (function()&#123;</span><br><span class="line">        if(&apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">            if (prompt(&apos;请输入文章密码&apos;) !== &apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">                alert(&apos;密码错误！&apos;);</span><br><span class="line">                history.back();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)();</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>安卓APP安全证书验证分类</title>
     <url>/2024/04/26/android-app-https-ca/</url>
     <content><![CDATA[<p><img src="/images/ca.png" alt="安卓APP安全证书验证分类" title="安卓APP安全证书验证分类"></p>
@@ -22,27 +10,18 @@
       </categories>
   </entry>
   <entry>
-    <title>APScheduler中BlockingScheduler和BackgroundScheduler的区别</title>
-    <url>/2018/05/18/apscheduler-backgroundscheduler/</url>
-    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>APScheduler是基于Quartz的一个Python定时任务框架，提供了基于日期、固定时间间隔以及crontab类型的任务，并且可以持久化任务。</p>
-<p>这里简单列一下常用的若干调度器：</p>
-<p>BlockingScheduler：仅可用在当前你的进程之内，与当前的进行共享计算资源<br>BackgroundScheduler:　在后台运行调度，不影响当前的系统计算运行<br>AsyncIOScheduler:　如果当前系统中使用了async module，则需要使用异步的调度器<br>GeventScheduler:　如果使用了gevent，则需要使用该调度<br>TornadoScheduler:　如果使用了Tornado, 则使用当前的调度器<br>TwistedScheduler:Twister应用的调度器<br>QtScheduler:　Qt的调度器</p>
-<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>我在使用APScheduler过程中想使用BackgroundScheduler调度器，结果任务一直无法执行，后来换用BlockingScheduler，结果可以正常执行。</p>
-<p>BackgroundScheduler调度器代码：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">from datetime import datetime</span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line">scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">scheduler.start()</span><br><span class="line">scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 16:56:01&apos;,args=[&apos;my_test3&apos;],id=&apos;my_test4&apos;)</span><br></pre></td></tr></table></figure>
-<p>BlockingScheduler调度器代码：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">import datetime</span><br><span class="line">from apscheduler.schedulers.blocking import BlockingScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line"># 使用sqlite存储作业</span><br><span class="line">sqlitedb = r&quot;sqlitedb.db&quot;</span><br><span class="line">url = r&apos;sqlite:///%s&apos; %sqlitedb</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    print(datetime.datetime.now())</span><br><span class="line">    print(&apos;-&apos; * 10 + text + &apos;-&apos; * 10)</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=url)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sched = BlockingScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults)</span><br><span class="line">sched.add_job(test,next_run_time= args=[&apos;my_test&apos;],id=&apos;my_test&apos;)</span><br><span class="line">sched.start()</span><br></pre></td></tr></table></figure>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>BackgroundScheduler调度器依赖于python脚本的主进程，如果主进程不存在定时任务也就不存在，我的代码里面没有可以维持脚本运行的主进程所以无法执行定时任务</p>
-<h2 id="正确示例代码"><a href="#正确示例代码" class="headerlink" title="正确示例代码"></a>正确示例代码</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">from datetime import datetime</span><br><span class="line">import time</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">    &#125;</span><br><span class="line">    executors = &#123;</span><br><span class="line">        &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">        &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">    &#125;</span><br><span class="line">    job_defaults = &#123;</span><br><span class="line">        &apos;coalesce&apos;: False,</span><br><span class="line">        &apos;max_instances&apos;: 3</span><br><span class="line">    &#125;</span><br><span class="line">    scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">    #scheduler.add_job(tick, &apos;interval&apos;, seconds=3)</span><br><span class="line">    scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 17:12:01&apos;, args=[&apos;my_test5&apos;],id=&apos;my_test5&apos;)</span><br><span class="line">    scheduler.start()  #这里的调度任务是独立的一个线程</span><br><span class="line">    print(&apos;Press Ctrl+&#123;0&#125; to exit&apos;.format(&apos;Break&apos; if os.name == &apos;nt&apos; else &apos;C&apos;))</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        # This is here to simulate application activity (which keeps the main thread alive).</span><br><span class="line">        while True:</span><br><span class="line">            time.sleep(2)    #其他任务是独立的线程执行</span><br><span class="line">            print(&apos;sleep!&apos;)</span><br><span class="line">    except (KeyboardInterrupt, SystemExit):</span><br><span class="line">        # Not strictly necessary if daemonic mode is enabled but should be done if possible</span><br><span class="line">        scheduler.shutdown()</span><br><span class="line">        print(&apos;Exit The Job!&apos;)</span><br></pre></td></tr></table></figure>
-<p>参考链接:  </p>
-<p><a href="https://www.cnblogs.com/hushaojun/p/5189109.html" target="_blank" rel="noopener">https://www.cnblogs.com/hushaojun/p/5189109.html</a><br><a href="https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1](https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1)" target="_blank" rel="noopener">https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1](https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1)</a></p>
+    <title>hexo文章属性冒号后面要加空格</title>
+    <url>/2018/05/12/article-title/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>刚开始使用hexo，生成静态文件老是报错，错误提示如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">can not read a block mapping entry; a multiline key may implicit key at line</span><br></pre></td></tr></table></figure></p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>冒号后面加空格</p>
+<p>错误写法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags:[hexo入门]</span><br><span class="line">categories:hexo</span><br></pre></td></tr></table></figure></p>
+<p>正确写法:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags: [hexo入门]</span><br><span class="line">categories: hexo</span><br></pre></td></tr></table></figure></p>
 ]]></content>
       <categories>
-        <category>Python</category>
+        <category>hexo</category>
       </categories>
       <tags>
-        <tag>Python</tag>
-        <tag>APScheduler</tag>
+        <tag>hexo入门</tag>
       </tags>
   </entry>
   <entry>
@@ -72,91 +51,39 @@
       </tags>
   </entry>
   <entry>
-    <title>hexo文章属性冒号后面要加空格</title>
-    <url>/2018/05/12/article-title/</url>
-    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>刚开始使用hexo，生成静态文件老是报错，错误提示如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">can not read a block mapping entry; a multiline key may implicit key at line</span><br></pre></td></tr></table></figure></p>
-<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>冒号后面加空格</p>
-<p>错误写法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags:[hexo入门]</span><br><span class="line">categories:hexo</span><br></pre></td></tr></table></figure></p>
-<p>正确写法:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags: [hexo入门]</span><br><span class="line">categories: hexo</span><br></pre></td></tr></table></figure></p>
+    <title>Hexo文章加密</title>
+    <url>/2024/04/26/article-password/</url>
+    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>打开themes-&gt;next-&gt;layout-&gt;_partials-&gt;head.swig文件,在以下位置插入这样一段代码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    (function()&#123;</span><br><span class="line">        if(&apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">            if (prompt(&apos;请输入文章密码&apos;) !== &apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">                alert(&apos;密码错误！&apos;);</span><br><span class="line">                history.back();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)();</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
 ]]></content>
       <categories>
-        <category>hexo</category>
+        <category>Hexo</category>
       </categories>
       <tags>
-        <tag>hexo入门</tag>
+        <tag>Hexo</tag>
       </tags>
   </entry>
   <entry>
-    <title>chrome内置翻译无法使用的原因</title>
-    <url>/2024/04/26/chrome-googletrans/</url>
-    <content><![CDATA[<p>translate.googleapis.com（Google 翻译 API）,因为停止了中国大陆的服务,不再分配中国内地的服务器地址，所以chrome浏览器内置的 Google 翻译无法使用<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">chrome浏览器内置API不支持扩展配置的socks5代理，所以挂梯子是无效的，除非用系统代理。</span><br></pre></td></tr></table></figure></p>
+    <title>APScheduler中BlockingScheduler和BackgroundScheduler的区别</title>
+    <url>/2018/05/18/apscheduler-backgroundscheduler/</url>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>APScheduler是基于Quartz的一个Python定时任务框架，提供了基于日期、固定时间间隔以及crontab类型的任务，并且可以持久化任务。</p>
+<p>这里简单列一下常用的若干调度器：</p>
+<p>BlockingScheduler：仅可用在当前你的进程之内，与当前的进行共享计算资源<br>BackgroundScheduler:　在后台运行调度，不影响当前的系统计算运行<br>AsyncIOScheduler:　如果当前系统中使用了async module，则需要使用异步的调度器<br>GeventScheduler:　如果使用了gevent，则需要使用该调度<br>TornadoScheduler:　如果使用了Tornado, 则使用当前的调度器<br>TwistedScheduler:Twister应用的调度器<br>QtScheduler:　Qt的调度器</p>
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>我在使用APScheduler过程中想使用BackgroundScheduler调度器，结果任务一直无法执行，后来换用BlockingScheduler，结果可以正常执行。</p>
+<p>BackgroundScheduler调度器代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">from datetime import datetime</span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line">scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">scheduler.start()</span><br><span class="line">scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 16:56:01&apos;,args=[&apos;my_test3&apos;],id=&apos;my_test4&apos;)</span><br></pre></td></tr></table></figure>
+<p>BlockingScheduler调度器代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line"># -*- coding: UTF-8 -*-</span><br><span class="line">import datetime</span><br><span class="line">from apscheduler.schedulers.blocking import BlockingScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line"># 使用sqlite存储作业</span><br><span class="line">sqlitedb = r&quot;sqlitedb.db&quot;</span><br><span class="line">url = r&apos;sqlite:///%s&apos; %sqlitedb</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    print(datetime.datetime.now())</span><br><span class="line">    print(&apos;-&apos; * 10 + text + &apos;-&apos; * 10)</span><br><span class="line"></span><br><span class="line">jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=url)</span><br><span class="line">&#125;</span><br><span class="line">executors = &#123;</span><br><span class="line">    &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">    &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">&#125;</span><br><span class="line">job_defaults = &#123;</span><br><span class="line">    &apos;coalesce&apos;: False,</span><br><span class="line">    &apos;max_instances&apos;: 3</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sched = BlockingScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults)</span><br><span class="line">sched.add_job(test,next_run_time= args=[&apos;my_test&apos;],id=&apos;my_test&apos;)</span><br><span class="line">sched.start()</span><br></pre></td></tr></table></figure>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>BackgroundScheduler调度器依赖于python脚本的主进程，如果主进程不存在定时任务也就不存在，我的代码里面没有可以维持脚本运行的主进程所以无法执行定时任务</p>
+<h2 id="正确示例代码"><a href="#正确示例代码" class="headerlink" title="正确示例代码"></a>正确示例代码</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">from datetime import datetime</span><br><span class="line">import time</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">from apscheduler.schedulers.background import BackgroundScheduler</span><br><span class="line">from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore</span><br><span class="line">from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor</span><br><span class="line"></span><br><span class="line">def test(text):</span><br><span class="line">    date1 = datetime.now().strftime(&apos;%Y-%m-%d %H:%M:%S&apos;)</span><br><span class="line">    f = open(&apos;log2.txt&apos;,&apos;a&apos;)</span><br><span class="line">    f.write(date1 + &apos;-&apos; * 10 + text + &apos;-&apos; * 10 + &apos;\n&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    jobstores = &#123;</span><br><span class="line">    &apos;default&apos;: SQLAlchemyJobStore(url=&apos;sqlite:///jobs.sqlite&apos;)</span><br><span class="line">    &#125;</span><br><span class="line">    executors = &#123;</span><br><span class="line">        &apos;default&apos;: ThreadPoolExecutor(20),</span><br><span class="line">        &apos;processpool&apos;: ProcessPoolExecutor(5)</span><br><span class="line">    &#125;</span><br><span class="line">    job_defaults = &#123;</span><br><span class="line">        &apos;coalesce&apos;: False,</span><br><span class="line">        &apos;max_instances&apos;: 3</span><br><span class="line">    &#125;</span><br><span class="line">    scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=&apos;Asia/Shanghai&apos;)</span><br><span class="line">    #scheduler.add_job(tick, &apos;interval&apos;, seconds=3)</span><br><span class="line">    scheduler.add_job(test,&apos;date&apos;,run_date=&apos;2018-05-18 17:12:01&apos;, args=[&apos;my_test5&apos;],id=&apos;my_test5&apos;)</span><br><span class="line">    scheduler.start()  #这里的调度任务是独立的一个线程</span><br><span class="line">    print(&apos;Press Ctrl+&#123;0&#125; to exit&apos;.format(&apos;Break&apos; if os.name == &apos;nt&apos; else &apos;C&apos;))</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        # This is here to simulate application activity (which keeps the main thread alive).</span><br><span class="line">        while True:</span><br><span class="line">            time.sleep(2)    #其他任务是独立的线程执行</span><br><span class="line">            print(&apos;sleep!&apos;)</span><br><span class="line">    except (KeyboardInterrupt, SystemExit):</span><br><span class="line">        # Not strictly necessary if daemonic mode is enabled but should be done if possible</span><br><span class="line">        scheduler.shutdown()</span><br><span class="line">        print(&apos;Exit The Job!&apos;)</span><br></pre></td></tr></table></figure>
+<p>参考链接:  </p>
+<p><a href="https://www.cnblogs.com/hushaojun/p/5189109.html" target="_blank" rel="noopener">https://www.cnblogs.com/hushaojun/p/5189109.html</a><br><a href="https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1](https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1)" target="_blank" rel="noopener">https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1](https://blog.csdn.net/blueheart20/article/details/70219490?locationNum=1&amp;fps=1)</a></p>
 ]]></content>
       <categories>
-        <category>Chrome</category>
+        <category>Python</category>
       </categories>
       <tags>
-        <tag>chrome</tag>
-        <tag>翻译</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2024/12/10/digitalocean-centos9-lnmp/</url>
-    <content><![CDATA[<p>title: Digitalocean CentOS 9 安装 <code>screen</code> 和设置虚拟内存的简洁命令汇总：<br>tags: [Digitalocean,CentOS9,LNMP]</p>
-<p>1G内存的vps会因为内存不足不能成功安装lnmp</p>
-<h3 id="设置虚拟内存（1GB-Swap）："><a href="#设置虚拟内存（1GB-Swap）：" class="headerlink" title="设置虚拟内存（1GB Swap）："></a>设置虚拟内存（1GB Swap）：</h3><ol>
-<li><p>检查现有 Swap 空间：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>创建 1GB Swap 文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo fallocate -l 1G /swapfile</span><br></pre></td></tr></table></figure>
-<p>（如不支持 <code>fallocate</code> 可替代为：）</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dd <span class="keyword">if</span>=/dev/zero of=/swapfile bs=1M count=1024</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置权限：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo chmod 600 /swapfile</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>标记为 Swap 空间：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mkswap /swapfile</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>启用 Swap：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo swapon /swapfile</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>确认：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>将 Swap 文件加入开机自动挂载：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'/swapfile none swap sw 0 0'</span> | sudo tee -a /etc/fstab</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="安装-screen："><a href="#安装-screen：" class="headerlink" title="安装 screen："></a>安装 <code>screen</code>：</h3><ol>
-<li><p>更新系统：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf update -y</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>启用 EPEL 仓库：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf install epel-release</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装 <code>screen</code>：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf install screen</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>验证安装：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen --version</span><br></pre></td></tr></table></figure></li>
-</ol>
-]]></content>
-  </entry>
-  <entry>
-    <title>Centos显示tcp，udp的端口和进程等相关情况</title>
-    <url>/2018/05/18/centos-tcp-udp-show/</url>
-    <content><![CDATA[<h2 id="netstat命令"><a href="#netstat命令" class="headerlink" title="netstat命令"></a>netstat命令</h2><p>netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际的网络连接以及每一个网络接口设备<br>netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。<br>该命令的一般格式为：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat [选项]</span><br><span class="line">    命令中各选项的含义如下：</span><br><span class="line">    -a 显示所有socket，包括正在监听的。</span><br><span class="line">    -c 每隔1秒就重新显示一遍，直到用户中断它。</span><br><span class="line">    -i 显示所有网络接口的信息，格式同“ifconfig -e”。</span><br><span class="line">    -n 以网络IP地址代替名称，显示出网络连接情形。</span><br><span class="line">    -r 显示核心路由表，格式同“route -e”。</span><br><span class="line">    -t 显示TCP协议的连接情况。</span><br><span class="line">    -u 显示UDP协议的连接情况。</span><br><span class="line">    -v 显示正在进行的工作。</span><br></pre></td></tr></table></figure>
-<h2 id="netstat-tunlp"><a href="#netstat-tunlp" class="headerlink" title="netstat -tunlp"></a>netstat -tunlp</h2><p>用于显示tcp，udp的端口和进程等相关情况<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat -tunlp</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>CentOS</tag>
+        <tag>Python</tag>
+        <tag>APScheduler</tag>
       </tags>
   </entry>
   <entry>
@@ -272,6 +199,83 @@
       </tags>
   </entry>
   <entry>
+    <title>Centos显示tcp，udp的端口和进程等相关情况</title>
+    <url>/2018/05/18/centos-tcp-udp-show/</url>
+    <content><![CDATA[<h2 id="netstat命令"><a href="#netstat命令" class="headerlink" title="netstat命令"></a>netstat命令</h2><p>netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际的网络连接以及每一个网络接口设备<br>netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。<br>该命令的一般格式为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat [选项]</span><br><span class="line">    命令中各选项的含义如下：</span><br><span class="line">    -a 显示所有socket，包括正在监听的。</span><br><span class="line">    -c 每隔1秒就重新显示一遍，直到用户中断它。</span><br><span class="line">    -i 显示所有网络接口的信息，格式同“ifconfig -e”。</span><br><span class="line">    -n 以网络IP地址代替名称，显示出网络连接情形。</span><br><span class="line">    -r 显示核心路由表，格式同“route -e”。</span><br><span class="line">    -t 显示TCP协议的连接情况。</span><br><span class="line">    -u 显示UDP协议的连接情况。</span><br><span class="line">    -v 显示正在进行的工作。</span><br></pre></td></tr></table></figure>
+<h2 id="netstat-tunlp"><a href="#netstat-tunlp" class="headerlink" title="netstat -tunlp"></a>netstat -tunlp</h2><p>用于显示tcp，udp的端口和进程等相关情况<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat -tunlp</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>CentOS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>chrome内置翻译无法使用的原因</title>
+    <url>/2024/04/26/chrome-googletrans/</url>
+    <content><![CDATA[<p>translate.googleapis.com（Google 翻译 API）,因为停止了中国大陆的服务,不再分配中国内地的服务器地址，所以chrome浏览器内置的 Google 翻译无法使用<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">chrome浏览器内置API不支持扩展配置的socks5代理，所以挂梯子是无效的，除非用系统代理。</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>Chrome</category>
+      </categories>
+      <tags>
+        <tag>chrome</tag>
+        <tag>翻译</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Digitalocean CentOS 9 安装 `screen` 和设置虚拟内存的命令汇总</title>
+    <url>/2024/12/10/digitalocean-centos9-lnmp/</url>
+    <content><![CDATA[<p>1G内存的vps会因为内存不足不能成功安装lnmp，解决方法如下：</p>
+<h3 id="设置虚拟内存（1GB-Swap）："><a href="#设置虚拟内存（1GB-Swap）：" class="headerlink" title="设置虚拟内存（1GB Swap）："></a>设置虚拟内存（1GB Swap）：</h3><ol>
+<li><p>检查现有 Swap 空间：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建 1GB Swap 文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo fallocate -l 1G /swapfile</span><br></pre></td></tr></table></figure>
+<p>（如不支持 <code>fallocate</code> 可替代为：）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dd <span class="keyword">if</span>=/dev/zero of=/swapfile bs=1M count=1024</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置权限：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo chmod 600 /swapfile</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>标记为 Swap 空间：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mkswap /swapfile</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启用 Swap：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo swapon /swapfile</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>确认：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将 Swap 文件加入开机自动挂载：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'/swapfile none swap sw 0 0'</span> | sudo tee -a /etc/fstab</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="安装-screen："><a href="#安装-screen：" class="headerlink" title="安装 screen："></a>安装 <code>screen</code>：</h3><ol>
+<li><p>更新系统：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf update -y</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启用 EPEL 仓库：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf install epel-release</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 <code>screen</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf install screen</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证安装：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen --version</span><br></pre></td></tr></table></figure></li>
+</ol>
+]]></content>
+      <tags>
+        <tag>Digitalocean</tag>
+        <tag>CentOS9</tag>
+        <tag>LNMP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>组合索引</title>
     <url>/2024/04/26/db-index/</url>
     <content><![CDATA[<p>首先我们看看组合索引的与单列索引的区别：</p>
@@ -333,16 +337,6 @@
       </categories>
   </entry>
   <entry>
-    <title>hexo 标题特殊符号引发错误 &amp;#40;冒号、引号、大括号、连字符&amp;#41;</title>
-    <url>/2024/04/26/hexo-title-erro/</url>
-    <content><![CDATA[<p>可以使用HTML字符实体代替</p>
-<p>HTML字符实体列表：<a href="https://www.cnblogs.com/xcsn/p/3559624.html" target="_blank" rel="noopener">https://www.cnblogs.com/xcsn/p/3559624.html</a></p>
-]]></content>
-      <categories>
-        <category>hexo</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Fiddler证书清除并重新配置</title>
     <url>/2024/04/26/fiddler-certificates-clean/</url>
     <content><![CDATA[<p>很多使用fiddler抓包，对于http来说不需太多纠结，随便设置下就能用，但是抓取https就死活抓不了，出现诸如以下问题：</p>
@@ -367,6 +361,24 @@
       </tags>
   </entry>
   <entry>
+    <title>hexo 标题特殊符号引发错误 &amp;#40;冒号、引号、大括号、连字符&amp;#41;</title>
+    <url>/2024/04/26/hexo-title-erro/</url>
+    <content><![CDATA[<p>可以使用HTML字符实体代替</p>
+<p>HTML字符实体列表：<a href="https://www.cnblogs.com/xcsn/p/3559624.html" target="_blank" rel="noopener">https://www.cnblogs.com/xcsn/p/3559624.html</a></p>
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Nginx设置虚拟目录alias</title>
+    <url>/2024/04/26/nginx-alias/</url>
+    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location ^~ /random_img/ &#123;</span><br><span class="line">    alias /home/random_img/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Nginx</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Hello World</title>
     <url>/2024/04/26/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
@@ -379,14 +391,6 @@
 <h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>Nginx设置虚拟目录alias</title>
-    <url>/2024/04/26/nginx-alias/</url>
-    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location ^~ /random_img/ &#123;</span><br><span class="line">    alias /home/random_img/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Nginx</category>
-      </categories>
   </entry>
   <entry>
     <title>使用kill杀死含有指定关键字的进程</title>
@@ -426,18 +430,6 @@
         <tag>https</tag>
         <tag>openssl</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>ModuleNotFoundError&amp;#58; No module named &amp;#39;&amp;#95;ctypes&amp;#39; 解决方法</title>
-    <url>/2024/04/26/no-module-named-ctypes/</url>
-    <content><![CDATA[<h1 id="错误原因"><a href="#错误原因" class="headerlink" title="错误原因"></a>错误原因</h1><p>Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。<br>由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所以在安装pip的时候就报了&quot;ModuleNotFoundError: No module named &#39;&#95;ctypes&#39;&quot;的错误。</p>
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>其实很简单安装一下外部函数库(libffi)就可以了，操作步骤如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install libffi-devel -y</span><br></pre></td></tr></table></figure>
-<p>源码安装的python3 重新编译安装， 如果通过yum安装的 那么直接执行命令 yum install python</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">./configure --prefix=/usr/local/python3</span><br><span class="line"> </span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
   </entry>
   <entry>
     <title>OpenSSL编译安装</title>
@@ -510,12 +502,15 @@
       </tags>
   </entry>
   <entry>
-    <title>python3.8.6安装时提示Detected Windows 7 SP1 without KB2533623</title>
-    <url>/2024/04/26/python-install-erro/</url>
-    <content><![CDATA[<p>下载的安装包，双击安装时，提示安装失败，经过界面中的提示，打开日志后，最后一行提示：Detected Windows 7 SP1 without KB2533623<br>解决办法：<br>需要更新安装win7系统的KB2533623，我的是64位操作系统<br>下载地址：<a href="https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu" target="_blank" rel="noopener">https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu</a><br>百度网盘：<br>链接: <a href="https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA" target="_blank" rel="noopener">https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA</a> 提取码: wdqs 复制这段内容后打开百度网盘手机App，操作更方便哦<br>下载完成后，安装重启电脑即可。<br>————————————————<br>版权声明：本文为CSDN博主「雪诺颜」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/lxiaoqqin/article/details/106402866" target="_blank" rel="noopener">https://blog.csdn.net/lxiaoqqin/article/details/106402866</a></p>
-]]></content>
+    <title>ModuleNotFoundError&amp;#58; No module named &amp;#39;&amp;#95;ctypes&amp;#39; 解决方法</title>
+    <url>/2024/04/26/no-module-named-ctypes/</url>
+    <content><![CDATA[<h1 id="错误原因"><a href="#错误原因" class="headerlink" title="错误原因"></a>错误原因</h1><p>Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。<br>由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所以在安装pip的时候就报了&quot;ModuleNotFoundError: No module named &#39;&#95;ctypes&#39;&quot;的错误。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>其实很简单安装一下外部函数库(libffi)就可以了，操作步骤如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install libffi-devel -y</span><br></pre></td></tr></table></figure>
+<p>源码安装的python3 重新编译安装， 如果通过yum安装的 那么直接执行命令 yum install python</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">./configure --prefix=/usr/local/python3</span><br><span class="line"> </span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
-        <category>Python</category>
+        <category>python</category>
       </categories>
   </entry>
   <entry>
@@ -547,6 +542,27 @@
       <tags>
         <tag>Tor</tag>
         <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>WordPress 创建自定义 URL 页面模板</title>
+    <url>/2024/04/26/wordpress-loadcustom-template/</url>
+    <content><![CDATA[<p>WordPress 创建模板的其实都非常的简单，而 WordPress 添加自定义页面一般有两种方法，一种是使用自定义模板，另外一种是使用 template_redirect 动作钩子来实现自定义页面。这也是子凡最近在开发博客导航中屡试不爽的一个功能，其中主要就是为了完成博客导航中 URL 的一个统一及规范，所以这就成了最好的一个方法了。</p>
+<p>WordPress 自定义创建页面模板其实非常的简单，但是也比较的有局限性，因为 WordPress 在 page 页面类型中的 url 是不支持同名存在的，所以一旦与分类目录活着标签别名相同后，自定义固定链接使用文章名的链接就会出现错误，这也使得不能规范博客导航中的 URL 链接，所以这就成了子凡在开发博客导航中一直纠结的一个梗，所以最后不得不弃用 WordPress 自定义模板的这个功能。</p>
+<p>template_redirect 动作钩子很有用，因为它是 WordPress 知道用户正在浏览的页面的关键。它在特定的页面选择 theme template 之前执行。在只在网站的前端触发，并不在管理员页面触发。直接调用 WordPress 的 API. 来解决这个问题。</p>
+<p>老规矩，在当前主题 functions.php 中添加一下代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//自定义页面模板</span><br><span class="line">function loadCustomTemplate($template) &#123;</span><br><span class="line">    global $wp_query;</span><br><span class="line">    if(!file_exists($template))return;</span><br><span class="line">    $wp_query-&gt;is_page = true;</span><br><span class="line">    $wp_query-&gt;is_single = false;</span><br><span class="line">    $wp_query-&gt;is_home = false;</span><br><span class="line">    $wp_query-&gt;comments = false;</span><br><span class="line">    // if we have a 404 status</span><br><span class="line">    if ($wp_query-&gt;is_404) &#123;</span><br><span class="line">        // set status of 404 to false</span><br><span class="line">        unset($wp_query-&gt;query[&quot;error&quot;]);</span><br><span class="line">        $wp_query-&gt;query_vars[&quot;error&quot;]=&quot;&quot;;</span><br><span class="line">        $wp_query-&gt;is_404=false;</span><br><span class="line">    &#125;</span><br><span class="line">    // change the header to 200 OK</span><br><span class="line">    header(&quot;HTTP/1.1 200 OK&quot;);</span><br><span class="line">    //load our template</span><br><span class="line">    include($template);</span><br><span class="line">    exit;</span><br><span class="line">&#125;</span><br><span class="line">function templateRedirect() &#123;</span><br><span class="line">    $basename = basename($_SERVER[&apos;REQUEST_URI&apos;], &apos;?&apos; . $_SERVER[&apos;QUERY_STRING&apos;]);</span><br><span class="line">    loadCustomTemplate(TEMPLATEPATH.&apos;/blogs/&apos;.&quot;/$basename.php&quot;);</span><br><span class="line">&#125;</span><br><span class="line">add_action(&apos;template_redirect&apos;, &apos;templateRedirect&apos;);</span><br></pre></td></tr></table></figure>
+<p>这样就实现了 WordPress 查找主题文件夹下/blogs 文件夹下的 php 文件，并且将相匹配的 URL 请求转交给对应的 php 文件来处理的效果，与此同时，这个 php 文件还保持了对 WordPress API 的调用，因此留给我们的空间非常大。</p>
+<p>如果我们需要自定义某个页面链接的模板，就需要在主题文件夹下的/blogs 目录创建一个 xxx.php 的 php 文件。这里页面的内容子凡就不提供代码示例了。</p>
+<p>那么最后我们就只需要输入 domain.com/xxx 就能显示这个 xxx.php 的文件内容了，并且 xxx.php 这个文件是支持所有 WordPress 函数的，具有主题的框架和 CSS 样式，非常方便好用。</p>
+<p>原文链接：<a href="https://zhangzifan.com/wordpress-template-redirect.html" target="_blank" rel="noopener">https://zhangzifan.com/wordpress-template-redirect.html</a></p>
+]]></content>
+      <categories>
+        <category>WordPress</category>
+      </categories>
+      <tags>
+        <tag>Template</tag>
+        <tag>WordPress</tag>
       </tags>
   </entry>
   <entry>
@@ -627,27 +643,6 @@
       </tags>
   </entry>
   <entry>
-    <title>WordPress 创建自定义 URL 页面模板</title>
-    <url>/2024/04/26/wordpress-loadcustom-template/</url>
-    <content><![CDATA[<p>WordPress 创建模板的其实都非常的简单，而 WordPress 添加自定义页面一般有两种方法，一种是使用自定义模板，另外一种是使用 template_redirect 动作钩子来实现自定义页面。这也是子凡最近在开发博客导航中屡试不爽的一个功能，其中主要就是为了完成博客导航中 URL 的一个统一及规范，所以这就成了最好的一个方法了。</p>
-<p>WordPress 自定义创建页面模板其实非常的简单，但是也比较的有局限性，因为 WordPress 在 page 页面类型中的 url 是不支持同名存在的，所以一旦与分类目录活着标签别名相同后，自定义固定链接使用文章名的链接就会出现错误，这也使得不能规范博客导航中的 URL 链接，所以这就成了子凡在开发博客导航中一直纠结的一个梗，所以最后不得不弃用 WordPress 自定义模板的这个功能。</p>
-<p>template_redirect 动作钩子很有用，因为它是 WordPress 知道用户正在浏览的页面的关键。它在特定的页面选择 theme template 之前执行。在只在网站的前端触发，并不在管理员页面触发。直接调用 WordPress 的 API. 来解决这个问题。</p>
-<p>老规矩，在当前主题 functions.php 中添加一下代码：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//自定义页面模板</span><br><span class="line">function loadCustomTemplate($template) &#123;</span><br><span class="line">    global $wp_query;</span><br><span class="line">    if(!file_exists($template))return;</span><br><span class="line">    $wp_query-&gt;is_page = true;</span><br><span class="line">    $wp_query-&gt;is_single = false;</span><br><span class="line">    $wp_query-&gt;is_home = false;</span><br><span class="line">    $wp_query-&gt;comments = false;</span><br><span class="line">    // if we have a 404 status</span><br><span class="line">    if ($wp_query-&gt;is_404) &#123;</span><br><span class="line">        // set status of 404 to false</span><br><span class="line">        unset($wp_query-&gt;query[&quot;error&quot;]);</span><br><span class="line">        $wp_query-&gt;query_vars[&quot;error&quot;]=&quot;&quot;;</span><br><span class="line">        $wp_query-&gt;is_404=false;</span><br><span class="line">    &#125;</span><br><span class="line">    // change the header to 200 OK</span><br><span class="line">    header(&quot;HTTP/1.1 200 OK&quot;);</span><br><span class="line">    //load our template</span><br><span class="line">    include($template);</span><br><span class="line">    exit;</span><br><span class="line">&#125;</span><br><span class="line">function templateRedirect() &#123;</span><br><span class="line">    $basename = basename($_SERVER[&apos;REQUEST_URI&apos;], &apos;?&apos; . $_SERVER[&apos;QUERY_STRING&apos;]);</span><br><span class="line">    loadCustomTemplate(TEMPLATEPATH.&apos;/blogs/&apos;.&quot;/$basename.php&quot;);</span><br><span class="line">&#125;</span><br><span class="line">add_action(&apos;template_redirect&apos;, &apos;templateRedirect&apos;);</span><br></pre></td></tr></table></figure>
-<p>这样就实现了 WordPress 查找主题文件夹下/blogs 文件夹下的 php 文件，并且将相匹配的 URL 请求转交给对应的 php 文件来处理的效果，与此同时，这个 php 文件还保持了对 WordPress API 的调用，因此留给我们的空间非常大。</p>
-<p>如果我们需要自定义某个页面链接的模板，就需要在主题文件夹下的/blogs 目录创建一个 xxx.php 的 php 文件。这里页面的内容子凡就不提供代码示例了。</p>
-<p>那么最后我们就只需要输入 domain.com/xxx 就能显示这个 xxx.php 的文件内容了，并且 xxx.php 这个文件是支持所有 WordPress 函数的，具有主题的框架和 CSS 样式，非常方便好用。</p>
-<p>原文链接：<a href="https://zhangzifan.com/wordpress-template-redirect.html" target="_blank" rel="noopener">https://zhangzifan.com/wordpress-template-redirect.html</a></p>
-]]></content>
-      <categories>
-        <category>WordPress</category>
-      </categories>
-      <tags>
-        <tag>Template</tag>
-        <tag>WordPress</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>WordPress 过滤钩子（Filter）基础详解</title>
     <url>/2024/04/26/wordpress-filter/</url>
     <content><![CDATA[<p>WordPress 过滤钩子（filters）——我们可以扩展 WordPress 的最好方法之一。这个特性的基础就是钩子（hooks）—— WordPress的过滤（filters）和动作（actions）钩子。没有它们，我们就无法利用 WordPress 的可扩展性的优势。</p>
@@ -715,5 +710,14 @@
         <tag>WordPress</tag>
         <tag>Filter</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>python3.8.6安装时提示Detected Windows 7 SP1 without KB2533623</title>
+    <url>/2024/04/26/python-install-erro/</url>
+    <content><![CDATA[<p>下载的安装包，双击安装时，提示安装失败，经过界面中的提示，打开日志后，最后一行提示：Detected Windows 7 SP1 without KB2533623<br>解决办法：<br>需要更新安装win7系统的KB2533623，我的是64位操作系统<br>下载地址：<a href="https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu" target="_blank" rel="noopener">https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu</a><br>百度网盘：<br>链接: <a href="https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA" target="_blank" rel="noopener">https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA</a> 提取码: wdqs 复制这段内容后打开百度网盘手机App，操作更方便哦<br>下载完成后，安装重启电脑即可。<br>————————————————<br>版权声明：本文为CSDN博主「雪诺颜」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/lxiaoqqin/article/details/106402866" target="_blank" rel="noopener">https://blog.csdn.net/lxiaoqqin/article/details/106402866</a></p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
   </entry>
 </search>

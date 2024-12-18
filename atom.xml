@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2024-12-10T06:35:55.882Z</updated>
+  <updated>2024-12-18T02:12:43.599Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,24 +17,30 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title></title>
+    <title>Digitalocean CentOS 9 安装 `screen` 和设置虚拟内存的命令汇总</title>
     <link href="http://yoursite.com/2024/12/10/digitalocean-centos9-lnmp/"/>
     <id>http://yoursite.com/2024/12/10/digitalocean-centos9-lnmp/</id>
     <published>2024-12-10T06:32:37.608Z</published>
-    <updated>2024-12-10T06:35:55.882Z</updated>
+    <updated>2024-12-18T02:12:43.599Z</updated>
     
-    <content type="html"><![CDATA[<p>title: Digitalocean CentOS 9 安装 <code>screen</code> 和设置虚拟内存的简洁命令汇总：<br>tags: [Digitalocean,CentOS9,LNMP]</p><p>1G内存的vps会因为内存不足不能成功安装lnmp</p><h3 id="设置虚拟内存（1GB-Swap）："><a href="#设置虚拟内存（1GB-Swap）：" class="headerlink" title="设置虚拟内存（1GB Swap）："></a>设置虚拟内存（1GB Swap）：</h3><ol><li><p>检查现有 Swap 空间：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure></li><li><p>创建 1GB Swap 文件：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo fallocate -l 1G /swapfile</span><br></pre></td></tr></table></figure><p>（如不支持 <code>fallocate</code> 可替代为：）</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dd <span class="keyword">if</span>=/dev/zero of=/swapfile bs=1M count=1024</span><br></pre></td></tr></table></figure></li><li><p>设置权限：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 600 /swapfile</span><br></pre></td></tr></table></figure></li><li><p>标记为 Swap 空间：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkswap /swapfile</span><br></pre></td></tr></table></figure></li><li><p>启用 Swap：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo swapon /swapfile</span><br></pre></td></tr></table></figure></li><li><p>确认：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure></li><li><p>将 Swap 文件加入开机自动挂载：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'/swapfile none swap sw 0 0'</span> | sudo tee -a /etc/fstab</span><br></pre></td></tr></table></figure></li></ol><h3 id="安装-screen："><a href="#安装-screen：" class="headerlink" title="安装 screen："></a>安装 <code>screen</code>：</h3><ol><li><p>更新系统：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf update -y</span><br></pre></td></tr></table></figure></li><li><p>启用 EPEL 仓库：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install epel-release</span><br></pre></td></tr></table></figure></li><li><p>安装 <code>screen</code>：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install screen</span><br></pre></td></tr></table></figure></li><li><p>验证安装：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">screen --version</span><br></pre></td></tr></table></figure></li></ol>]]></content>
+    <content type="html"><![CDATA[<p>1G内存的vps会因为内存不足不能成功安装lnmp，解决方法如下：</p><h3 id="设置虚拟内存（1GB-Swap）："><a href="#设置虚拟内存（1GB-Swap）：" class="headerlink" title="设置虚拟内存（1GB Swap）："></a>设置虚拟内存（1GB Swap）：</h3><ol><li><p>检查现有 Swap 空间：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure></li><li><p>创建 1GB Swap 文件：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo fallocate -l 1G /swapfile</span><br></pre></td></tr></table></figure><p>（如不支持 <code>fallocate</code> 可替代为：）</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dd <span class="keyword">if</span>=/dev/zero of=/swapfile bs=1M count=1024</span><br></pre></td></tr></table></figure></li><li><p>设置权限：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 600 /swapfile</span><br></pre></td></tr></table></figure></li><li><p>标记为 Swap 空间：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkswap /swapfile</span><br></pre></td></tr></table></figure></li><li><p>启用 Swap：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo swapon /swapfile</span><br></pre></td></tr></table></figure></li><li><p>确认：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure></li><li><p>将 Swap 文件加入开机自动挂载：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'/swapfile none swap sw 0 0'</span> | sudo tee -a /etc/fstab</span><br></pre></td></tr></table></figure></li></ol><h3 id="安装-screen："><a href="#安装-screen：" class="headerlink" title="安装 screen："></a>安装 <code>screen</code>：</h3><ol><li><p>更新系统：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf update -y</span><br></pre></td></tr></table></figure></li><li><p>启用 EPEL 仓库：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install epel-release</span><br></pre></td></tr></table></figure></li><li><p>安装 <code>screen</code>：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install screen</span><br></pre></td></tr></table></figure></li><li><p>验证安装：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">screen --version</span><br></pre></td></tr></table></figure></li></ol>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;title: Digitalocean CentOS 9 安装 &lt;code&gt;screen&lt;/code&gt; 和设置虚拟内存的简洁命令汇总：&lt;br&gt;tags: [Digitalocean,CentOS9,LNMP]&lt;/p&gt;
-&lt;p&gt;1G内存的vps会因为内存不足不能成功安装lnmp
+        &lt;p&gt;1G内存的vps会因为内存不足不能成功安装lnmp，解决方法如下：&lt;/p&gt;
+&lt;h3 id=&quot;设置虚拟内存（1GB-Swap）：&quot;&gt;&lt;a href=&quot;#设置虚拟内存（1GB-Swap）：&quot; class=&quot;headerlink&quot; title=&quot;设置虚拟内存（1GB Swap）：
       
     
     </summary>
     
+    
+      <category term="Digitalocean" scheme="http://yoursite.com/tags/Digitalocean/"/>
+    
+      <category term="CentOS9" scheme="http://yoursite.com/tags/CentOS9/"/>
+    
+      <category term="LNMP" scheme="http://yoursite.com/tags/LNMP/"/>
     
   </entry>
   

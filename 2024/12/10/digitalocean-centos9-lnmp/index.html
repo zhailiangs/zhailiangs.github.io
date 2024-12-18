@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Digitalocean,CentOS9,LNMP," />
 
 
 
@@ -88,17 +88,18 @@
 
 
 
-<meta name="description" content="title: Digitalocean CentOS 9 安装 screen 和设置虚拟内存的简洁命令汇总：tags: [Digitalocean,CentOS9,LNMP] 1G内存的vps会因为内存不足不能成功安装lnmp 设置虚拟内存（1GB Swap）： 检查现有 Swap 空间： 1swapon --show  创建 1GB Swap 文件： 1sudo fallocate -l 1G">
+<meta name="description" content="1G内存的vps会因为内存不足不能成功安装lnmp，解决方法如下： 设置虚拟内存（1GB Swap）： 检查现有 Swap 空间： 1swapon --show  创建 1GB Swap 文件： 1sudo fallocate -l 1G /swapfile （如不支持 fallocate 可替代为：） 1sudo dd if=/dev/zero of=/swapfile bs=1M count=">
+<meta name="keywords" content="Digitalocean,CentOS9,LNMP">
 <meta property="og:type" content="article">
-<meta property="og:title" content="zhailiangs&#39;blog">
+<meta property="og:title" content="Digitalocean CentOS 9 安装 `screen` 和设置虚拟内存的命令汇总">
 <meta property="og:url" content="http://yoursite.com/2024/12/10/digitalocean-centos9-lnmp/index.html">
 <meta property="og:site_name" content="zhailiangs&#39;blog">
-<meta property="og:description" content="title: Digitalocean CentOS 9 安装 screen 和设置虚拟内存的简洁命令汇总：tags: [Digitalocean,CentOS9,LNMP] 1G内存的vps会因为内存不足不能成功安装lnmp 设置虚拟内存（1GB Swap）： 检查现有 Swap 空间： 1swapon --show  创建 1GB Swap 文件： 1sudo fallocate -l 1G">
+<meta property="og:description" content="1G内存的vps会因为内存不足不能成功安装lnmp，解决方法如下： 设置虚拟内存（1GB Swap）： 检查现有 Swap 空间： 1swapon --show  创建 1GB Swap 文件： 1sudo fallocate -l 1G /swapfile （如不支持 fallocate 可替代为：） 1sudo dd if=/dev/zero of=/swapfile bs=1M count=">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2024-12-10T06:35:55.882Z">
+<meta property="og:updated_time" content="2024-12-18T02:12:43.599Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zhailiangs&#39;blog">
-<meta name="twitter:description" content="title: Digitalocean CentOS 9 安装 screen 和设置虚拟内存的简洁命令汇总：tags: [Digitalocean,CentOS9,LNMP] 1G内存的vps会因为内存不足不能成功安装lnmp 设置虚拟内存（1GB Swap）： 检查现有 Swap 空间： 1swapon --show  创建 1GB Swap 文件： 1sudo fallocate -l 1G">
+<meta name="twitter:title" content="Digitalocean CentOS 9 安装 `screen` 和设置虚拟内存的命令汇总">
+<meta name="twitter:description" content="1G内存的vps会因为内存不足不能成功安装lnmp，解决方法如下： 设置虚拟内存（1GB Swap）： 检查现有 Swap 空间： 1swapon --show  创建 1GB Swap 文件： 1sudo fallocate -l 1G /swapfile （如不支持 fallocate 可替代为：） 1sudo dd if=/dev/zero of=/swapfile bs=1M count=">
 
 
 
@@ -143,7 +144,7 @@
 
 
 
-  <title> | zhailiangs'blog</title>
+  <title>Digitalocean CentOS 9 安装 `screen` 和设置虚拟内存的命令汇总 | zhailiangs'blog</title>
   
 
 
@@ -321,7 +322,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">Digitalocean CentOS 9 安装 `screen` 和设置虚拟内存的命令汇总</h1>
         
 
         <div class="post-meta">
@@ -386,8 +387,7 @@
       
 
       
-        <p>title: Digitalocean CentOS 9 安装 <code>screen</code> 和设置虚拟内存的简洁命令汇总：<br>tags: [Digitalocean,CentOS9,LNMP]</p>
-<p>1G内存的vps会因为内存不足不能成功安装lnmp</p>
+        <p>1G内存的vps会因为内存不足不能成功安装lnmp，解决方法如下：</p>
 <h3 id="设置虚拟内存（1GB-Swap）："><a href="#设置虚拟内存（1GB-Swap）：" class="headerlink" title="设置虚拟内存（1GB Swap）："></a>设置虚拟内存（1GB Swap）：</h3><ol>
 <li><p>检查现有 Swap 空间：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure>
@@ -440,6 +440,16 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Digitalocean/" rel="tag"># Digitalocean</a>
+          
+            <a href="/tags/CentOS9/" rel="tag"># CentOS9</a>
+          
+            <a href="/tags/LNMP/" rel="tag"># LNMP</a>
+          
+        </div>
       
 
       
@@ -564,7 +574,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
