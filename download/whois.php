@@ -271,7 +271,9 @@ $whoisservers = array(
 	"xxx" => "whois.nic.xxx",
 	// ye - Yemen - no whois server assigned
 	"yt" => "whois.nic.yt", // Mayotte
-	"yu" => "whois.ripe.net");
+	"yu" => "whois.ripe.net",
+	"za" => "coza-whois.registry.net.za"
+);
 
 function LookupDomain($domain){
 	global $whoisservers;

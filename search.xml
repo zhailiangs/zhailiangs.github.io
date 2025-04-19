@@ -10,21 +10,6 @@
       </categories>
   </entry>
   <entry>
-    <title>hexo文章属性冒号后面要加空格</title>
-    <url>/2018/05/12/article-title/</url>
-    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>刚开始使用hexo，生成静态文件老是报错，错误提示如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">can not read a block mapping entry; a multiline key may implicit key at line</span><br></pre></td></tr></table></figure></p>
-<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>冒号后面加空格</p>
-<p>错误写法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags:[hexo入门]</span><br><span class="line">categories:hexo</span><br></pre></td></tr></table></figure></p>
-<p>正确写法:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags: [hexo入门]</span><br><span class="line">categories: hexo</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>hexo</category>
-      </categories>
-      <tags>
-        <tag>hexo入门</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Android7.0以上版本抓取https包问题</title>
     <url>/2024/04/26/android-app-https/</url>
     <content><![CDATA[<p>Android7以后，系统不再信任用户级的证书，只信任系统级的证书，所以要抓包就需要把我们的代理程序证书安装至Android的系统目录中</p>
@@ -63,6 +48,21 @@
       </tags>
   </entry>
   <entry>
+    <title>hexo文章属性冒号后面要加空格</title>
+    <url>/2018/05/12/article-title/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>刚开始使用hexo，生成静态文件老是报错，错误提示如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">can not read a block mapping entry; a multiline key may implicit key at line</span><br></pre></td></tr></table></figure></p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>冒号后面加空格</p>
+<p>错误写法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags:[hexo入门]</span><br><span class="line">categories:hexo</span><br></pre></td></tr></table></figure></p>
+<p>正确写法:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tags: [hexo入门]</span><br><span class="line">categories: hexo</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>hexo入门</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>APScheduler中BlockingScheduler和BackgroundScheduler的区别</title>
     <url>/2018/05/18/apscheduler-backgroundscheduler/</url>
     <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>APScheduler是基于Quartz的一个Python定时任务框架，提供了基于日期、固定时间间隔以及crontab类型的任务，并且可以持久化任务。</p>
@@ -84,6 +84,21 @@
       <tags>
         <tag>Python</tag>
         <tag>APScheduler</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Centos显示tcp，udp的端口和进程等相关情况</title>
+    <url>/2018/05/18/centos-tcp-udp-show/</url>
+    <content><![CDATA[<h2 id="netstat命令"><a href="#netstat命令" class="headerlink" title="netstat命令"></a>netstat命令</h2><p>netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际的网络连接以及每一个网络接口设备<br>netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。<br>该命令的一般格式为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat [选项]</span><br><span class="line">    命令中各选项的含义如下：</span><br><span class="line">    -a 显示所有socket，包括正在监听的。</span><br><span class="line">    -c 每隔1秒就重新显示一遍，直到用户中断它。</span><br><span class="line">    -i 显示所有网络接口的信息，格式同“ifconfig -e”。</span><br><span class="line">    -n 以网络IP地址代替名称，显示出网络连接情形。</span><br><span class="line">    -r 显示核心路由表，格式同“route -e”。</span><br><span class="line">    -t 显示TCP协议的连接情况。</span><br><span class="line">    -u 显示UDP协议的连接情况。</span><br><span class="line">    -v 显示正在进行的工作。</span><br></pre></td></tr></table></figure>
+<h2 id="netstat-tunlp"><a href="#netstat-tunlp" class="headerlink" title="netstat -tunlp"></a>netstat -tunlp</h2><p>用于显示tcp，udp的端口和进程等相关情况<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat -tunlp</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>CentOS</tag>
       </tags>
   </entry>
   <entry>
@@ -199,21 +214,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Centos显示tcp，udp的端口和进程等相关情况</title>
-    <url>/2018/05/18/centos-tcp-udp-show/</url>
-    <content><![CDATA[<h2 id="netstat命令"><a href="#netstat命令" class="headerlink" title="netstat命令"></a>netstat命令</h2><p>netstat命令是一个监控TCP/IP网络的非常有用的工具，它可以显示路由表、实际的网络连接以及每一个网络接口设备<br>netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。<br>该命令的一般格式为：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat [选项]</span><br><span class="line">    命令中各选项的含义如下：</span><br><span class="line">    -a 显示所有socket，包括正在监听的。</span><br><span class="line">    -c 每隔1秒就重新显示一遍，直到用户中断它。</span><br><span class="line">    -i 显示所有网络接口的信息，格式同“ifconfig -e”。</span><br><span class="line">    -n 以网络IP地址代替名称，显示出网络连接情形。</span><br><span class="line">    -r 显示核心路由表，格式同“route -e”。</span><br><span class="line">    -t 显示TCP协议的连接情况。</span><br><span class="line">    -u 显示UDP协议的连接情况。</span><br><span class="line">    -v 显示正在进行的工作。</span><br></pre></td></tr></table></figure>
-<h2 id="netstat-tunlp"><a href="#netstat-tunlp" class="headerlink" title="netstat -tunlp"></a>netstat -tunlp</h2><p>用于显示tcp，udp的端口和进程等相关情况<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat -tunlp</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>CentOS</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>chrome内置翻译无法使用的原因</title>
     <url>/2024/04/26/chrome-googletrans/</url>
     <content><![CDATA[<p>translate.googleapis.com（Google 翻译 API）,因为停止了中国大陆的服务,不再分配中国内地的服务器地址，所以chrome浏览器内置的 Google 翻译无法使用<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">chrome浏览器内置API不支持扩展配置的socks5代理，所以挂梯子是无效的，除非用系统代理。</span><br></pre></td></tr></table></figure></p>
@@ -227,79 +227,14 @@
       </tags>
   </entry>
   <entry>
-    <title>Digitalocean CentOS 9 安装 `screen` 和设置虚拟内存的命令汇总</title>
-    <url>/2024/12/10/digitalocean-centos9-lnmp/</url>
-    <content><![CDATA[<p>1G内存的vps会因为内存不足不能成功安装lnmp，解决方法如下：</p>
-<h3 id="设置虚拟内存（1GB-Swap）："><a href="#设置虚拟内存（1GB-Swap）：" class="headerlink" title="设置虚拟内存（1GB Swap）："></a>设置虚拟内存（1GB Swap）：</h3><ol>
-<li><p>检查现有 Swap 空间：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>创建 1GB Swap 文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo fallocate -l 1G /swapfile</span><br></pre></td></tr></table></figure>
-<p>（如不支持 <code>fallocate</code> 可替代为：）</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dd <span class="keyword">if</span>=/dev/zero of=/swapfile bs=1M count=1024</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置权限：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo chmod 600 /swapfile</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>标记为 Swap 空间：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mkswap /swapfile</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>启用 Swap：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo swapon /swapfile</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>确认：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>将 Swap 文件加入开机自动挂载：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'/swapfile none swap sw 0 0'</span> | sudo tee -a /etc/fstab</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="安装-screen："><a href="#安装-screen：" class="headerlink" title="安装 screen："></a>安装 <code>screen</code>：</h3><ol>
-<li><p>更新系统：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf update -y</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>启用 EPEL 仓库：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf install epel-release</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装 <code>screen</code>：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf install screen</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>验证安装：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen --version</span><br></pre></td></tr></table></figure></li>
-</ol>
-]]></content>
-      <tags>
-        <tag>Digitalocean</tag>
-        <tag>CentOS9</tag>
-        <tag>LNMP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>组合索引</title>
-    <url>/2024/04/26/db-index/</url>
-    <content><![CDATA[<p>首先我们看看组合索引的与单列索引的区别：</p>
-<h2 id="一-为什么要使用联合索引"><a href="#一-为什么要使用联合索引" class="headerlink" title="一.为什么要使用联合索引"></a>一.为什么要使用联合索引</h2><ol>
-<li><p>减少开销<br>建一个联合索引(col1,col2,col3)，实际相当于建了(col1),(col1,col2),(col1,col2,col3)三个索引。每多一个索引，都会增加写操作的开销和磁盘空间的开销。对于大量数据的表，使用联合索引会大大的减少开销！</p>
-</li>
-<li><p>覆盖索引<br>对联合索引(col1,col2,col3)，如果有如下的sql: select col1,col2,col3 from test where col1=1 and col2=2。那么MySQL可以直接通过遍历索引取得数据，而无需回表，这减少了很多的随机io操作。减少io操作，特别的随机io其实是dba主要的优化策略。所以，在真正的实际应用中，覆盖索引是主要的提升性能的优化手段之一。</p>
-</li>
-<li><p>效率高<br>索引列越多，通过索引筛选出的数据越少。有1000W条数据的表，有如下sql:select from table where col1=1 and col2=2 and col3=3,假设假设每个条件可以筛选出10%的数据，如果只有单值索引，那么通过该索引能筛选出1000W*10%=100w条数据，然后再回表从100w条数据中找到符合col2=2 and col3= 3的数据，然后再排序，再分页；如果是联合索引，通过索引筛选出1000w*10%*10%*10%=1w，效率提升可想而知!</p>
-</li>
-</ol>
-<h2 id="二-组合索引如何使用"><a href="#二-组合索引如何使用" class="headerlink" title="二.组合索引如何使用"></a>二.组合索引如何使用</h2><p>最左原则</p>
-<p>例如组合索引（a,b,c），组合索引的生效原则是</p>
-<p>从前往后依次使用生效，如果中间某个索引没有使用，那么断点前面的索引部分起作用，断点后面的索引没有起作用；</p>
-<p>对于组合索引:Mysql从左到右的使用索引中的字段，一个查询可以只使用索引中的一部份，但只能是最左侧部分。例如索引是key index (a,b,c). 可以支持a | a,b| a,b,c 3种组合进行查找，但不支持 b,c进行查找 .当最左侧字段是常量引用时，索引就十分有效。</p>
-<p>两个或更多个列上的索引被称作复合索引。<br>利用索引中的附加列，您可以缩小搜索的范围，但使用一个具有两列的索引 不同于使用两个单独的索引。复合索引的结构与电话簿类似，人名由姓和名构成，电话簿首先按姓氏对进行排序，然后按名字对有相同姓氏的人进行排序。如果您知 道姓，电话簿将非常有用；如果您知道姓和名，电话簿则更为有用，但如果您只知道名不姓，电话簿将没有用处。<br>所以说创建复合索引时，应该仔细考虑列的顺序。对索引中的所有列执行搜索或仅对前几列执行搜索时，复合索引非常有用；仅对后面的任意列执行搜索时，复合索引则没有用处。</p>
-<p>原文链接：<a href="https://blog.csdn.net/qq_46661297/article/details/106226732" target="_blank" rel="noopener">https://blog.csdn.net/qq_46661297/article/details/106226732</a></p>
+    <title>hexo 标题特殊符号引发错误 &amp;#40;冒号、引号、大括号、连字符&amp;#41;</title>
+    <url>/2024/04/26/hexo-title-erro/</url>
+    <content><![CDATA[<p>可以使用HTML字符实体代替</p>
+<p>HTML字符实体列表：<a href="https://www.cnblogs.com/xcsn/p/3559624.html" target="_blank" rel="noopener">https://www.cnblogs.com/xcsn/p/3559624.html</a></p>
 ]]></content>
       <categories>
-        <category>数据库</category>
+        <category>hexo</category>
       </categories>
-      <tags>
-        <tag>索引</tag>
-      </tags>
   </entry>
   <entry>
     <title>Django灵活使用csrf</title>
@@ -337,46 +272,30 @@
       </categories>
   </entry>
   <entry>
-    <title>Fiddler证书清除并重新配置</title>
-    <url>/2024/04/26/fiddler-certificates-clean/</url>
-    <content><![CDATA[<p>很多使用fiddler抓包，对于http来说不需太多纠结，随便设置下就能用，但是抓取https就死活抓不了，出现诸如以下问题：</p>
-<p>creation of the root certificate was not successful;</p>
-<p>Failed to find the root certificate in User Root List;</p>
-<p>The Root certificate could not be found;</p>
-<p>The root certificate could not be located;</p>
-<p>Fiddler 抓取https 显示 Tunnel to … 443;</p>
-<p>等等…</p>
-<p>1.(最关键).清除C:\Users\用户\AppData\Roaming\Microsoft\Crypto\RSA 目录下所有文件（首次安装fiddler请忽略）</p>
-<p>2.清除电脑上的根证书，WIN+R快捷键，输入：certmgr.msc， 然后回车，查找所有fiddler证书（菜单栏–操作–查找证书），然后删除。（首次安装fiddler请忽略）</p>
-<p>3.清除浏览器上的证书文件 ,此处需要仔细查找带有FiddlerRoot的字样，并删除，以谷歌浏览器为例说明，在浏览器上输入: chrome://settings/，（首次安装fiddler请忽略）</p>
-<p>4.打开fiddler，点击工具栏中的Tools—&gt;Options，点击Actions,选择最后一项，Reset All certificates,然后关闭</p>
-<p>原文链接：<a href="https://blog.csdn.net/w6082819920919/article/details/112174650" target="_blank" rel="noopener">https://blog.csdn.net/w6082819920919/article/details/112174650</a></p>
+    <title>组合索引</title>
+    <url>/2024/04/26/db-index/</url>
+    <content><![CDATA[<p>首先我们看看组合索引的与单列索引的区别：</p>
+<h2 id="一-为什么要使用联合索引"><a href="#一-为什么要使用联合索引" class="headerlink" title="一.为什么要使用联合索引"></a>一.为什么要使用联合索引</h2><ol>
+<li><p>减少开销<br>建一个联合索引(col1,col2,col3)，实际相当于建了(col1),(col1,col2),(col1,col2,col3)三个索引。每多一个索引，都会增加写操作的开销和磁盘空间的开销。对于大量数据的表，使用联合索引会大大的减少开销！</p>
+</li>
+<li><p>覆盖索引<br>对联合索引(col1,col2,col3)，如果有如下的sql: select col1,col2,col3 from test where col1=1 and col2=2。那么MySQL可以直接通过遍历索引取得数据，而无需回表，这减少了很多的随机io操作。减少io操作，特别的随机io其实是dba主要的优化策略。所以，在真正的实际应用中，覆盖索引是主要的提升性能的优化手段之一。</p>
+</li>
+<li><p>效率高<br>索引列越多，通过索引筛选出的数据越少。有1000W条数据的表，有如下sql:select from table where col1=1 and col2=2 and col3=3,假设假设每个条件可以筛选出10%的数据，如果只有单值索引，那么通过该索引能筛选出1000W*10%=100w条数据，然后再回表从100w条数据中找到符合col2=2 and col3= 3的数据，然后再排序，再分页；如果是联合索引，通过索引筛选出1000w*10%*10%*10%=1w，效率提升可想而知!</p>
+</li>
+</ol>
+<h2 id="二-组合索引如何使用"><a href="#二-组合索引如何使用" class="headerlink" title="二.组合索引如何使用"></a>二.组合索引如何使用</h2><p>最左原则</p>
+<p>例如组合索引（a,b,c），组合索引的生效原则是</p>
+<p>从前往后依次使用生效，如果中间某个索引没有使用，那么断点前面的索引部分起作用，断点后面的索引没有起作用；</p>
+<p>对于组合索引:Mysql从左到右的使用索引中的字段，一个查询可以只使用索引中的一部份，但只能是最左侧部分。例如索引是key index (a,b,c). 可以支持a | a,b| a,b,c 3种组合进行查找，但不支持 b,c进行查找 .当最左侧字段是常量引用时，索引就十分有效。</p>
+<p>两个或更多个列上的索引被称作复合索引。<br>利用索引中的附加列，您可以缩小搜索的范围，但使用一个具有两列的索引 不同于使用两个单独的索引。复合索引的结构与电话簿类似，人名由姓和名构成，电话簿首先按姓氏对进行排序，然后按名字对有相同姓氏的人进行排序。如果您知 道姓，电话簿将非常有用；如果您知道姓和名，电话簿则更为有用，但如果您只知道名不姓，电话簿将没有用处。<br>所以说创建复合索引时，应该仔细考虑列的顺序。对索引中的所有列执行搜索或仅对前几列执行搜索时，复合索引非常有用；仅对后面的任意列执行搜索时，复合索引则没有用处。</p>
+<p>原文链接：<a href="https://blog.csdn.net/qq_46661297/article/details/106226732" target="_blank" rel="noopener">https://blog.csdn.net/qq_46661297/article/details/106226732</a></p>
 ]]></content>
       <categories>
-        <category>APP抓包</category>
+        <category>数据库</category>
       </categories>
       <tags>
-        <tag>fiddler</tag>
-        <tag>https</tag>
+        <tag>索引</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>hexo 标题特殊符号引发错误 &amp;#40;冒号、引号、大括号、连字符&amp;#41;</title>
-    <url>/2024/04/26/hexo-title-erro/</url>
-    <content><![CDATA[<p>可以使用HTML字符实体代替</p>
-<p>HTML字符实体列表：<a href="https://www.cnblogs.com/xcsn/p/3559624.html" target="_blank" rel="noopener">https://www.cnblogs.com/xcsn/p/3559624.html</a></p>
-]]></content>
-      <categories>
-        <category>hexo</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Nginx设置虚拟目录alias</title>
-    <url>/2024/04/26/nginx-alias/</url>
-    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location ^~ /random_img/ &#123;</span><br><span class="line">    alias /home/random_img/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Nginx</category>
-      </categories>
   </entry>
   <entry>
     <title>Hello World</title>
@@ -413,66 +332,24 @@
       </tags>
   </entry>
   <entry>
-    <title>openssl常用操作</title>
-    <url>/2024/04/26/openssl-cmd/</url>
-    <content><![CDATA[<p>PKCS＃12（也称为PKCS12或PFX）是一种二进制格式，用于将证书链和私钥存储在单个可加密文件中。 PKCS＃12文件通常用于在Windows和macOS计算机上导入和导出证书和私钥，并且通常具有文件扩展名 .p12 or .pfx.</p>
-<p>查看所有信息:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -info -in apiclient_cert.p12 -nodes</span><br></pre></td></tr></table></figure></p>
-<p>导出证书(公钥):<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out cert.pem -nokeys</span><br></pre></td></tr></table></figure></p>
-<p>导出私钥:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out private_key.pem -nodes -nocerts</span><br></pre></td></tr></table></figure></p>
-<p>查看证书(公钥)序列号:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -in cert.pem -noout -serial</span><br></pre></td></tr></table></figure></p>
-<p>将证书(公钥)转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl rsa -in rsa_public_key.pem -out rsa_public_key.der -pubin -outform der</span><br></pre></td></tr></table></figure></p>
-<p>将私钥转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl rsa -in rsa_private_key.pem -out rsa_private_key.der -outform der</span><br></pre></td></tr></table></figure></p>
-]]></content>
+    <title>ModuleNotFoundError&amp;#58; No module named &amp;#39;&amp;#95;ctypes&amp;#39; 解决方法</title>
+    <url>/2024/04/26/no-module-named-ctypes/</url>
+    <content><![CDATA[<h1 id="错误原因"><a href="#错误原因" class="headerlink" title="错误原因"></a>错误原因</h1><p>Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。<br>由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所以在安装pip的时候就报了&quot;ModuleNotFoundError: No module named &#39;&#95;ctypes&#39;&quot;的错误。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>其实很简单安装一下外部函数库(libffi)就可以了，操作步骤如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install libffi-devel -y</span><br></pre></td></tr></table></figure>
+<p>源码安装的python3 重新编译安装， 如果通过yum安装的 那么直接执行命令 yum install python</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">./configure --prefix=/usr/local/python3</span><br><span class="line"> </span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
-        <category>APP抓包</category>
-      </categories>
-      <tags>
-        <tag>https</tag>
-        <tag>openssl</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>OpenSSL编译安装</title>
-    <url>/2024/08/21/openssl-install/</url>
-    <content><![CDATA[<p>如果 OpenSSL 的库文件安装在 <code>lib64</code> 文件夹而不是 <code>lib</code> 文件夹中，您需要根据实际路径调整配置。以下是修改步骤：</p>
-<h3 id="重新编译和安装-OpenSSL（使用-lib64）"><a href="#重新编译和安装-OpenSSL（使用-lib64）" class="headerlink" title="重新编译和安装 OpenSSL（使用 lib64）"></a>重新编译和安装 OpenSSL（使用 <code>lib64</code>）</h3><h4 id="1-下载-OpenSSL-源码"><a href="#1-下载-OpenSSL-源码" class="headerlink" title="1. 下载 OpenSSL 源码"></a>1. <strong>下载 OpenSSL 源码</strong></h4><p>如果尚未下载 OpenSSL 源码，请从 OpenSSL 官方网站下载：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://www.openssl.org/<span class="built_in">source</span>/openssl-3.3.1.tar.gz</span><br><span class="line">tar -xvzf openssl-3.3.1.tar.gz</span><br><span class="line"><span class="built_in">cd</span> openssl-3.3.1</span><br></pre></td></tr></table></figure>
-<h4 id="2-配置编译选项"><a href="#2-配置编译选项" class="headerlink" title="2. 配置编译选项"></a>2. <strong>配置编译选项</strong></h4><p>在编译之前，使用 <code>./config</code> 命令指定 <code>lib64</code> 作为库文件目录：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./config --prefix=/usr/<span class="built_in">local</span>/openssl-3.3.1 --openssldir=/usr/<span class="built_in">local</span>/openssl-3.3.1 shared zlib</span><br></pre></td></tr></table></figure>
-<p>这里，<code>--prefix</code> 和 <code>--openssldir</code> 是指定安装路径的参数，但 OpenSSL 默认安装到 <code>lib</code> 下。如果最终安装到 <code>lib64</code>，这通常是系统的标准做法。</p>
-<h4 id="3-编译-OpenSSL"><a href="#3-编译-OpenSSL" class="headerlink" title="3. 编译 OpenSSL"></a>3. <strong>编译 OpenSSL</strong></h4><p>使用 <code>make</code> 命令编译 OpenSSL：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
-<p>如果有多个 CPU 核心，可以使用 <code>-j</code> 选项加速编译：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">make -j$(nproc)</span><br></pre></td></tr></table></figure>
-<h4 id="4-安装-OpenSSL"><a href="#4-安装-OpenSSL" class="headerlink" title="4. 安装 OpenSSL"></a>4. <strong>安装 OpenSSL</strong></h4><p>编译完成后，使用 <code>make install</code> 安装：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
-<h4 id="5-验证安装"><a href="#5-验证安装" class="headerlink" title="5. 验证安装"></a>5. <strong>验证安装</strong></h4><p>确认库文件安装在 <code>lib64</code> 目录下，并检查 OpenSSL 版本：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ls -l /usr/<span class="built_in">local</span>/openssl-3.3.1/lib64/libssl.so.3</span><br><span class="line">ls -l /usr/<span class="built_in">local</span>/openssl-3.3.1/lib64/libcrypto.so.3</span><br><span class="line"></span><br><span class="line">/usr/<span class="built_in">local</span>/openssl-3.3.1/bin/openssl version</span><br></pre></td></tr></table></figure>
-<h4 id="6-配置环境变量"><a href="#6-配置环境变量" class="headerlink" title="6. 配置环境变量"></a>6. <strong>配置环境变量</strong></h4><p>为了让系统自动找到正确的 OpenSSL 库文件，请设置 <code>LD_LIBRARY_PATH</code> 环境变量：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/<span class="built_in">local</span>/openssl-3.3.1/lib64:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
-<p>将其添加到 <code>.bashrc</code> 或 <code>.bash_profile</code> 中，以便每次启动终端时自动加载：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'export LD_LIBRARY_PATH=/usr/local/openssl-3.3.1/lib64:$LD_LIBRARY_PATH'</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
-<h4 id="7-使用-ldconfig-更新共享库缓存（可选）"><a href="#7-使用-ldconfig-更新共享库缓存（可选）" class="headerlink" title="7. 使用 ldconfig 更新共享库缓存（可选）"></a>7. <strong>使用 <code>ldconfig</code> 更新共享库缓存（可选）</strong></h4><p>将 <code>lib64</code> 目录添加到系统共享库路径中：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo sh -c <span class="string">'echo "/usr/local/openssl-3.3.1/lib64" &gt; /etc/ld.so.conf.d/openssl-3.3.1.conf'</span></span><br><span class="line">sudo ldconfig</span><br></pre></td></tr></table></figure>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>如果 OpenSSL 的库文件安装在 <code>lib64</code> 目录下，确保您在环境变量和配置文件中使用正确的路径。按照上述步骤，您应该能够正确配置并使用 OpenSSL 3.3.1。</p>
-]]></content>
-      <categories>
-        <category>OpenSSL</category>
+        <category>python</category>
       </categories>
   </entry>
   <entry>
-    <title>torrc配置项 HTTPTunnelPort</title>
-    <url>/2024/04/26/torrc-HTTPTunnelPort/</url>
-    <content><![CDATA[<p>新版本的Tor提供了一个http代理端口的配置项：</p>
-<p>vi /etc/tor/torrc<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">HTTPTunnelPort 1081</span><br></pre></td></tr></table></figure></p>
-<p>这样就不需要通过第三方软件吧socks转换成http了</p>
-]]></content>
+    <title>Nginx设置虚拟目录alias</title>
+    <url>/2024/04/26/nginx-alias/</url>
+    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location ^~ /random_img/ &#123;</span><br><span class="line">    alias /home/random_img/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
-        <category>爬虫</category>
+        <category>Nginx</category>
       </categories>
-      <tags>
-        <tag>Tor</tag>
-      </tags>
   </entry>
   <entry>
     <title>给python的pip设置代理</title>
@@ -502,16 +379,23 @@
       </tags>
   </entry>
   <entry>
-    <title>ModuleNotFoundError&amp;#58; No module named &amp;#39;&amp;#95;ctypes&amp;#39; 解决方法</title>
-    <url>/2024/04/26/no-module-named-ctypes/</url>
-    <content><![CDATA[<h1 id="错误原因"><a href="#错误原因" class="headerlink" title="错误原因"></a>错误原因</h1><p>Python3中有个内置模块叫ctypes，它是Python3的外部函数库模块，它提供兼容C语言的数据类型，并通过它调用Linux系统下的共享库(Shared library)，此模块需要使用CentOS7系统中外部函数库(Foreign function library)的开发链接库(头文件和链接库)。<br>由于在CentOS7系统中没有安装外部函数库(libffi)的开发链接库软件包，所以在安装pip的时候就报了&quot;ModuleNotFoundError: No module named &#39;&#95;ctypes&#39;&quot;的错误。</p>
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>其实很简单安装一下外部函数库(libffi)就可以了，操作步骤如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install libffi-devel -y</span><br></pre></td></tr></table></figure>
-<p>源码安装的python3 重新编译安装， 如果通过yum安装的 那么直接执行命令 yum install python</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">./configure --prefix=/usr/local/python3</span><br><span class="line"> </span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>]]></content>
+    <title>openssl常用操作</title>
+    <url>/2024/04/26/openssl-cmd/</url>
+    <content><![CDATA[<p>PKCS＃12（也称为PKCS12或PFX）是一种二进制格式，用于将证书链和私钥存储在单个可加密文件中。 PKCS＃12文件通常用于在Windows和macOS计算机上导入和导出证书和私钥，并且通常具有文件扩展名 .p12 or .pfx.</p>
+<p>查看所有信息:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -info -in apiclient_cert.p12 -nodes</span><br></pre></td></tr></table></figure></p>
+<p>导出证书(公钥):<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out cert.pem -nokeys</span><br></pre></td></tr></table></figure></p>
+<p>导出私钥:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl pkcs12 -in apiclient_cert.p12 -out private_key.pem -nodes -nocerts</span><br></pre></td></tr></table></figure></p>
+<p>查看证书(公钥)序列号:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl x509 -in cert.pem -noout -serial</span><br></pre></td></tr></table></figure></p>
+<p>将证书(公钥)转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl rsa -in rsa_public_key.pem -out rsa_public_key.der -pubin -outform der</span><br></pre></td></tr></table></figure></p>
+<p>将私钥转换成 DER 格式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl rsa -in rsa_private_key.pem -out rsa_private_key.der -outform der</span><br></pre></td></tr></table></figure></p>
+]]></content>
       <categories>
-        <category>python</category>
+        <category>APP抓包</category>
       </categories>
+      <tags>
+        <tag>https</tag>
+        <tag>openssl</tag>
+      </tags>
   </entry>
   <entry>
     <title>利用Tor网络实现自动切换IP的爬虫</title>
@@ -540,9 +424,32 @@
         <category>爬虫</category>
       </categories>
       <tags>
-        <tag>Tor</tag>
         <tag>爬虫</tag>
+        <tag>Tor</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>torrc配置项 HTTPTunnelPort</title>
+    <url>/2024/04/26/torrc-HTTPTunnelPort/</url>
+    <content><![CDATA[<p>新版本的Tor提供了一个http代理端口的配置项：</p>
+<p>vi /etc/tor/torrc<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">HTTPTunnelPort 1081</span><br></pre></td></tr></table></figure></p>
+<p>这样就不需要通过第三方软件吧socks转换成http了</p>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+      <tags>
+        <tag>Tor</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>python3.8.6安装时提示Detected Windows 7 SP1 without KB2533623</title>
+    <url>/2024/04/26/python-install-erro/</url>
+    <content><![CDATA[<p>下载的安装包，双击安装时，提示安装失败，经过界面中的提示，打开日志后，最后一行提示：Detected Windows 7 SP1 without KB2533623<br>解决办法：<br>需要更新安装win7系统的KB2533623，我的是64位操作系统<br>下载地址：<a href="https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu" target="_blank" rel="noopener">https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu</a><br>百度网盘：<br>链接: <a href="https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA" target="_blank" rel="noopener">https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA</a> 提取码: wdqs 复制这段内容后打开百度网盘手机App，操作更方便哦<br>下载完成后，安装重启电脑即可。<br>————————————————<br>版权声明：本文为CSDN博主「雪诺颜」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/lxiaoqqin/article/details/106402866" target="_blank" rel="noopener">https://blog.csdn.net/lxiaoqqin/article/details/106402866</a></p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
   </entry>
   <entry>
     <title>WordPress 创建自定义 URL 页面模板</title>
@@ -643,6 +550,55 @@
       </tags>
   </entry>
   <entry>
+    <title>Digitalocean CentOS 9 安装 `screen` 和设置虚拟内存的命令汇总</title>
+    <url>/2024/12/10/digitalocean-centos9-lnmp/</url>
+    <content><![CDATA[<p>1G内存的vps会因为内存不足不能成功安装lnmp，解决方法如下：</p>
+<h3 id="设置虚拟内存（1GB-Swap）："><a href="#设置虚拟内存（1GB-Swap）：" class="headerlink" title="设置虚拟内存（1GB Swap）："></a>设置虚拟内存（1GB Swap）：</h3><ol>
+<li><p>检查现有 Swap 空间：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建 1GB Swap 文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo fallocate -l 1G /swapfile</span><br></pre></td></tr></table></figure>
+<p>（如不支持 <code>fallocate</code> 可替代为：）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dd <span class="keyword">if</span>=/dev/zero of=/swapfile bs=1M count=1024</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置权限：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo chmod 600 /swapfile</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>标记为 Swap 空间：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mkswap /swapfile</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启用 Swap：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo swapon /swapfile</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>确认：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">swapon --show</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将 Swap 文件加入开机自动挂载：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'/swapfile none swap sw 0 0'</span> | sudo tee -a /etc/fstab</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="安装-screen："><a href="#安装-screen：" class="headerlink" title="安装 screen："></a>安装 <code>screen</code>：</h3><ol>
+<li><p>更新系统：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf update -y</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启用 EPEL 仓库：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf install epel-release</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 <code>screen</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dnf install screen</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证安装：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen --version</span><br></pre></td></tr></table></figure></li>
+</ol>
+]]></content>
+      <tags>
+        <tag>Digitalocean</tag>
+        <tag>CentOS9</tag>
+        <tag>LNMP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>WordPress 过滤钩子（Filter）基础详解</title>
     <url>/2024/04/26/wordpress-filter/</url>
     <content><![CDATA[<p>WordPress 过滤钩子（filters）——我们可以扩展 WordPress 的最好方法之一。这个特性的基础就是钩子（hooks）—— WordPress的过滤（filters）和动作（actions）钩子。没有它们，我们就无法利用 WordPress 的可扩展性的优势。</p>
@@ -712,12 +668,56 @@
       </tags>
   </entry>
   <entry>
-    <title>python3.8.6安装时提示Detected Windows 7 SP1 without KB2533623</title>
-    <url>/2024/04/26/python-install-erro/</url>
-    <content><![CDATA[<p>下载的安装包，双击安装时，提示安装失败，经过界面中的提示，打开日志后，最后一行提示：Detected Windows 7 SP1 without KB2533623<br>解决办法：<br>需要更新安装win7系统的KB2533623，我的是64位操作系统<br>下载地址：<a href="https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu" target="_blank" rel="noopener">https://zhailiangs.github.io/download/Windows6.1--KB2533623-x64.msu</a><br>百度网盘：<br>链接: <a href="https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA" target="_blank" rel="noopener">https://pan.baidu.com/s/1bDNwJCjo9DDSANOPsU1ztA</a> 提取码: wdqs 复制这段内容后打开百度网盘手机App，操作更方便哦<br>下载完成后，安装重启电脑即可。<br>————————————————<br>版权声明：本文为CSDN博主「雪诺颜」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/lxiaoqqin/article/details/106402866" target="_blank" rel="noopener">https://blog.csdn.net/lxiaoqqin/article/details/106402866</a></p>
+    <title>OpenSSL编译安装</title>
+    <url>/2024/08/21/openssl-install/</url>
+    <content><![CDATA[<p>如果 OpenSSL 的库文件安装在 <code>lib64</code> 文件夹而不是 <code>lib</code> 文件夹中，您需要根据实际路径调整配置。以下是修改步骤：</p>
+<h3 id="重新编译和安装-OpenSSL（使用-lib64）"><a href="#重新编译和安装-OpenSSL（使用-lib64）" class="headerlink" title="重新编译和安装 OpenSSL（使用 lib64）"></a>重新编译和安装 OpenSSL（使用 <code>lib64</code>）</h3><h4 id="1-下载-OpenSSL-源码"><a href="#1-下载-OpenSSL-源码" class="headerlink" title="1. 下载 OpenSSL 源码"></a>1. <strong>下载 OpenSSL 源码</strong></h4><p>如果尚未下载 OpenSSL 源码，请从 OpenSSL 官方网站下载：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://www.openssl.org/<span class="built_in">source</span>/openssl-3.3.1.tar.gz</span><br><span class="line">tar -xvzf openssl-3.3.1.tar.gz</span><br><span class="line"><span class="built_in">cd</span> openssl-3.3.1</span><br></pre></td></tr></table></figure>
+<h4 id="2-配置编译选项"><a href="#2-配置编译选项" class="headerlink" title="2. 配置编译选项"></a>2. <strong>配置编译选项</strong></h4><p>在编译之前，使用 <code>./config</code> 命令指定 <code>lib64</code> 作为库文件目录：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./config --prefix=/usr/<span class="built_in">local</span>/openssl-3.3.1 --openssldir=/usr/<span class="built_in">local</span>/openssl-3.3.1 shared zlib</span><br></pre></td></tr></table></figure>
+<p>这里，<code>--prefix</code> 和 <code>--openssldir</code> 是指定安装路径的参数，但 OpenSSL 默认安装到 <code>lib</code> 下。如果最终安装到 <code>lib64</code>，这通常是系统的标准做法。</p>
+<h4 id="3-编译-OpenSSL"><a href="#3-编译-OpenSSL" class="headerlink" title="3. 编译 OpenSSL"></a>3. <strong>编译 OpenSSL</strong></h4><p>使用 <code>make</code> 命令编译 OpenSSL：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
+<p>如果有多个 CPU 核心，可以使用 <code>-j</code> 选项加速编译：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">make -j$(nproc)</span><br></pre></td></tr></table></figure>
+<h4 id="4-安装-OpenSSL"><a href="#4-安装-OpenSSL" class="headerlink" title="4. 安装 OpenSSL"></a>4. <strong>安装 OpenSSL</strong></h4><p>编译完成后，使用 <code>make install</code> 安装：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<h4 id="5-验证安装"><a href="#5-验证安装" class="headerlink" title="5. 验证安装"></a>5. <strong>验证安装</strong></h4><p>确认库文件安装在 <code>lib64</code> 目录下，并检查 OpenSSL 版本：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ls -l /usr/<span class="built_in">local</span>/openssl-3.3.1/lib64/libssl.so.3</span><br><span class="line">ls -l /usr/<span class="built_in">local</span>/openssl-3.3.1/lib64/libcrypto.so.3</span><br><span class="line"></span><br><span class="line">/usr/<span class="built_in">local</span>/openssl-3.3.1/bin/openssl version</span><br></pre></td></tr></table></figure>
+<h4 id="6-配置环境变量"><a href="#6-配置环境变量" class="headerlink" title="6. 配置环境变量"></a>6. <strong>配置环境变量</strong></h4><p>为了让系统自动找到正确的 OpenSSL 库文件，请设置 <code>LD_LIBRARY_PATH</code> 环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/<span class="built_in">local</span>/openssl-3.3.1/lib64:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
+<p>将其添加到 <code>.bashrc</code> 或 <code>.bash_profile</code> 中，以便每次启动终端时自动加载：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'export LD_LIBRARY_PATH=/usr/local/openssl-3.3.1/lib64:$LD_LIBRARY_PATH'</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+<h4 id="7-使用-ldconfig-更新共享库缓存（可选）"><a href="#7-使用-ldconfig-更新共享库缓存（可选）" class="headerlink" title="7. 使用 ldconfig 更新共享库缓存（可选）"></a>7. <strong>使用 <code>ldconfig</code> 更新共享库缓存（可选）</strong></h4><p>将 <code>lib64</code> 目录添加到系统共享库路径中：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo sh -c <span class="string">'echo "/usr/local/openssl-3.3.1/lib64" &gt; /etc/ld.so.conf.d/openssl-3.3.1.conf'</span></span><br><span class="line">sudo ldconfig</span><br></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>如果 OpenSSL 的库文件安装在 <code>lib64</code> 目录下，确保您在环境变量和配置文件中使用正确的路径。按照上述步骤，您应该能够正确配置并使用 OpenSSL 3.3.1。</p>
 ]]></content>
       <categories>
-        <category>Python</category>
+        <category>OpenSSL</category>
       </categories>
+  </entry>
+  <entry>
+    <title>Fiddler证书清除并重新配置</title>
+    <url>/2024/04/26/fiddler-certificates-clean/</url>
+    <content><![CDATA[<p>很多使用fiddler抓包，对于http来说不需太多纠结，随便设置下就能用，但是抓取https就死活抓不了，出现诸如以下问题：</p>
+<p>creation of the root certificate was not successful;</p>
+<p>Failed to find the root certificate in User Root List;</p>
+<p>The Root certificate could not be found;</p>
+<p>The root certificate could not be located;</p>
+<p>Fiddler 抓取https 显示 Tunnel to … 443;</p>
+<p>等等…</p>
+<p>1.(最关键).清除C:\Users\用户\AppData\Roaming\Microsoft\Crypto\RSA 目录下所有文件（首次安装fiddler请忽略）</p>
+<p>2.清除电脑上的根证书，WIN+R快捷键，输入：certmgr.msc， 然后回车，查找所有fiddler证书（菜单栏–操作–查找证书），然后删除。（首次安装fiddler请忽略）</p>
+<p>3.清除浏览器上的证书文件 ,此处需要仔细查找带有FiddlerRoot的字样，并删除，以谷歌浏览器为例说明，在浏览器上输入: chrome://settings/，（首次安装fiddler请忽略）</p>
+<p>4.打开fiddler，点击工具栏中的Tools—&gt;Options，点击Actions,选择最后一项，Reset All certificates,然后关闭</p>
+<p>原文链接：<a href="https://blog.csdn.net/w6082819920919/article/details/112174650" target="_blank" rel="noopener">https://blog.csdn.net/w6082819920919/article/details/112174650</a></p>
+]]></content>
+      <categories>
+        <category>APP抓包</category>
+      </categories>
+      <tags>
+        <tag>fiddler</tag>
+        <tag>https</tag>
+      </tags>
   </entry>
 </search>
